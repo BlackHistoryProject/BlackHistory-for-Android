@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tweet_item_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#000"
+    android:padding="8dp" >
+
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/icon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_launcher" />
+    
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignTop="@+id/icon"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/icon"
+        android:text="山田太郎"
+        android:textSize="11dp"/>
+
+    <TextView
+        android:id="@+id/screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignTop="@+id/name"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/name"
+        android:text="＠taro_yamada"
+        android:textSize="10dp"/>
+    
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/name"
+        android:text="ほんぶｎ"
+        android:textSize="11dp"/>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/text"
+        android:text="20XX年00月00日00:00:00"
+        android:layout_marginTop="5dp"
+        android:textSize="9dp"/>
+
+    <TextView
+        android:id="@+id/via"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_below="@+id/time"
+        android:text="via"
+        android:layout_marginTop="1dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="9dp"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/time"
+        android:layout_below="@+id/text"
+        >
+
+    <ImageButton
+        android:id="@+id/tweet_menu1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#000"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/iconlarge_more"
+    />
+
+    <ImageButton
+        android:id="@+id/tweet_favorote1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/time"
+        android:background="#000"
+        android:layout_toLeftOf="@id/tweet_menu1"
+
+        android:src="@drawable/iconlarge_favourite"
+        android:layout_marginRight="10dp"
+    />
+
+    <ImageButton
+        android:id="@+id/tweet_retweet1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/time"
+        android:background="#000"
+        android:layout_toLeftOf="@id/tweet_favorote1"
+        android:src="@drawable/iconlarge_retweet"
+        android:layout_marginRight="10dp"
+        />
+
+    <ImageButton
+        android:id="@+id/tweet_reply1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/time"
+        android:background="#000"
+        android:layout_toLeftOf="@id/tweet_retweet1"
+        android:src="@drawable/iconlarge_reply"
+        android:layout_marginRight="10dp"
+        />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

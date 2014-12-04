@@ -1,0 +1,13 @@
+<resources>
+
+    <string name="hello_world">Hello world</string>
+    <string name="menu_settings">menu_settings</string>
+    <string name="twitter_consumer_key">cuCJpHsZEknd18FY3PPOgQ</string>
+    <string name="twitter_consumer_secret">a2PGFassMySYAaUMo2wHPNRDL3qxLuJ2ALGLj5ZyUU8</string>
+    <string name="app_name">BlackHistory</string>
+    <string name="twitter_oauth">Twitter認証</string>
+    <string name="twitter_callback_url">gabu://twitter</string>
+
+    <integer name="default_tweet_count">140</integer>
+
+</resources>

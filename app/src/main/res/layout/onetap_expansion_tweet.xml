@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--　つぶやき拡大した時のやつ　-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000"
+    >
+
+    <TextView
+        android:id="@+id/expansion_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textColor="#D3D3D3"
+        android:text="かくだいほんぶｎ"
+        android:textSize="20dp"/>
+
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/expansion_icon"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:src="@drawable/ic_launcher"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_below="@+id/expansion_text"
+        android:layout_alignParentLeft="@+id/expansion_text"
+        android:layout_alignParentStart="@+id/expansion_text" />
+
+    <TextView
+        android:id="@+id/expansion_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignTop="@+id/expansion_icon"
+        android:layout_marginLeft="8dp"
+        android:layout_toRightOf="@+id/expansion_icon"
+        android:text="山田太郎"
+        android:textSize="16dp"/>
+
+    <TextView
+        android:id="@+id/expansion_screen_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:text="＠taro_yamada"
+        android:textSize="13dp"
+        android:layout_below="@+id/expansion_name"
+        android:layout_alignLeft="@+id/expansion_name"
+        android:layout_alignStart="@+id/expansion_name" />
+
+    <TextView
+        android:id="@+id/expansion_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_alignLeft="@+id/expansion_screen_name"
+        android:layout_below="@+id/expansion_screen_name"
+        android:text="年月日時間"
+        android:layout_marginTop="1dp"
+        android:textSize="11dp"/>
+
+    <TextView
+        android:id="@+id/expansion_via"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#D3D3D3"
+        android:layout_toRightOf="@+id/expansion_icon"
+        android:layout_below="@+id/expansion_time"
+        android:text="via"
+        android:layout_marginTop="1dp"
+        android:layout_marginLeft="8dp"
+        android:textSize="11dp"/>
+
+        <com.loopj.android.image.SmartImageView
+            android:src="@drawable/attachment_place"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_below="@+id/expansion_via"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"/>
+</RelativeLayout>
+

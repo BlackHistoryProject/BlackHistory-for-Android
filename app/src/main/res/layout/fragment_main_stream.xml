@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v4.view.PagerTitleStrip
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_gravity="top"
+            android:background="@drawable/back_actionbar"
+            android:textColor="#FFFFFF"
+            android:paddingTop="2dp"
+            android:paddingBottom="4dp"/>
+        <!--
+        android:layout_height =>　上のHomeとかのサイズ
+        android:paddingTop    =>　アクションバーの上からどれだけ離すか　(ここではHome)
+        android:paddingBottom =>　              の下からどれだけ離すか
+        -->
+    </android.support.v4.view.ViewPager>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/actions_grad"
+        android:gravity="center"
+        >
+
+        <!--位置情報-->
+        <Button
+            android:id="@+id/Geolocation"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/toolbaricon_map2"
+            android:orderInCategory="50"
+            android:showAsAction="always"
+            android:title="位置情報"
+            />
+
+       <!--アカウントの追加-->
+        <Button
+            android:id="@+id/account"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/Geolocation"
+            android:scaleType="fitCenter"
+            android:background="@drawable/toolbaricon_contacts2"
+            android:orderInCategory="100"
+            android:showAsAction="always"
+            android:title="アカウントの追加と削除"
+            />
+
+        <!--リストの追加と削除-->
+        <Button
+            android:id="@+id/addList"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/account"
+            android:background="@drawable/toolbaricon_add2"
+            android:orderInCategory="150"
+            android:showAsAction="always"
+            android:title="リストの追加と削除"
+            />
+
+        <!--つぶやく-->
+        <Button
+            android:id="@+id/menu_tweet"
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/addList"
+            android:background="@drawable/toolbaricon_compose2"
+            android:orderInCategory="200"
+            android:showAsAction="always"
+            android:title="@string/menu_tweet"
+            />
+
+        <Button
+            android:id="@+id/menuber_menu"
+            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/menu_tweet"
+            android:background="@drawable/wdg_iconlist_grey"
+            android:orderInCategory="200"
+            android:showAsAction="always"
+            android:title="@string/menu_tweet"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>
