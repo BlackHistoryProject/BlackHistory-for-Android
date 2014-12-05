@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="b_off">#00ffffff</color>
+    <color name="b_on">#7f1da7d9</color>
+</resources>

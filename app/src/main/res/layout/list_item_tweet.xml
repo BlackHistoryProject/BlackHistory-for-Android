@@ -5,7 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#000"
-    android:padding="8dp" >
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp">
+    <RelativeLayout
+        android:id="@+id/tweet_body"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
 
     <com.loopj.android.image.SmartImageView
         android:id="@+id/icon"
@@ -98,29 +103,36 @@
         android:layout_marginRight="10dp"
     />
 
-    <ImageButton
-        android:id="@+id/tweet_retweet1"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/time"
-        android:background="#000"
-        android:layout_toLeftOf="@id/tweet_favorote1"
-        android:src="@drawable/iconlarge_retweet"
-        android:layout_marginRight="10dp"
-        />
+        <ImageButton
+            android:id="@+id/tweet_retweet1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/time"
+            android:background="#000"
+            android:layout_toLeftOf="@id/tweet_favorote1"
+            android:src="@drawable/iconlarge_retweet"
+            android:layout_marginRight="10dp"
+            />
 
-    <ImageButton
-        android:id="@+id/tweet_reply1"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@+id/time"
-        android:background="#000"
-        android:layout_toLeftOf="@id/tweet_retweet1"
-        android:src="@drawable/iconlarge_reply"
-        android:layout_marginRight="10dp"
-        />
+        <ImageButton
+            android:id="@+id/tweet_reply1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/time"
+            android:background="#000"
+            android:layout_toLeftOf="@id/tweet_retweet1"
+            android:src="@drawable/iconlarge_reply"
+            android:layout_marginRight="10dp"
+            />
 
     </RelativeLayout>
-
+    </RelativeLayout>
+    <View
+        android:background="#ffffffff"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tweet_body"
+        android:layout_marginTop="4dp"
+       />
 
 </RelativeLayout>

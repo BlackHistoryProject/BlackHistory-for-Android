@@ -20,11 +20,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.loopj.android.image.SmartImageView;
 import com.nanami.chikechike.myapplication.R;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.Serializable;
 
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -37,24 +41,45 @@ import twitter4j.TwitterException;
 public class TweetActivity extends Activity{
 
     static  final int REQUEST_CAPTURE_IMAGE = 100;
-
     static final int REQUEST_SELECT_IMAGE = 120;
+
+    boolean isReply = false;
 
     private EditText mInputText;
     private Twitter mTwitter;
     boolean isImage = false;
     Bitmap mBitmap = null;
 
+    Status status;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
         setContentView(R.layout.activity_tweet);
+        Serializable serializable = getIntent().getSerializableExtra("tweet");
+        if(serializable == null){}
+        else{
+            status = ((TweetSerialize)serializable).getStatus();
+            ((TextView)findViewById(R.id.tweet_taskbar)).setText("Reply");
+            findViewById(R.id.reply_user_info).setVisibility(View.VISIBLE);
+            findViewById(R.id.location_addaccount).setVisibility(View.GONE);
+            ((SmartImageView)findViewById(R.id.expansion_icon)).setImageUrl(status.getUser().getProfileImageURL());
+            ((TextView)findViewById(R.id.expansion_name)).setText(status.getUser().getName());
+            ((TextView)findViewById(R.id.expansion_screen_name)).setText("@" + status.getUser().getScreenName());
+            ((TextView)findViewById(R.id.expansion_text)).setText(status.getText());
+            ((TextView)findViewById(R.id.expansion_time)).setText(BlackUtil.getDateFormat(status.getCreatedAt()));
+            ((TextView)findViewById(R.id.expansion_via)).setText("via " + BlackUtil.getVia(status.getSource()));
+            String str = status.getInReplyToScreenName();
+            if(str == null || str.equals("null") || str.equals("")){
+                str = status.getUser().getScreenName();
+            }
+            ((EditText)findViewById(R.id.input_text)).setText("@" + str + " ");
+            isReply = true;
+        }
 
         mTwitter = TwitterUtils.getTwitterInstance(this);
-
         mInputText = (EditText) findViewById(R.id.input_text);
-
         findViewById(R.id.tweet_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,8 +121,7 @@ public class TweetActivity extends Activity{
             public void afterTextChanged(Editable editable) {
                 final EditText editText = (EditText)findViewById(R.id.input_text);
                 final int nowCount = editText.getText().length();
-                final int defaultCount = Integer.parseInt(getString(R.integer.default_tweet_count));        // ここの赤線は問題ない
-
+                final int defaultCount = getResources().getInteger(R.integer.default_tweet_count);
                 final TextView textView = (TextView)findViewById(R.id.tweet_count);
                 textView.setText(String.valueOf(defaultCount - nowCount));
             }
@@ -146,8 +170,8 @@ public class TweetActivity extends Activity{
                 try {
                     Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this);
 
-                    if (isImage){
-                        final StatusUpdate statusUpdate = new StatusUpdate(String.valueOf(params[0]));
+                    final StatusUpdate statusUpdate = new StatusUpdate(String.valueOf(params[0]));
+                    if (isImage) {
 
                         ByteArrayOutputStream bos = new ByteArrayOutputStream();
                         // 第一引数　画像の形式
@@ -157,16 +181,16 @@ public class TweetActivity extends Activity{
                         InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
 
                         statusUpdate.media("test", inputStream);
-                        twitter.updateStatus(statusUpdate);
-                        return true;
-                    } else {
-                        twitter.updateStatus(String.valueOf(params[0]));
-                        return true;
                     }
-                } catch (Exception e) {
+                    if (isReply) {
+                        statusUpdate.setInReplyToStatusId(status.getInReplyToStatusId());
+                    }
+                    twitter.updateStatus(statusUpdate);
+                    return true;
+                } catch (TwitterException e) {
                     e.printStackTrace();
-                    return false;
                 }
+                return false;
             }
 
             @Override
@@ -193,9 +217,6 @@ public class TweetActivity extends Activity{
         notification.setLatestEventInfo(getApplicationContext(), title ,text ,pendingIntent );
 
         notification.tickerText = text;
-
-
-        // notification.defaults |= Notification.DEFAULT_VIBRATE;      // バイブレーション機能
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(id, notification);

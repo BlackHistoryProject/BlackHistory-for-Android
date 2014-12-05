@@ -47,7 +47,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
                 Intent intent = new Intent(getContext(), TweetExpansionTweet.class);              // TLのツイートを押した時そのツイートが拡大される
                 intent.putExtra("tweet", new TweetSerialize(item));
                 getContext().startActivity(intent);
-
             }
         }) ;
 
@@ -74,10 +73,25 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Reply", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), TweetActivity.class);
+                intent.putExtra("tweet", new TweetSerialize(item));
+                getContext().startActivity(intent);
             }
         });
 
         return convertView;
+    }
+    public void deleteTweet(long paramLong)
+    {
+        Status status = null;
+        for (int i = 0; i < this.getCount(); i++){
+            if(this.getItem(i).getId() == paramLong){
+                status = this.getItem(i);
+            }
+        }
+        if(status != null){
+            this.remove(status);
+        }
+        notifyDataSetInvalidated();
     }
 }

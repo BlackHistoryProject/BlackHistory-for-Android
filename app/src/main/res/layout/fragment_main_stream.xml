@@ -10,7 +10,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#000">
         <android.support.v4.view.PagerTitleStrip
             android:layout_width="match_parent"
             android:layout_height="25dp"
@@ -31,78 +32,80 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/actions_grad"
-        android:gravity="center"
-        >
+        android:gravity="center" >
+        <ImageButton
+            android:id="@+id/menuber_menu"
+            android:layout_height="40dp"
+            android:layout_width="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/wdg_iconlist_grey"
+            android:background="@drawable/press_button"
+            android:orderInCategory="250"
+            android:showAsAction="always"
+            android:title="@string/menu_tweet"/>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_toLeftOf="@id/menuber_menu"
+            android:orientation="horizontal">
 
         <!--位置情報-->
-        <Button
+        <ImageButton
             android:id="@+id/Geolocation"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
             android:scaleType="fitCenter"
-            android:background="@drawable/toolbaricon_map2"
+            android:src="@drawable/toolbaricon_map2"
+            android:background="@drawable/press_button"
             android:orderInCategory="50"
             android:showAsAction="always"
             android:title="位置情報"
             />
 
        <!--アカウントの追加-->
-        <Button
+        <ImageButton
             android:id="@+id/account"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/Geolocation"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
             android:scaleType="fitCenter"
-            android:background="@drawable/toolbaricon_contacts2"
+            android:src="@drawable/toolbaricon_contacts2"
+            android:background="@drawable/press_button"
             android:orderInCategory="100"
             android:showAsAction="always"
             android:title="アカウントの追加と削除"
             />
 
         <!--リストの追加と削除-->
-        <Button
+        <ImageButton
             android:id="@+id/addList"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/account"
-            android:background="@drawable/toolbaricon_add2"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/toolbaricon_add2"
+            android:background="@drawable/press_button"
             android:orderInCategory="150"
             android:showAsAction="always"
             android:title="リストの追加と削除"
             />
 
         <!--つぶやく-->
-        <Button
+        <ImageButton
             android:id="@+id/menu_tweet"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/addList"
-            android:background="@drawable/toolbaricon_compose2"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_weight="1"
+            android:src="@drawable/toolbaricon_compose2"
+            android:background="@drawable/press_button"
             android:orderInCategory="200"
             android:showAsAction="always"
             android:title="@string/menu_tweet"
             />
-
-        <Button
-            android:id="@+id/menuber_menu"
-            android:layout_height="50dp"
-            android:layout_width="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_toRightOf="@+id/menu_tweet"
-            android:background="@drawable/wdg_iconlist_grey"
-            android:orderInCategory="200"
-            android:showAsAction="always"
-            android:title="@string/menu_tweet"
-            />
+        </LinearLayout>
 
     </RelativeLayout>
 

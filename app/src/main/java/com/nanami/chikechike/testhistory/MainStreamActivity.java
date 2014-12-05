@@ -28,32 +28,28 @@ public class MainStreamActivity extends FragmentActivity {
                 new MyFragmentPagerAdapter(
                         getSupportFragmentManager()));
 
-        Button Geolocation = (Button)findViewById(R.id.Geolocation);
-        Geolocation.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.Geolocation).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
 
-        Button account = (Button)findViewById(R.id.account);
-        account.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.account).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
 
-        Button addList = (Button)findViewById(R.id.addList);
-        addList.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.addList).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
             }
         });
 
-        Button menu_tweet = (Button)findViewById(R.id.menu_tweet);
-        menu_tweet.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.menu_tweet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainStreamActivity.this, TweetActivity.class);   //アクティビティを開く　ここだとつぶやきに飛ぶ
@@ -61,8 +57,7 @@ public class MainStreamActivity extends FragmentActivity {
             }
         });
 
-        Button menuber_menu = (Button)findViewById(R.id.menuber_menu);
-        menuber_menu.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.menuber_menu).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
