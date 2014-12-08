@@ -147,6 +147,7 @@
 
                 <ImageButton
                     android:id="@+id/teet_view_image"
+                    android:background="#000"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_toRightOf="@+id/tweet_count"
@@ -162,7 +163,7 @@
                 android:layout_below="@id/otherbutton1">
                 <ImageButton
                     android:id="@+id/tweet_camera"
-                    android:layout_width="wrap_content"
+                    android:layout_width="70dp"
                     android:layout_height="fill_parent"
                     android:layout_alignParentRight="true"
                     android:src="@android:drawable/ic_menu_camera"
@@ -189,20 +190,27 @@
                     android:layout_marginTop="1dp">
                     <ImageButton
                         android:id="@+id/tweet_gps"
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="fill_parent"
                         android:layout_alignParentRight="true"
-                        android:src="@android:drawable/ic_menu_compass"
+                        android:src="@drawable/iconcompose_location"
                         android:textColor="#FFF"/>
                     <Button
                         android:id="@+id/tweet_location"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:drawableLeft="@drawable/iconcompose_location"
+                        android:drawableLeft="@android:drawable/ic_menu_compass"
                         android:layout_toLeftOf="@id/tweet_gps"
                         android:textColor="#FFF"
                         android:text="Location" />
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/otherbutton4"
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_below="@+id/otherbutton3">
 
                 <Button
                     android:id="@+id/tweet_Account"
@@ -210,8 +218,9 @@
                     android:layout_height="fill_parent"
                     android:textColor="#FFF"
                     android:text="Add Account"
-                    android:drawableLeft="@drawable/iconcompose_addcontact"
-                    android:layout_below="@id/otherbutton3"/>
+                    android:drawableLeft="@drawable/iconcompose_addcontact"/>
+
+                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

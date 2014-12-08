@@ -56,13 +56,13 @@ public class TweetActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
-        setContentView(R.layout.activity_tweet);
-        Serializable serializable = getIntent().getSerializableExtra("tweet");
+        setContentView(R.layout.activity_tweet);                                                    //  指定したIDのレイアウトを読み込んでいる
+        Serializable serializable = getIntent().getSerializableExtra("tweet");                      // setContentViewで指定したIDの中にあるものは全部使える
         if(serializable == null){}
         else{
             status = ((TweetSerialize)serializable).getStatus();
             ((TextView)findViewById(R.id.tweet_taskbar)).setText("Reply");
-            findViewById(R.id.reply_user_info).setVisibility(View.VISIBLE);
+            findViewById(R.id.reply_user_info).setVisibility(View.VISIBLE);                         // findViewByID　指定したIDのViewを見つける
             findViewById(R.id.location_addaccount).setVisibility(View.GONE);
             ((SmartImageView)findViewById(R.id.expansion_icon)).setImageUrl(status.getUser().getProfileImageURL());
             ((TextView)findViewById(R.id.expansion_name)).setText(status.getUser().getName());
@@ -74,7 +74,10 @@ public class TweetActivity extends Activity{
             if(str == null || str.equals("null") || str.equals("")){
                 str = status.getUser().getScreenName();
             }
-            ((EditText)findViewById(R.id.input_text)).setText("@" + str + " ");
+            EditText editText = (EditText)findViewById(R.id.input_text);                            // Edit text を定義した。。。　キャストという
+            editText.setText("@" + str + " ");                                                      // ()の中のstrはReplyの相手のScreenName(相手の@以下のID)
+            editText.setSelection(editText.getText().length());                                     //　setSelectionの中には数字が入る（今回は今入っている（）の中身が数字を持ってきてくれている
+            editText.getText().length();                                                            // lengthは"長さ"であって、物の長さではなくて文字の長さ(サイズ)だそうで、プログラミングではそう呼ばれている
             isReply = true;
         }
 

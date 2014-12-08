@@ -1,7 +1,5 @@
 package com.nanami.chikechike.testhistory;
 
-import android.app.Fragment;
-import android.app.ListFragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,12 +8,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nanami.chikechike.myapplication.R;
@@ -31,7 +27,6 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
 import twitter4j.User;
 import twitter4j.UserList;
-import twitter4j.UserStreamAdapter;
 import twitter4j.UserStreamListener;
 
 /**
@@ -46,7 +41,7 @@ public class homefragment extends android.support.v4.app.ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
 
-        LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.homefragment, container, false);
+        LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.fragment_common_list, container, false);
 
         Context context = getActivity();
 
@@ -220,8 +215,8 @@ public class homefragment extends android.support.v4.app.ListFragment {
                     @Override
                     public void run() {
                         if(status.getText().contains("@baki_chike")){
-                            String txt = status.getText().replace("@" + status.getInReplyToScreenName(), "");
-                            showNotification(R.drawable.ic_launcher2, status.getUser().getName(), txt, 2 );
+                            String txt = status.getText().replace("@" + status.getInReplyToScreenName(), "");       // 自分宛に通知が来た時に表示される自分のUserIDを消している
+                            showNotification(R.drawable.ic_launcher2, status.getUser().getName(), txt, 2 );         // 通知の表示
                         }
                     }
                 });
