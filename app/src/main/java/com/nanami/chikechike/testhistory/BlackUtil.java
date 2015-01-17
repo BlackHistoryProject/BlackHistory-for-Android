@@ -38,7 +38,7 @@ public class BlackUtil {
         return (10 > val)?"0" + String.valueOf(val):String.valueOf(val);
     }
 
-    static String getDateFormat(Date date) {
+    public static String getDateFormat(Date date) {
         Calendar datetime = Calendar.getInstance();
         datetime.setTime(date);
         String dateString = "";
@@ -56,7 +56,7 @@ public class BlackUtil {
                 year,month,day,dayKind, hour,minute,second);
 
         }
-    static String getVia(String tweetSource){
+    public static String getVia(String tweetSource){
         String reg = "<(.*)>(.*)<(.*)>";
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(tweetSource);

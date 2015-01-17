@@ -1,4 +1,4 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.activity;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -18,12 +17,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.image.SmartImageView;
 import com.nanami.chikechike.myapplication.R;
-
-import org.w3c.dom.Text;
+import com.nanami.chikechike.testhistory.BlackUtil;
+import com.nanami.chikechike.testhistory.TweetSerialize;
+import com.nanami.chikechike.testhistory.TwitterUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

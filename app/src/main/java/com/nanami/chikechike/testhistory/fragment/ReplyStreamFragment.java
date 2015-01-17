@@ -1,21 +1,21 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.fragment;
 
-import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.nanami.chikechike.myapplication.R;
+import com.nanami.chikechike.testhistory.fragment.CommonStreamFragment;
 
 /**
  * Created by nanami on 2014/09/05.
  */
-public class ReplyStreamfragment extends android.support.v4.app.Fragment {
+public class ReplyStreamFragment extends CommonStreamFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
+        this.setTitle("Reply");
         return inflater.inflate(R.layout.fragment_common_list, null);
     }
 

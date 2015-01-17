@@ -1,7 +1,6 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.activity;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -10,6 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.nanami.chikechike.myapplication.R;
+import com.nanami.chikechike.testhistory.TwitterUtils;
+import com.nanami.chikechike.testhistory.activity.MainStreamActivity;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -36,13 +37,15 @@ public class TwitterOAuthActivity extends Activity{
         mCallBackURL = getString(R.string.twitter_callback_url);
         mTwitter = TwitterUtils.getTwitterInstance(this);
 
+        startAuthorize();
+        /*
         findViewById(R.id.action_start_oauth).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startAuthorize();
-
             }
         });
+        */
     }
 
     /*
@@ -55,6 +58,7 @@ public class TwitterOAuthActivity extends Activity{
             @Override
             protected String doInBackground(Void... params) {
                 try {
+                    mTwitter.setOAuthAccessToken(null);
                     mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
                     return mRequestToken.getAuthorizationURL();
                 } catch (TwitterException e){
@@ -113,7 +117,7 @@ public class TwitterOAuthActivity extends Activity{
 
     private void successOAuth(AccessToken accessToken) {
         TwitterUtils.storeAccessToken(this, accessToken);
-        Intent intent = new Intent(this, homefragment.class);
+        Intent intent = new Intent(this, MainStreamActivity.class);
         startActivity(intent);
         finish();
     }

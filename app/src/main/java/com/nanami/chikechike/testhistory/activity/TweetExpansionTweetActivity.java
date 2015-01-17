@@ -1,4 +1,4 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,13 +11,15 @@ import android.widget.Toast;
 
 import com.loopj.android.image.SmartImageView;
 import com.nanami.chikechike.myapplication.R;
+import com.nanami.chikechike.testhistory.BlackUtil;
+import com.nanami.chikechike.testhistory.TweetSerialize;
 
 import twitter4j.Status;
 
 /**
  * Created by nanami on 2014/09/11.
  */
-public class TweetExpansionTweet extends Activity{
+public class TweetExpansionTweetActivity extends Activity{
     Status status;                                                                              //StatusはここではTLにある１つ１つのツイートの事
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -1,4 +1,4 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.fragment;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -15,6 +15,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.nanami.chikechike.myapplication.R;
+import com.nanami.chikechike.testhistory.activity.MainStreamActivity;
+import com.nanami.chikechike.testhistory.adapter.TweetAdapter;
+import com.nanami.chikechike.testhistory.TwitterUtils;
 
 import java.util.List;
 
@@ -32,11 +35,17 @@ import twitter4j.UserStreamListener;
 /**
  * Created by nanami on 2014/09/05.
  */
-public class homefragment extends android.support.v4.app.ListFragment {
+public class HomeStreamFragment extends CommonStreamFragment {
 
-    android.os.Handler handler = new android.os.Handler();
-    private TweetAdapter mAdapter;
-    private Twitter mTwitter;
+    public android.os.Handler handler = new android.os.Handler();
+    public TweetAdapter mAdapter;
+    public Twitter mTwitter;
+
+    public static HomeStreamFragment newInstance(String title){
+        HomeStreamFragment fragment = new HomeStreamFragment();
+        fragment.setTitle(title);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
@@ -45,31 +54,20 @@ public class homefragment extends android.support.v4.app.ListFragment {
 
         Context context = getActivity();
 
-        if (!TwitterUtils.hasAccessToken(context)) {
-            Intent intent = new Intent(context, TwitterOAuthActivity.class);
-            startActivity(intent);
-        } else {
-            mAdapter = new TweetAdapter(context);
+        mAdapter = new TweetAdapter(context);
+        setListAdapter(mAdapter);
 
-            setListAdapter(mAdapter);
+        mTwitter = TwitterUtils.getTwitterInstance(context);
+        reloadTimeLine();
 
-            mTwitter = TwitterUtils.getTwitterInstance(context);
-            reloadTimeLine();
-
-            TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(context);
-            {
-                twitterStream.addListener(new mMyUserStreamAdapter());
-                twitterStream.user();
-            }
+        TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(context);
+        {
+            twitterStream.addListener(new mMyUserStreamAdapter());
+            twitterStream.user();
         }
 
 
         return ll;
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-
     }
 
     class mMyUserStreamAdapter implements UserStreamListener {

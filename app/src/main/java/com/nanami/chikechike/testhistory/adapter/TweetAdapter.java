@@ -1,10 +1,8 @@
-package com.nanami.chikechike.testhistory;
+package com.nanami.chikechike.testhistory.adapter;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.CalendarContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.image.SmartImageView;
 import com.nanami.chikechike.myapplication.R;
-
-import java.util.Calendar;
+import com.nanami.chikechike.testhistory.BlackUtil;
+import com.nanami.chikechike.testhistory.activity.TweetExpansionTweetActivity;
+import com.nanami.chikechike.testhistory.TweetSerialize;
+import com.nanami.chikechike.testhistory.activity.TweetActivity;
 
 import twitter4j.Status;
 
@@ -44,7 +43,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         tweetItemMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), TweetExpansionTweet.class);              // TLのツイートを押した時そのツイートが拡大される
+                Intent intent = new Intent(getContext(), TweetExpansionTweetActivity.class);              // TLのツイートを押した時そのツイートが拡大される
                 intent.putExtra("tweet", new TweetSerialize(item));
                 getContext().startActivity(intent);
             }
