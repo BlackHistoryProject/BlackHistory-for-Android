@@ -9,6 +9,7 @@ android {
         targetSdkVersion 20
         versionCode 1
         versionName '1.0'
+    }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/DEPENDENCIES'
@@ -19,7 +20,6 @@ android {
 buildTypes {
     release {
     }
-}
 }
 
 dependencies {
