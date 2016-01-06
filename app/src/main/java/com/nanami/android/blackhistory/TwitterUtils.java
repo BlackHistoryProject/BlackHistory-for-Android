@@ -137,6 +137,13 @@ public class TwitterUtils {
         database.close();
     }
 
+    static void deleteAllAccount(Context context){
+        SQLiteManager manager = new SQLiteManager(context);
+        SQLiteDatabase database = manager.getWritableDatabase();
+        database.rawQuery("Delete from account", new String[]{});
+        database.close();
+    }
+
     public static Account getAccount(Context context) {
             SQLiteManager manager = new SQLiteManager(context);
             SQLiteDatabase database = manager.getReadableDatabase();

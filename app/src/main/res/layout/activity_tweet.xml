@@ -111,49 +111,44 @@
                 android:layout_below="@id/input_text">
 
                 <ImageButton
-                    android:id="@+id/tweet_other_menu"
-                    android:layout_width="50dp"
-                    android:layout_height="fill_parent"
-                    android:background="@android:drawable/ic_menu_more"
-                />
-
-                <TextView
-                    android:id="@+id/tweet_count"
-                    android:layout_width="50dp"
-                    android:layout_height="fill_parent"
-                    android:text="140"
-                    android:gravity="center"
-                    android:textColor="#FFF"
-                    android:layout_toRightOf="@+id/tweet_other_menu"
-                />
-
-                <FrameLayout
-                    android:id="@+id/tweet_button_layout"
-                    android:layout_width="100dp"
-                    android:layout_height="fill_parent"
-                    android:layout_alignParentRight="true"
-                    >
-
-                    <Button
-                        android:id="@+id/tweet_button"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:paddingLeft="10dp"
-                        android:text="Send"
-                        android:textColor="#FFF"
-                    />
-
-                </FrameLayout>
-
-                <ImageButton
-                    android:id="@+id/teet_view_image"
-                    android:background="#000"
+                    android:id="@+id/upload_image_1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_toRightOf="@+id/tweet_count"
-                    android:layout_marginLeft="80dp"
-                    />
+                    android:padding="8dp"
+                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
+                    android:background="@drawable/lay_text_blick" />
+                <ImageButton
+                    android:id="@+id/upload_image_2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
+                    android:background="@drawable/lay_text_blick"
+                    android:layout_toRightOf="@id/upload_image_1"/>
+                <ImageButton
+                    android:id="@+id/upload_image_3"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
+                    android:background="@drawable/lay_text_blick"
+                    android:layout_toRightOf="@id/upload_image_2"/>
+                <ImageButton
+                    android:id="@+id/upload_image_4"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
+                    android:background="@drawable/lay_text_blick"
+                    android:layout_toRightOf="@id/upload_image_3"/>
+
+                <Button
+                    android:id="@+id/tweet_button"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_toRightOf="@id/upload_image_4"
+                    android:layout_marginLeft="20dp"
+                    android:text="Send"
+                    android:textColor="#FFF" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/otherbutton2"
                 android:layout_width="fill_parent"
@@ -177,50 +172,6 @@
                     android:textColor="#FFF"
                     android:layout_toLeftOf="@id/tweet_camera"
                     android:text="Add Picture" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/location_addaccount"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/otherbutton2">
-                <RelativeLayout
-                    android:id="@+id/otherbutton3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="1dp">
-                    <ImageButton
-                        android:id="@+id/tweet_gps"
-                        android:layout_width="70dp"
-                        android:layout_height="fill_parent"
-                        android:layout_alignParentRight="true"
-                        android:src="@drawable/iconcompose_location"
-                        android:textColor="#FFF"/>
-                    <Button
-                        android:id="@+id/tweet_location"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:drawableLeft="@android:drawable/ic_menu_compass"
-                        android:layout_toLeftOf="@id/tweet_gps"
-                        android:textColor="#FFF"
-                        android:text="Location" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/otherbutton4"
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="1dp"
-                    android:layout_below="@+id/otherbutton3">
-
-                <Button
-                    android:id="@+id/tweet_Account"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:textColor="#FFF"
-                    android:text="Add Account"
-                    android:drawableLeft="@drawable/iconcompose_addcontact"/>
-
-                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

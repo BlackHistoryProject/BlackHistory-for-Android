@@ -15,6 +15,12 @@ public class Globals extends Application {
     public void addAccount(Account account){
         this.accountList.add(account);
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
     public static class Account{
         long userID;
         String screenName;
