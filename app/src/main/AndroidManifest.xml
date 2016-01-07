@@ -15,44 +15,24 @@
             android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="twitter"
-                    android:scheme="gabu" />
+                <data android:host="twitter" android:scheme="gabu" />
             </intent-filter>
-
         </activity>
 
-        <activity
-           android:name=".activity.TweetActivity"
-            android:windowSoftInputMode="adjustResize"
+        <activity android:name=".activity.TweetActivity"
+            android:windowSoftInputMode="adjustResize" />
 
-
-         />
-
-        <activity
-            android:name=".activity.MainStreamActivity">
-
+        <activity android:name=".activity.MainStreamActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
-
                 <category android:name="android.intent.category.LAUNCHER"/>
-
             </intent-filter>
-
         </activity>
 
-        <activity
-            
-            android:name=".activity.TweetExpansionTweetActivity"
-            android:uiOptions="splitActionBarWhenNarrow">
-
-        </activity>
+        <activity android:name=".activity.TweetExpansionTweetActivity"
+            android:uiOptions="splitActionBarWhenNarrow" />
 
     </application>
 

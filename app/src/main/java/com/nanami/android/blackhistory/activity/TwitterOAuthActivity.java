@@ -18,32 +18,18 @@ import twitter4j.auth.RequestToken;
 /**
  * Created by nanami on 2014/09/03.
  */
-public class TwitterOAuthActivity extends Activity{
+public class TwitterOAuthActivity extends CommonActivityAbstract{
 
     private String mCallBackURL;
     private Twitter mTwitter;
     private RequestToken mRequestToken;
-
-    public TwitterOAuthActivity() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twitter_oauth);
 
-        mCallBackURL = getString(R.string.twitter_callback_url);
-        mTwitter = TwitterUtils.getTwitterInstance(this);
-
         startAuthorize();
-        /*
-        findViewById(R.id.action_start_oauth).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startAuthorize();
-            }
-        });
-        */
     }
 
     /*
@@ -52,6 +38,10 @@ public class TwitterOAuthActivity extends Activity{
      * @param listener
      */
      private void startAuthorize() {
+
+         mCallBackURL = getString(R.string.twitter_callback_url);
+         mTwitter = TwitterUtils.getTwitterInstance(this);
+
         AsyncTask<Void, Void,String> task = new AsyncTask<Void, Void, String>() {
             @Override
             protected String doInBackground(Void... params) {

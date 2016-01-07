@@ -18,6 +18,9 @@ import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
 import com.nanami.android.blackhistory.TweetSerialize;
 import com.nanami.android.blackhistory.activity.TweetActivity;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import twitter4j.Status;
 
 /**
@@ -32,51 +35,74 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         super(context, android.R.layout.simple_list_item_1);
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
+
+    static class ViewHolder {
+
+        private Context context;
+        private Status status;
+
+        @Bind(R.id.icon) SmartImageView icon;
+        @Bind(R.id.name) TextView name;
+        @Bind(R.id.screen_name) TextView screenName;
+        @Bind(R.id.text) TextView text;
+        @Bind(R.id.time) TextView time;
+        @Bind(R.id.via) TextView via;
+
+        @OnClick(R.id.reply) void OnClickReply(){
+
+            Intent intent = new Intent(context, TweetActivity.class);
+            intent.putExtra("tweet", new TweetSerialize(status));
+            context.startActivity(intent);
+        }
+
+        @OnClick(R.id.retweet) void OnClickReTweet(){
+
+        }
+
+        @OnClick(R.id.favorite) void OnClickFavorite(){
+
+        }
+
+        @OnClick(R.id.menu) void OnClickMenu(){
+
+        }
+
+        @OnClick(R.id.tweet_item_main) void OnClickStatus(){
+            Intent intent = new Intent(context, TweetExpansionTweetActivity.class);              // TLのツイートを押した時そのツイートが拡大される
+            intent.putExtra("tweet", new TweetSerialize(status));
+            context.startActivity(intent);
+        }
+
+        public ViewHolder(View view){
+            ButterKnife.bind(this, view);
+            this.context = view.getContext();
+        }
+
+        public void setStatus(Status status){
+            this.status = status;
+        }
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
+        final ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_tweet,null);
+            convertView = mInflater.inflate(R.layout.list_item_tweet, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
         }
+
         final Status item = getItem(position);
+        holder.setStatus(item);
 
-        RelativeLayout tweetItemMain = (RelativeLayout) convertView.findViewById(R.id.tweet_item_main);
-        tweetItemMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), TweetExpansionTweetActivity.class);              // TLのツイートを押した時そのツイートが拡大される
-                intent.putExtra("tweet", new TweetSerialize(item));
-                getContext().startActivity(intent);
-            }
-        }) ;
-
-        SmartImageView icon = (SmartImageView) convertView.findViewById(R.id.icon);
-        icon.setImageUrl(item.getUser().getProfileImageURL());
-
-        TextView name = (TextView) convertView.findViewById(R.id.name);
-        name.setText(item.getUser().getName());
-
-        TextView screenName = (TextView) convertView.findViewById(R.id.screen_name);
-        screenName.setText("@" + item.getUser().getScreenName());
-
-        TextView text = (TextView) convertView.findViewById(R.id.text);
-        text.setText(item.getText());
-
-        TextView time = (TextView) convertView.findViewById(R.id.time);
-        time.setText(BlackUtil.getDateFormat(item.getCreatedAt()));
-
-
-        TextView via = (TextView) convertView.findViewById(R.id.via);
-        via.setText("via " + BlackUtil.getVia(item.getSource()));
-
-        ImageButton imageButton = (ImageButton)convertView.findViewById(R.id.tweet_reply1);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), TweetActivity.class);
-                intent.putExtra("tweet", new TweetSerialize(item));
-                getContext().startActivity(intent);
-            }
-        });
+        holder.icon.setImageUrl(item.getUser().getProfileImageURL());
+        holder.name.setText(item.getUser().getName());
+        holder.screenName.setText("@" + item.getUser().getScreenName());
+        holder.text.setText(item.getText());
+        holder.time.setText(BlackUtil.getDateFormat(item.getCreatedAt()));
+        holder.via.setText("via " + BlackUtil.getVia(item.getSource()));
 
         return convertView;
     }

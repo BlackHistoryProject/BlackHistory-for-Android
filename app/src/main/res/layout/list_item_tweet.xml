@@ -83,7 +83,7 @@
         >
 
     <ImageButton
-        android:id="@+id/tweet_menu1"
+        android:id="@+id/menu"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="#000"
@@ -92,35 +92,35 @@
     />
 
     <ImageButton
-        android:id="@+id/tweet_favorote1"
+        android:id="@+id/favorite"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_below="@+id/time"
         android:background="#000"
-        android:layout_toLeftOf="@id/tweet_menu1"
+        android:layout_toLeftOf="@id/menu"
 
         android:src="@drawable/iconlarge_favourite"
         android:layout_marginRight="10dp"
     />
 
         <ImageButton
-            android:id="@+id/tweet_retweet1"
+            android:id="@+id/retweet"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@+id/time"
             android:background="#000"
-            android:layout_toLeftOf="@id/tweet_favorote1"
+            android:layout_toLeftOf="@id/favorite"
             android:src="@drawable/iconlarge_retweet"
             android:layout_marginRight="10dp"
             />
 
         <ImageButton
-            android:id="@+id/tweet_reply1"
+            android:id="@+id/reply"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_below="@+id/time"
             android:background="#000"
-            android:layout_toLeftOf="@id/tweet_retweet1"
+            android:layout_toLeftOf="@id/retweet"
             android:src="@drawable/iconlarge_reply"
             android:layout_marginRight="10dp"
             />
