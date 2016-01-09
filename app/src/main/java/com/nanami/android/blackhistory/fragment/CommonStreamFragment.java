@@ -3,6 +3,7 @@ package com.nanami.android.blackhistory.fragment;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
+import com.nanami.android.blackhistory.EventBusHolder;
 import com.nanami.android.blackhistory.TwitterUtils;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
 
@@ -25,4 +26,20 @@ public class CommonStreamFragment extends ListFragment {
         // fragment再生成抑止
         setRetainInstance(true);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // EventBus の登録
+        EventBusHolder.EVENT_BUS.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        // 登録の解除
+        EventBusHolder.EVENT_BUS.unregister(this);
+        super.onPause();
+    }
+
+    // OnClick Event
 }
