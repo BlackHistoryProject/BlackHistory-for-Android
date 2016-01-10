@@ -6,19 +6,13 @@ import twitter4j.Status;
  * Created by atsumi on 2016/01/09.
  */
 abstract public class TwitterAbstractEvent {
-    private final String userName;
-    private final Status tweet;
+    private final long userId;
 
-    public TwitterAbstractEvent(final String userName, final Status tweet) {
-        this.userName = userName;
-        this.tweet = tweet;
+    public TwitterAbstractEvent(final long userId) {
+        this.userId = userId;
     }
 
-    public String getUserName(){
-        return this.userName;
-    }
-
-    public Status getStatus() {
-        return tweet;
+    final public long getUserId(){
+        return this.userId;
     }
 }

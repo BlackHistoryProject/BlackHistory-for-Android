@@ -29,7 +29,8 @@ public class TweetExpansionTweetActivity extends CommonActivityAbstract{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.onetap_expansion_tweet);
 
         status = ((TweetSerialize) getIntent().getSerializableExtra("tweet")).getStatus();

@@ -62,18 +62,19 @@ public class MainStreamActivity extends FragmentActivity {
 
     }
 
-    ArrayList<TwitterStream> listeners
-
-    String screenName;
+    long userId;
+    boolean hasToken = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (!TwitterUtils.hasAccessToken(this)) {
+            hasToken = false;
             Intent intent = new Intent(this, TwitterOAuthActivity.class);
             startActivity(intent);
         }else {
+            hasToken = true;
             setContentView(R.layout.fragment_main_stream);
             ButterKnife.bind(this);
 
@@ -85,7 +86,7 @@ public class MainStreamActivity extends FragmentActivity {
                 globals.initializeList();
                 for(TwitterUtils.Account account : _account.accounts){
                     globals.addAccount(new Globals.Account(account.userId, account.screenName));
-                    this.screenName = account.screenName;
+                    this.userId = account.userId;
                 }
             }
 
@@ -98,10 +99,12 @@ public class MainStreamActivity extends FragmentActivity {
     protected void onStart() {
         super.onStart();
 
-        TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this);
-        {
-            twitterStream.addListener(new ObservableUserStreamListener(this.screenName));
-            twitterStream.user();
+        if (hasToken) {
+            TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this);
+            {
+                twitterStream.addListener(new ObservableUserStreamListener(this, this.userId));
+                twitterStream.user();
+            }
         }
     }
 }

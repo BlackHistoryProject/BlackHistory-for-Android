@@ -1,5 +1,10 @@
 package com.nanami.android.blackhistory;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
+
+import com.nanami.android.blackhistory.event.TwitterFriendListEvent;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 
 import twitter4j.DirectMessage;
@@ -15,9 +20,11 @@ import twitter4j.UserStreamListener;
  */
 final public class ObservableUserStreamListener implements UserStreamListener {
 
-    final String userName;
-    public ObservableUserStreamListener(String userName){
-        this.userName = userName;
+    final Activity context;
+    final long userId;
+    public ObservableUserStreamListener(Activity context, long userId){
+        this.userId = userId;
+        this.context = context;
     }
 
     @Override
@@ -26,8 +33,13 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     }
 
     @Override
-    public void onFriendList(long[] friendIds) {
-
+    public void onFriendList(final long[] friendIds) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EventBusHolder.EVENT_BUS.post(new TwitterFriendListEvent(userId, friendIds));
+            }
+        });
     }
 
     @Override
@@ -131,8 +143,13 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     }
 
     @Override
-    public void onStatus(Status status) {
-        EventBusHolder.EVENT_BUS.post(new TwitterStreamEvent(this.userName, status));
+    public void onStatus(final Status status) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EventBusHolder.EVENT_BUS.post(new TwitterStreamEvent(userId, status));
+            }
+        });
     }
 
     @Override

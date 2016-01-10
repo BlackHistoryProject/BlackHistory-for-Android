@@ -134,7 +134,7 @@ public class TweetActivity extends CommonActivityAbstract{
             try {
                 InputStream in = getContentResolver().openInputStream(data.getData());
                 BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inSampleSize = 1;
+                options.inSampleSize = 2;
 
                 mBitmap = BitmapFactory.decodeStream(in, null, options);
                 in.close();

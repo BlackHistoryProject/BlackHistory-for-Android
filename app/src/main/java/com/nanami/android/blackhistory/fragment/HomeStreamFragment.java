@@ -14,10 +14,13 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.nanami.android.blackhistory.EventBusHolder;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
 import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.event.TwitterStreamEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -189,6 +192,44 @@ public class HomeStreamFragment extends CommonStreamFragment {
         NotificationManagerCompat manager = NotificationManagerCompat.from(getContext());
         manager.notify(id, builder.build());
 
+    }
+
+    @Subscribe
+    public void OnTwitterStreamEvent(TwitterStreamEvent event){
+        System.out.println("やったぜ");
+
+
+        final Status status = event.getStatus();
+        try {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            refreshView(status);
+                        }
+                    });
+                }
+            }).start();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // EventBus の登録
+        EventBusHolder.EVENT_BUS.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        // 登録の解除
+        EventBusHolder.EVENT_BUS.unregister(this);
+        super.onPause();
     }
 
 

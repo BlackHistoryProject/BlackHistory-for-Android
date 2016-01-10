@@ -27,19 +27,5 @@ public class CommonStreamFragment extends ListFragment {
         setRetainInstance(true);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // EventBus の登録
-        EventBusHolder.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        // 登録の解除
-        EventBusHolder.EVENT_BUS.unregister(this);
-        super.onPause();
-    }
-
     // OnClick Event
 }
