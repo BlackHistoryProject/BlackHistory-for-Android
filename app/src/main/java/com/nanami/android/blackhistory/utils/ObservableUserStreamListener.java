@@ -1,9 +1,8 @@
-package com.nanami.android.blackhistory;
+package com.nanami.android.blackhistory.utils;
 
 import android.app.Activity;
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 
+import com.nanami.android.blackhistory.event.EventBusHolder;
 import com.nanami.android.blackhistory.event.TwitterFriendListEvent;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 

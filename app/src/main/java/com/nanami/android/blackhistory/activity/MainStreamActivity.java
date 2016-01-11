@@ -5,29 +5,18 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
-import com.nanami.android.blackhistory.EventBusHolder;
-import com.nanami.android.blackhistory.ObservableUserStreamListener;
+import com.nanami.android.blackhistory.utils.ObservableUserStreamListener;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.Globals;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.adapter.MyFragmentPagerAdapter;
 import com.nanami.android.blackhistory.dialog.SelectAccountDialogFragment;
 import com.nanami.android.blackhistory.dialog.SelectTabKindDialogFragment;
-import com.nanami.android.blackhistory.event.TwitterStreamEvent;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import twitter4j.DirectMessage;
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 import twitter4j.TwitterStream;
-import twitter4j.User;
-import twitter4j.UserList;
-import twitter4j.UserStreamListener;
 
 /**
  * Created by nanami on 2014/09/05.

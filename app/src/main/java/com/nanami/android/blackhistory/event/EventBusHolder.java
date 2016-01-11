@@ -1,4 +1,4 @@
-package com.nanami.android.blackhistory;
+package com.nanami.android.blackhistory.event;
 
 import com.squareup.otto.Bus;
 

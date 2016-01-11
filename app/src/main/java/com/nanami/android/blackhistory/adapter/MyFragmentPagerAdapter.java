@@ -15,16 +15,10 @@ import java.util.ArrayList;
  */
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    ArrayList<CommonStreamFragment> tab = new ArrayList<CommonStreamFragment>();
+    ArrayList<CommonStreamFragment> tab = new ArrayList<>();
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-        if( 1 > tab.size()) initializeTab();
-    }
-
-    public void initializeTab(){
-        tab.add(HomeStreamFragment.newInstance("Home"));
-        //tab.add(new ReplyStreamFragment());
     }
 
     public void addTab(String title){

@@ -1,4 +1,4 @@
-package com.nanami.android.blackhistory;
+package com.nanami.android.blackhistory.utils;
 
 import java.util.Calendar;
 import java.util.Date;

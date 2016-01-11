@@ -1,4 +1,4 @@
-package com.nanami.android.blackhistory;
+package com.nanami.android.blackhistory.serialize;
 
 import java.io.Serializable;
 

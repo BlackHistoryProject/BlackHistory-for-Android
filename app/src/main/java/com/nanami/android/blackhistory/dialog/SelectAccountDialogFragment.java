@@ -11,7 +11,7 @@ import android.widget.Toast;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.Globals;
 import com.nanami.android.blackhistory.activity.TwitterOAuthActivity;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 
 import java.util.ArrayList;

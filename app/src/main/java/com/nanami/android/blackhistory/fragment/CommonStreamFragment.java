@@ -3,8 +3,7 @@ package com.nanami.android.blackhistory.fragment;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
-import com.nanami.android.blackhistory.EventBusHolder;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
 
 /**

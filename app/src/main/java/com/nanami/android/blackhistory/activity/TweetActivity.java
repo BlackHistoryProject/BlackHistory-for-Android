@@ -9,36 +9,28 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
+import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
-import com.nanami.android.blackhistory.BlackUtil;
-import com.nanami.android.blackhistory.TweetSerialize;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.BlackUtil;
+import com.nanami.android.blackhistory.serialize.TweetSerialize;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -65,7 +57,8 @@ public class TweetActivity extends CommonActivityAbstract{
 
     @Bind(R.id.tweet_taskbar) TextView textTaskBar;
     @Bind(R.id.reply_user_info) RelativeLayout layoutReplayInfo;
-    @Bind(R.id.expansion_icon) SmartImageView imageIconView;
+    @Bind(R.id.expansion_icon)
+    PicassoImageView imageIconView;
     @Bind(R.id.expansion_name) TextView textName;
     @Bind(R.id.expansion_screen_name) TextView textScreenName;
     @Bind(R.id.expansion_text) TextView textText;
@@ -106,7 +99,7 @@ public class TweetActivity extends CommonActivityAbstract{
             textTaskBar.setText("Reply");
             layoutReplayInfo.setVisibility(View.VISIBLE);                                           // findViewByID　指定したIDのViewを見つける
 
-            imageIconView.setImageUrl(status.getUser().getProfileImageURL());
+            imageIconView.loadImage(status.getUser().getProfileImageURL());
             textName.setText(status.getUser().getName());
             textScreenName.setText("@" + status.getUser().getScreenName());
             textText.setText(status.getText());

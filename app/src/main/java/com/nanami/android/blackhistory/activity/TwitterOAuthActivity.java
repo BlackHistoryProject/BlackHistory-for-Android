@@ -1,6 +1,5 @@
 package com.nanami.android.blackhistory.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -8,7 +7,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.nanami.android.blackhistory.R;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

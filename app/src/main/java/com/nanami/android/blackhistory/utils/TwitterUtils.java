@@ -1,4 +1,4 @@
-package com.nanami.android.blackhistory;
+package com.nanami.android.blackhistory.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.nanami.android.blackhistory.R;
 
 import java.util.ArrayList;
 

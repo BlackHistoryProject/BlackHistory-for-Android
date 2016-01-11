@@ -7,15 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.image.SmartImageView;
+import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
-import com.nanami.android.blackhistory.BlackUtil;
+import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
-import com.nanami.android.blackhistory.TweetSerialize;
+import com.nanami.android.blackhistory.serialize.TweetSerialize;
 import com.nanami.android.blackhistory.activity.TweetActivity;
 
 import butterknife.Bind;
@@ -41,7 +39,8 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         private Context context;
         private Status status;
 
-        @Bind(R.id.icon) SmartImageView icon;
+        @Bind(R.id.icon)
+        PicassoImageView icon;
         @Bind(R.id.name) TextView name;
         @Bind(R.id.screen_name) TextView screenName;
         @Bind(R.id.text) TextView text;
@@ -97,7 +96,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final Status item = getItem(position);
         holder.setStatus(item);
 
-        holder.icon.setImageUrl(item.getUser().getProfileImageURL());
+        holder.icon.loadImage(item.getUser().getProfileImageURL());
         holder.name.setText(item.getUser().getName());
         holder.screenName.setText("@" + item.getUser().getScreenName());
         holder.text.setText(item.getText());

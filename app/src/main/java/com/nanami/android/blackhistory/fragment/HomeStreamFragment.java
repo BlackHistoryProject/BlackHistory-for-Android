@@ -14,26 +14,19 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.nanami.android.blackhistory.EventBusHolder;
+import com.nanami.android.blackhistory.event.EventBusHolder;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
-import com.nanami.android.blackhistory.TwitterUtils;
+import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-import twitter4j.DirectMessage;
-import twitter4j.StallWarning;
 import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterStream;
-import twitter4j.User;
-import twitter4j.UserList;
-import twitter4j.UserStreamListener;
 
 /**
  * Created by nanami on 2014/09/05.
@@ -196,9 +189,6 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
     @Subscribe
     public void OnTwitterStreamEvent(TwitterStreamEvent event){
-        System.out.println("やったぜ");
-
-
         final Status status = event.getStatus();
         try {
             new Thread(new Runnable() {
