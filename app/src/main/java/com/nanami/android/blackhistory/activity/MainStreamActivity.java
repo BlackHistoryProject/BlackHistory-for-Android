@@ -73,7 +73,7 @@ public class MainStreamActivity extends FragmentActivity {
     }
     //////////////////////////////
     ArrayList<Long> userIds = new ArrayList<>();
-    ArrayList<TwitterStream> streams = new ArrayList<>();
+    ArrayList<ObservableUserStreamListener> streams = new ArrayList<>();
     //////////////////////////////
 
     @Override
@@ -89,10 +89,13 @@ public class MainStreamActivity extends FragmentActivity {
 
             if (userIds.size() > 0) {
                 for (Long userId : userIds) {
+                    if (this.isExistListener(userId)) continue;
                     BHLogger.println(userId + " load");
                     TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
-                    twitterStream.addListener(new ObservableUserStreamListener(this, userId));
+                    ObservableUserStreamListener listener =  new ObservableUserStreamListener(this, userId);
+                    twitterStream.addListener(listener);
                     twitterStream.user();
+                    this.streams.add(listener);
                 }
             }
 
@@ -101,5 +104,15 @@ public class MainStreamActivity extends FragmentActivity {
             Intent intent = new Intent(this, TwitterOAuthActivity.class);
             startActivity(intent);
         }
+    }
+
+
+    public boolean isExistListener(Long userId){
+        for (ObservableUserStreamListener listener : this.streams){
+            if (listener.getUserId() == userId){
+                return true;
+            }
+        }
+        return false;
     }
 }

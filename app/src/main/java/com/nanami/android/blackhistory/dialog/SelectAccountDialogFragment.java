@@ -108,8 +108,6 @@ public class SelectAccountDialogFragment extends DialogFragment {
         // アカウントの追加を押したときは、Twitter認証に飛ばす
         if(sel == this.tokens.size()){
             startActivity(new Intent(getActivity(), TwitterOAuthActivity.class));
-        }else{
-            startActivity(new Intent(getActivity(), MainStreamActivity.class));
         }
     }
 }

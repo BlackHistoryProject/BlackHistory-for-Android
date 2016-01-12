@@ -27,6 +27,10 @@ final public class ObservableUserStreamListener implements UserStreamListener {
         BHLogger.println("Initialize Listener");
     }
 
+    public Long getUserId(){
+        return userId;
+    }
+
     @Override
     public void onDeletionNotice(long directMessageId, long userId) {
 
