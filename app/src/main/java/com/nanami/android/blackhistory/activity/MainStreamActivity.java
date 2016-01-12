@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.ObservableUserStreamListener;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
@@ -19,9 +21,16 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import twitter4j.DirectMessage;
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
+import twitter4j.User;
+import twitter4j.UserList;
+import twitter4j.UserStreamListener;
 import twitter4j.auth.RequestToken;
 
 /**
@@ -77,13 +86,8 @@ public class MainStreamActivity extends FragmentActivity {
             this.userIds = TwitterUtils.getAccountIds(this);
             this.mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
             this.viewPager.setAdapter(this.mAdapter);
-            if (userIds.size() > 0) {
-                for (Long userId : userIds) {
-                    TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
-                    twitterStream.addListener(new ObservableUserStreamListener(this, userId));
-                    this.streams.add(twitterStream);
-                }
-            }
+
+//            this.mAdapter.addTab(TimelineListType.Home, userIds.get(0));
         }else {
             Intent intent = new Intent(this, TwitterOAuthActivity.class);
             startActivity(intent);
@@ -93,45 +97,14 @@ public class MainStreamActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        for (TwitterStream stream : this.streams){
-            stream.user();
+
+        if (userIds.size() > 0) {
+            for (Long userId : userIds) {
+                BHLogger.println(userId + " load");
+                TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
+                twitterStream.addListener(new ObservableUserStreamListener(this, userId));
+                twitterStream.user();
+            }
         }
     }
-
-
-
-    /*
-     * OAuth認証（厳密には認可）を開始します。
-     *
-     * @param listener
-     */
-    private void startAuthorize() {
-        mCallBackURL = getString(R.string.twitter_callback_url);
-        mTwitter = TwitterUtils.getTwitterInstance(this, null);
-
-        AsyncTask<Void, Void,String> task = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    mTwitter.setOAuthAccessToken(null);
-                    mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
-                    return mRequestToken.getAuthorizationURL();
-                } catch (TwitterException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void  onPostExecute(String url){
-                if (url == null) {
-
-                }else {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                }
-            }
-        };
-        task.execute();
-    }
-
 }

@@ -27,6 +27,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         switch (timelineListType){
             case Home:
                 additionalFragment = HomeStreamFragment.newInstance(userId);
+                additionalFragment.setParams(TimelineListType.Home, userId);
                 break;
             case Notification:
                 break;

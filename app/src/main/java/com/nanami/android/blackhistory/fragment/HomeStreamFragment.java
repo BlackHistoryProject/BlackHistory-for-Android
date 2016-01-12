@@ -19,6 +19,7 @@ import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 import com.squareup.otto.Subscribe;
@@ -42,6 +43,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
         HomeStreamFragment fragment = new HomeStreamFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(fragment.ARGS_USER_ID, userId);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -61,34 +63,6 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
         return ll;
     }
-
-//    public void onStatus(final Status status) {
-//        try {
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            refreshView(status);
-//                        }
-//                    });
-//                }
-//            }).start();
-//        } catch (Exception e) {
-//            System.out.println(e.toString());
-//        }
-//    }
-//
-//    @Override
-//    public void onDeletionNotice(final StatusDeletionNotice statusDeletionNotice) {
-//        getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                mAdapter.deleteTweet(statusDeletionNotice.getStatusId());
-//            }
-//        });
-//    }
 
     private void refreshView(final Status status) {
         try {
@@ -192,6 +166,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
     @Subscribe
     public void OnTwitterStreamEvent(TwitterStreamEvent event){
+        BHLogger.println("ついーとがあったぞい " + event.getUserId());
         if(event.getUserId() != getUserId()) return;
         final Status status = event.getStatus();
         try {

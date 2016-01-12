@@ -6,6 +6,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
+import static android.provider.Settings.System.AIRPLANE_MODE_ON;
+
 /**
  * Created by atsumi on 2016/01/10.
  */

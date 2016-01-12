@@ -96,7 +96,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final Status item = getItem(position);
         holder.setStatus(item);
 
-        holder.icon.loadImage(item.getUser().getProfileImageURL());
+        //holder.icon.loadImage(item.getUser().getProfileImageURL());
         holder.name.setText(item.getUser().getName());
         holder.screenName.setText("@" + item.getUser().getScreenName());
         holder.text.setText(item.getText());

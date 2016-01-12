@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+import com.nanami.android.blackhistory.AppController;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 
@@ -58,6 +59,9 @@ public class TwitterUtils {
                 if (accessToken != null) {
                     builder.setOAuthAccessToken(accessToken.getToken());
                     builder.setOAuthAccessTokenSecret(accessToken.getTokenSecret());
+                    BHLogger.println(accessToken.getToken() + " " + accessToken.getTokenSecret());
+                } else {
+                    BHLogger.println("Access token is null");
                 }
         }
         twitter4j.conf.Configuration configuration = builder.build();
@@ -129,8 +133,9 @@ public class TwitterUtils {
     }
 
     @Nullable
-    final public static ModelAccessTokenObject getAccount(Context context, Long userId) {
-        Realm realm = Realm.getInstance(context);
+    public static ModelAccessTokenObject getAccount(Context context, Long userId) {
+
+        Realm realm = Realm.getInstance(AppController.get().getApplicationContext());
         return realm
                 .where(ModelAccessTokenObject.class)
                 .equalTo("userId", userId)

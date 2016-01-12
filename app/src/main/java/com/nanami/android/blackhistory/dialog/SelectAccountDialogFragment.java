@@ -54,10 +54,12 @@ public class SelectAccountDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    final ArrayList<ModelAccessTokenObject> tokens = TwitterUtils.getAccounts(getContext());
+    ArrayList<ModelAccessTokenObject> tokens;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        this.tokens = TwitterUtils.getAccounts(getContext());
+
         final Bundle bundle = getArguments(); //引数の取得
 
         ArrayList<String> menu = new ArrayList<>();

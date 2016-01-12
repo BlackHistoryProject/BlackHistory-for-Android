@@ -24,6 +24,7 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     public ObservableUserStreamListener(Activity context, long userId){
         this.userId = userId;
         this.context = context;
+        BHLogger.println("Initialize Listener");
     }
 
     @Override
@@ -169,10 +170,11 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     @Override
     public void onStallWarning(StallWarning warning) {
 
+        BHLogger.println("[" + userId + "] " + warning);
     }
 
     @Override
     public void onException(Exception ex) {
-
+        BHLogger.println("[" + userId + "] " + ex);
     }
 }
