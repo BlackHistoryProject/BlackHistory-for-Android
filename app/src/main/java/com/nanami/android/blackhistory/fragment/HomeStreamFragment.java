@@ -55,7 +55,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
         Context context = getActivity();
 
-        mAdapter = new TweetAdapter(context);
+        mAdapter = new TweetAdapter(context, getUserId());
         setListAdapter(mAdapter);
 
         mTwitter = TwitterUtils.getTwitterInstance(context, getUserId());

@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.nanami.android.blackhistory.utils.PicassoImage;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by atsumi on 2016/01/10.
@@ -24,8 +25,7 @@ public class PicassoImageView extends ImageView {
     }
 
     public void loadImage(String url){
-        PicassoImage.Builder(getContext())
-                .with(getContext()).load(url)
+        Picasso.with(getContext()).load(url)
 //                .placeholder(R.drawable.progress_animation)
                 .into(this);
     }

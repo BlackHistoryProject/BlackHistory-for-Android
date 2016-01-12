@@ -87,17 +87,16 @@ public class TweetActivity extends CommonActivityAbstract{
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
-    final Long userId;
-
-    public TweetActivity(Long userId){
-        super();
-        this.userId = userId;
-    }
+    Long userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
         setContentView(R.layout.activity_tweet);                                                    //  指定したIDのレイアウトを読み込んでいる
+
+        this.userId = getIntent().getLongExtra("user_id", -1);
+
+        if (userId == -1) return;
 
         Serializable serializable = getIntent().getSerializableExtra("tweet");                      // setContentViewで指定したIDの中にあるものは全部使える
         if(serializable == null){}

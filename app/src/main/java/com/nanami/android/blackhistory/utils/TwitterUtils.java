@@ -107,6 +107,7 @@ public class TwitterUtils {
     }
 
     final public static void deleteAllAccount(Context context){
+        BHLogger.println("あかうんとけすぞいｗｗｗ");
         Realm realm = Realm.getInstance(context);
         RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
         realm.beginTransaction();

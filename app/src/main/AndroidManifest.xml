@@ -34,6 +34,8 @@
         <activity android:name=".activity.TweetExpansionTweetActivity"
             android:uiOptions="splitActionBarWhenNarrow" />
 
+        <service android:name=".event.TwitterStreamService" />
+
     </application>
 
 </manifest>

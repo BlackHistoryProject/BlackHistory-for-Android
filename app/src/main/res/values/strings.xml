@@ -2,6 +2,7 @@
 
     <string name="hello_world">Hello world</string>
     <string name="menu_settings">menu_settings</string>
+    <!-- TODO: 保存されているアカウントにコンシューマキーも入れて、更新とデバッグを楽にする -->
     <string name="twitter_consumer_key">cuCJpHsZEknd18FY3PPOgQ</string>
     <string name="twitter_consumer_secret">a2PGFassMySYAaUMo2wHPNRDL3qxLuJ2ALGLj5ZyUU8</string>
     <string name="app_name">BlackHistory</string>

@@ -87,24 +87,19 @@ public class MainStreamActivity extends FragmentActivity {
             this.mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
             this.viewPager.setAdapter(this.mAdapter);
 
+            if (userIds.size() > 0) {
+                for (Long userId : userIds) {
+                    BHLogger.println(userId + " load");
+                    TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
+                    twitterStream.addListener(new ObservableUserStreamListener(this, userId));
+                    twitterStream.user();
+                }
+            }
+
 //            this.mAdapter.addTab(TimelineListType.Home, userIds.get(0));
         }else {
             Intent intent = new Intent(this, TwitterOAuthActivity.class);
             startActivity(intent);
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (userIds.size() > 0) {
-            for (Long userId : userIds) {
-                BHLogger.println(userId + " load");
-                TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
-                twitterStream.addListener(new ObservableUserStreamListener(this, userId));
-                twitterStream.user();
-            }
         }
     }
 }

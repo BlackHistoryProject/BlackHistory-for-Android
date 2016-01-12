@@ -29,8 +29,11 @@ public class TweetAdapter extends ArrayAdapter<Status> {
 
     private LayoutInflater mInflater;
 
-    public TweetAdapter(Context context) {
+    final private Long userId;
+
+    public TweetAdapter(Context context, Long userId) {
         super(context, android.R.layout.simple_list_item_1);
+        this.userId = userId;
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -51,6 +54,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
 
             Intent intent = new Intent(context, TweetActivity.class);
             intent.putExtra("tweet", new TweetSerialize(status));
+            intent.putExtra("user_id", this.userId);
             context.startActivity(intent);
         }
 
@@ -72,9 +76,11 @@ public class TweetAdapter extends ArrayAdapter<Status> {
             context.startActivity(intent);
         }
 
-        public ViewHolder(View view){
+        final Long userId;
+        public ViewHolder(View view, Long userId){
             ButterKnife.bind(this, view);
             this.context = view.getContext();
+            this.userId = userId;
         }
 
         public void setStatus(Status status){
@@ -87,7 +93,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_tweet, parent, false);
-            holder = new ViewHolder(convertView);
+            holder = new ViewHolder(convertView, userId);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -96,7 +102,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final Status item = getItem(position);
         holder.setStatus(item);
 
-        //holder.icon.loadImage(item.getUser().getProfileImageURL());
+        holder.icon.loadImage(item.getUser().getProfileImageURL());
         holder.name.setText(item.getUser().getName());
         holder.screenName.setText("@" + item.getUser().getScreenName());
         holder.text.setText(item.getText());
