@@ -9,8 +9,9 @@ import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
 import com.nanami.android.blackhistory.R;
-import com.nanami.android.blackhistory.Globals;
 import com.nanami.android.blackhistory.activity.TwitterOAuthActivity;
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 
@@ -53,13 +54,17 @@ public class SelectAccountDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    Globals globals;
+    final ArrayList<ModelAccessTokenObject> tokens = TwitterUtils.getAccounts(getContext());
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        globals = (Globals)getActivity().getApplication();
         final Bundle bundle = getArguments(); //引数の取得
 
-        ArrayList<String> menu = globals.getAccountNames();
+        ArrayList<String> menu = new ArrayList<>();
+
+        for (ModelAccessTokenObject tokenObject : tokens){
+            menu.add(tokenObject.getUserScreenName());
+        }
 
         if(bundle.getInt(SELECT_TYPE) == R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT){
             menu.add("アカウントの追加");
@@ -90,24 +95,18 @@ public class SelectAccountDialogFragment extends DialogFragment {
     }
 
     public void tabCreate(int accountNum, int sel){
-        String selectScreenName = globals.accountList.get(accountNum).getScreenName();
-        String nowScreenName = TwitterUtils.nowLoginUserScreenName;
-        String hog = getActivity().getResources().getStringArray(R.array.tab_kind)[sel];
-        if(!selectScreenName.equals(nowScreenName))
-            TwitterUtils.storeUserID(
-                    getActivity(), globals.accountList.get(sel).getUserID());
+        ModelAccessTokenObject token = this.tokens.get(accountNum);
 
-        ((MainStreamActivity) getActivity()).mAdapter.addTab(hog);
+        ((MainStreamActivity) getActivity()).mAdapter.addTab(TimelineListType.getType(sel), token.getUserId());
 
         Toast.makeText(getActivity(), "タブを作成しました", Toast.LENGTH_SHORT).show();
     }
 
     public void changeAccount(int sel){
         // アカウントの追加を押したときは、Twitter認証に飛ばす
-        if(sel == globals.accountList.size()){
+        if(sel == this.tokens.size()){
             startActivity(new Intent(getActivity(), TwitterOAuthActivity.class));
         }else{
-            TwitterUtils.storeUserID(getActivity(), globals.accountList.get(sel).getUserID());
             startActivity(new Intent(getActivity(), MainStreamActivity.class));
         }
     }

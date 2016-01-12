@@ -18,55 +18,6 @@ import twitter4j.auth.RequestToken;
  * Created by nanami on 2014/09/03.
  */
 public class TwitterOAuthActivity extends CommonActivityAbstract{
-
-    private String mCallBackURL;
-    private Twitter mTwitter;
-    private RequestToken mRequestToken;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_twitter_oauth);
-
-        startAuthorize();
-    }
-
-    /*
-     * OAuth認証（厳密には認可）を開始します。
-     *
-     * @param listener
-     */
-     private void startAuthorize() {
-
-         mCallBackURL = getString(R.string.twitter_callback_url);
-         mTwitter = TwitterUtils.getTwitterInstance(this);
-
-        AsyncTask<Void, Void,String> task = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    mTwitter.setOAuthAccessToken(null);
-                    mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
-                    return mRequestToken.getAuthorizationURL();
-                } catch (TwitterException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void  onPostExecute(String url){
-                if (url != null){
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } else {
-                        // 失敗。。。
-                }
-            }
-        };
-         task.execute();
-     }
-
     @Override
     public void onNewIntent(Intent intent) {
         if (intent == null
@@ -103,13 +54,9 @@ public class TwitterOAuthActivity extends CommonActivityAbstract{
     }
 
     private void successOAuth(AccessToken accessToken) {
-        TwitterUtils.storeAccessToken(this, accessToken);
+        TwitterUtils.addAccount(this, accessToken);
         Intent intent = new Intent(this, MainStreamActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void showToast(String text) {
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 }

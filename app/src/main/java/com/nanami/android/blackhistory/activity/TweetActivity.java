@@ -87,6 +87,13 @@ public class TweetActivity extends CommonActivityAbstract{
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
+    final Long userId;
+
+    public TweetActivity(Long userId){
+        super();
+        this.userId = userId;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
@@ -151,7 +158,7 @@ public class TweetActivity extends CommonActivityAbstract{
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
-                    Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this);
+                    Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this, userId);
 
                     final StatusUpdate statusUpdate = new StatusUpdate(String.valueOf(params[0]));
                     if (setedImage()) {

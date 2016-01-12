@@ -12,16 +12,5 @@
 
     <string name="SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT">SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT</string>
     <string name="SELECT_ACCOUNT_TYPE__CREATE_TAB">SELECT_ACCOUNT_TYPE__CREATE_TAB</string>
-    <string-array name="tab_kind">
-        <item>Home</item>
-        <item>Notifications</item>
-        <item>Mentions</item>
-        <item>Favorites</item>
-        <item>Lists</item>
-        <item>Search</item>
-        <item>Followers</item>
-        <item>Messages</item>
-        <item>User</item>
-    </string-array>
 
 </resources>

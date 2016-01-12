@@ -18,6 +18,7 @@ import com.nanami.android.blackhistory.event.EventBusHolder;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 import com.squareup.otto.Subscribe;
@@ -37,14 +38,16 @@ public class HomeStreamFragment extends CommonStreamFragment {
     public TweetAdapter mAdapter;
     public Twitter mTwitter;
 
-    public static HomeStreamFragment newInstance(String title){
+    public static HomeStreamFragment newInstance(Long userId){
         HomeStreamFragment fragment = new HomeStreamFragment();
-        fragment.setTitle(title);
+        Bundle bundle = new Bundle();
+        bundle.putLong(fragment.ARGS_USER_ID, userId);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
+        this.setParams(TimelineListType.Home, getArguments().getLong(ARGS_USER_ID));
 
         LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.fragment_common_list, container, false);
 
@@ -53,7 +56,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
         mAdapter = new TweetAdapter(context);
         setListAdapter(mAdapter);
 
-        mTwitter = TwitterUtils.getTwitterInstance(context);
+        mTwitter = TwitterUtils.getTwitterInstance(context, getUserId());
         reloadTimeLine();
 
         return ll;
@@ -93,7 +96,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(status.getText().contains("@baki_chike")){
+                        if(status.getText().contains("@" + getUserObject().getUserScreenName())){
                             String txt = status.getText().replace("@" + status.getInReplyToScreenName(), "");       // 自分宛に通知が来た時に表示される自分のUserIDを消している
                             showNotification(R.drawable.ic_launcher2, status.getUser().getName(), txt, 2 );         // 通知の表示
                         }
@@ -125,7 +128,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
     public class mOnItemLongClockListener implements AdapterView.OnItemLongClickListener {
         @Override
-        public boolean onItemLongClick(AdapterView<?> parebt, View view, int position,long id) {
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position,long id) {
 
             showToast("長押し　POS:" + String.valueOf(position) + "id:" + String.valueOf(id));
 
@@ -189,6 +192,7 @@ public class HomeStreamFragment extends CommonStreamFragment {
 
     @Subscribe
     public void OnTwitterStreamEvent(TwitterStreamEvent event){
+        if(event.getUserId() != getUserId()) return;
         final Status status = event.getStatus();
         try {
             new Thread(new Runnable() {

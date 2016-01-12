@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
 import com.nanami.android.blackhistory.fragment.HomeStreamFragment;
-import com.nanami.android.blackhistory.fragment.SimpleStreamTabFragment;
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 
 import java.util.ArrayList;
 
@@ -21,9 +21,34 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    public void addTab(String title){
-        tab.add(SimpleStreamTabFragment.newInstance(title));
-        this.notifyDataSetChanged();
+    public void addTab(TimelineListType timelineListType, Long userId){
+        CommonStreamFragment additionalFragment = null;
+
+        switch (timelineListType){
+            case Home:
+                additionalFragment = HomeStreamFragment.newInstance(userId);
+                break;
+            case Notification:
+                break;
+            case Mentions:
+                break;
+            case Favorites:
+                break;
+            case Lists:
+                break;
+            case Search:
+                break;
+            case Followers:
+                break;
+            case Messages:
+                break;
+            case User:
+                break;
+        }
+        if (additionalFragment != null){
+            tab.add(additionalFragment);
+            this.notifyDataSetChanged();
+        }
     }
 
     public void deleteTab(CommonStreamFragment fragment){

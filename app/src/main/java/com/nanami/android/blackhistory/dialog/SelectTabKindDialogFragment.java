@@ -7,17 +7,20 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+
+import java.util.Arrays;
 
 /**
  * Created by Telneko on 2015/01/17.
  */
 public class SelectTabKindDialogFragment extends DialogFragment {
     public static SelectTabKindDialogFragment newInstance(){
-        return  new SelectTabKindDialogFragment();
+        return new SelectTabKindDialogFragment();
     }
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
-        final CharSequence[] items = getActivity().getResources().getStringArray(R.array.tab_kind);
+        final CharSequence[] items = TimelineListType.getValues();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("タブの種類を選ぶのじゃ");
@@ -26,30 +29,6 @@ public class SelectTabKindDialogFragment extends DialogFragment {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                /*
-                switch (i){
-                    case 0: //Home
-                        break;
-                    case 1: //Notifications
-                        break;
-                    case 2: //Mentions
-                        break;
-                    case 3: //Favorites
-                        break;
-                    case 4: //Lists
-                        break;
-                    case 5: //Search
-                        break;
-                    case 6: //Followers
-                        break;
-                    case 7: //Messages
-                        break;
-                    case 8: //User
-                        break;
-                    default:
-                        break;
-                }
-                */
                 openFragment(i);
             }
         });
@@ -57,7 +36,8 @@ public class SelectTabKindDialogFragment extends DialogFragment {
     }
 
     public void openFragment(int pos){
-        SelectAccountDialogFragment fragment = SelectAccountDialogFragment.newInstance(R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB, pos);
+        SelectAccountDialogFragment fragment = SelectAccountDialogFragment
+                .newInstance(R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB, pos);
         fragment.show(getFragmentManager(), "ext_menu");
     }
 }

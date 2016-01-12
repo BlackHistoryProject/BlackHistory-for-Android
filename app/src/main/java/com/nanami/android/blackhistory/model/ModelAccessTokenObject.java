@@ -10,14 +10,14 @@ import twitter4j.auth.AccessToken;
 public class ModelAccessTokenObject extends RealmObject {
 
     @PrimaryKey
-    private long userId;
+    private Long userId;
 
     private String userName;
     private String userScreenName;
     private String userToken;
     private String userTokenSecret;
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
@@ -37,7 +37,7 @@ public class ModelAccessTokenObject extends RealmObject {
         this.userTokenSecret = userTokenSecret;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
