@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.Pair;
 
 import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
+import com.nanami.android.blackhistory.fragment.FavoriteStreamFragment;
 import com.nanami.android.blackhistory.fragment.HomeStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.utils.BHLogger;
@@ -31,14 +32,14 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (timelineListType){
             case Home:
-                additionalFragment = HomeStreamFragment.newInstance(userId);
-                additionalFragment.setParams(TimelineListType.Home, userId);
+                additionalFragment = HomeStreamFragment.newInstance(userId, TimelineListType.Home);
                 break;
             case Notification:
                 break;
             case Mentions:
                 break;
             case Favorites:
+                additionalFragment = FavoriteStreamFragment.newInstance(userId, TimelineListType.Favorites);
                 break;
             case Lists:
                 break;
@@ -93,6 +94,16 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return this.tab.get(position).second.getTitle();
+        try {
+            try {
+                return this.tab.get(position).second.getTitle();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return String.valueOf(position);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return "Non-Title";
+        }
     }
 }

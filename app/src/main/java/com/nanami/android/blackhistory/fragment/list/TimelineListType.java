@@ -8,18 +8,27 @@ import java.util.ArrayList;
  * Created by atsumi on 2016/01/12.
  */
 public enum TimelineListType {
-    Home,
-    Notification,
-    Mentions,
-    Favorites,
-    Lists,
-    Search,
-    Followers,
-    Messages,
-    User;
+    Home(0),
+    Notification(1),
+    Mentions(2),
+    Favorites(3),
+    Lists(4),
+    Search(5),
+    Followers(6),
+    Messages(7),
+    User(8);
+
+    final private Integer index;
+    TimelineListType(Integer index){
+        this.index = index;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
 
     @Nullable
-    final static public TimelineListType getType(int index){
+    static public TimelineListType getType(int index){
         if (index == 0) return Home;
         if (index == 1) return Notification;
         if (index == 2) return Mentions;
@@ -32,7 +41,7 @@ public enum TimelineListType {
         return null;
     }
 
-    final static public String[] getValues(){
+    static public String[] getValues(){
         ArrayList<String> _ret = new ArrayList<>();
         for (TimelineListType type : TimelineListType.values()){
             _ret.add(type.name());

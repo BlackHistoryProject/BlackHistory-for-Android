@@ -35,88 +35,22 @@ import twitter4j.TwitterException;
  */
 public class HomeStreamFragment extends CommonStreamFragment {
 
-    public android.os.Handler handler = new android.os.Handler();
-    public TweetAdapter mAdapter;
-    public Twitter mTwitter;
-
-    public static HomeStreamFragment newInstance(Long userId){
+    public static HomeStreamFragment newInstance(Long userId, TimelineListType listType){
         HomeStreamFragment fragment = new HomeStreamFragment();
         Bundle bundle = new Bundle();
         bundle.putLong(fragment.ARGS_USER_ID, userId);
+        bundle.putInt(fragment.ARGS_LIST_TYPE, listType.getIndex());
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
-        this.setParams(TimelineListType.Home, getArguments().getLong(ARGS_USER_ID));
-
-        LinearLayout ll = (LinearLayout)inflater.inflate(R.layout.fragment_common_list, container, false);
-
-        Context context = getActivity();
-
-        mAdapter = new TweetAdapter(context, getUserId());
-        setListAdapter(mAdapter);
-
-        mTwitter = TwitterUtils.getTwitterInstance(context, getUserId());
-        reloadTimeLine();
-
-        return ll;
-    }
-
-    private void refreshView(final Status status) {
-        try {
-            if(status.getInReplyToUserId() > -1){
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(status.getText().contains("@" + getUserObject().getUserScreenName())){
-                            String txt = status.getText().replace("@" + status.getInReplyToScreenName(), "");       // 自分宛に通知が来た時に表示される自分のUserIDを消している
-                            showNotification(R.drawable.ic_launcher2, status.getUser().getName(), txt, 2 );         // 通知の表示
-                        }
-                    }
-                });
-            }
-            mAdapter.insert(status, 0);
-            mAdapter.notifyDataSetChanged();
-            getListView().invalidateViews();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        getListView().setOnItemLongClickListener(new mOnItemLongClockListener());
-        getListView().setOnItemClickListener(new mOnItemClickListener());
-    }
-
-    public class mOnItemClickListener implements AdapterView.OnItemClickListener{
-        @Override
-        public void onItemClick(AdapterView<?>parent, View view, int position, long id){
-            showToast(((Status)parent.getItemAtPosition(position)).getUser().getName());
-        }
-    }
-
-    public class mOnItemLongClockListener implements AdapterView.OnItemLongClickListener {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position,long id) {
-
-            showToast("長押し　POS:" + String.valueOf(position) + "id:" + String.valueOf(id));
-
-            return false;
-        }
-    }
-
-
-    private void reloadTimeLine() {
+    public void reloadTimeLine() {
         AsyncTask<Void, Void, List<Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
-                    return mTwitter.getHomeTimeline();
+                    return getTwitter().getHomeTimeline();
                 } catch (TwitterException e) {
                     e.printStackTrace();
                 }
@@ -126,43 +60,17 @@ public class HomeStreamFragment extends CommonStreamFragment {
             @Override
             protected void onPostExecute(List<twitter4j.Status> result) {
                 if (result != null) {
-                    mAdapter.clear();
-                    for (twitter4j.Status status : result) {
-                        mAdapter.add(status);
-                    }
+                    getAdapter().clear();
+                    getAdapter().addAll(result);
                     getListView().setSelection(0);
                 } else {
-                    showToast("タイムラインの取得に失敗しました。");
+                    BHLogger.toast("タイムラインの取得に失敗しました。");
                 }
             }
         };
         task.execute();
     }
 
-    private void showToast(String text) {
-        Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-    }
-
-    public void showNotification(int image, String title, String text, int id){
-        Notification.Builder builder = new Notification.Builder(getContext());
-        builder.setSmallIcon(image);
-
-        Intent intent = new Intent(getContext(), MainStreamActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
-
-        builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
-
-        builder.setContentTitle(title);
-        builder.setContentText(text);
-
-        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-        builder.setLights(0x7700FF00, 500, 300);
-
-        NotificationManagerCompat manager = NotificationManagerCompat.from(getContext());
-        manager.notify(id, builder.build());
-
-    }
 
     @Subscribe
     public void OnTwitterStreamEvent(TwitterStreamEvent event){
@@ -170,17 +78,17 @@ public class HomeStreamFragment extends CommonStreamFragment {
         if(event.getUserId() != getUserId()) return;
         final Status status = event.getStatus();
         try {
-            new Thread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    handler.post(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             refreshView(status);
                         }
                     });
                 }
-            }).start();
+            });
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -200,6 +108,4 @@ public class HomeStreamFragment extends CommonStreamFragment {
         EventBusHolder.EVENT_BUS.unregister(this);
         super.onPause();
     }
-
-
 }

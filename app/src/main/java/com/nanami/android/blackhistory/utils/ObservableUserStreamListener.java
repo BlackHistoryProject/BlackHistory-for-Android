@@ -3,6 +3,7 @@ package com.nanami.android.blackhistory.utils;
 import android.app.Activity;
 
 import com.nanami.android.blackhistory.event.EventBusHolder;
+import com.nanami.android.blackhistory.event.TwitterFavoriteEvent;
 import com.nanami.android.blackhistory.event.TwitterFriendListEvent;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
 
@@ -47,8 +48,13 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     }
 
     @Override
-    public void onFavorite(User source, User target, Status favoritedStatus) {
-
+    public void onFavorite(final User source, final User target, final Status favoritedStatus) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EventBusHolder.EVENT_BUS.post(new TwitterFavoriteEvent(userId, source, target, favoritedStatus));
+            }
+        });
     }
 
     @Override
