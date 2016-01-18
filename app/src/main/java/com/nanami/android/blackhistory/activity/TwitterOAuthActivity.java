@@ -104,8 +104,7 @@ public class TwitterOAuthActivity extends CommonActivityAbstract{
 
     private void successOAuth(AccessToken accessToken) {
         TwitterUtils.addAccount(this, accessToken);
-        Intent intent = new Intent(this, MainStreamActivity.class);
-        startActivity(intent);
+        MainStreamActivity.startActivity(this, accessToken.getUserId());
         finish();
     }
 }

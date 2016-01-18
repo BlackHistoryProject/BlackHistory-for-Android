@@ -1,5 +1,6 @@
 package com.nanami.android.blackhistory.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,8 +16,6 @@ import com.nanami.android.blackhistory.adapter.TweetAdapter;
  */
 public class CommonStreamFragment extends ListFragment {
      final String ARGS_USER_ID = "args_user_id";
-
-    public TweetAdapter mAdapter;
 
     @Nullable private TimelineListType listType;
     @Nullable private Long userId;
@@ -40,7 +39,7 @@ public class CommonStreamFragment extends ListFragment {
     final public void setParams(@NonNull TimelineListType listType,@NonNull Long userId){
         this.listType = listType;
         this.userId = userId;
-        this.userObject = TwitterUtils.getAccount(getContext(), userId);
+        this.userObject = TwitterUtils.getAccount(userId);
     }
 
     public String getTitle(){
@@ -50,7 +49,6 @@ public class CommonStreamFragment extends ListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // fragment再生成抑止
         setRetainInstance(true);
     }

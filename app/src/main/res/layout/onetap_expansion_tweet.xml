@@ -74,7 +74,7 @@
         android:layout_marginLeft="8dp"
         android:textSize="11dp"/>
 
-        <com.loopj.android.image.SmartImageView
+        <ImageView
             android:src="@drawable/attachment_place"
             android:layout_width="20dp"
             android:layout_height="20dp"
