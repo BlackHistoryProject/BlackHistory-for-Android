@@ -164,16 +164,22 @@ abstract public class CommonStreamFragment extends ListFragment {
 
             @Override
             protected void onPostExecute(List<twitter4j.Status> result) {
-                if (result != null) {
-                    if (listener instanceof SimpleStreamListener) {
-                        ((SimpleStreamListener)listener).response(result);
-                    } else if (listener instanceof ListStreamListener){
-                        ((ListStreamListener)listener).response(getListView(), mAdapter, result);
+                try {
+
+                    if (result != null) {
+                        if (listener instanceof SimpleStreamListener) {
+                            ((SimpleStreamListener) listener).response(result);
+                        } else if (listener instanceof ListStreamListener) {
+                            ((ListStreamListener) listener).response(getListView(), mAdapter, result);
+                        } else {
+                            BHLogger.toast("Unknown Listener");
+                        }
                     } else {
-                        BHLogger.toast("Unknown Listener");
+                        BHLogger.toast("Response is invalid");
                     }
-                } else {
-                    BHLogger.toast("Response is invalid");
+                }
+                catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         };

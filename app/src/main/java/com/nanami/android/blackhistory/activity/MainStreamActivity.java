@@ -17,6 +17,8 @@ import android.widget.TextView;
 import com.nanami.android.blackhistory.dialog.CustomDialogFragment;
 import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
+import com.nanami.android.blackhistory.model.ModelListObject;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.ObservableUserStreamListener;
 import com.nanami.android.blackhistory.R;
@@ -31,6 +33,8 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -83,14 +87,13 @@ public class MainStreamActivity extends FragmentActivity {
                 new CustomDialogFragment.DialogListener() {
                     @Override
                     public void onClick(String[] menuRes, int position) {
-//                        switch (position){
-//                            case 0: //リスト削除
-//                                mAdapter.deleteTab(getCurrentTabUserId());
-//                                viewPager.invalidate();
-//                                break;
-//                            case 1: //設定
-//                                break;
-//                        }
+                        switch (position){
+                            case 0: //リスト削除
+                                removeTab();
+                                break;
+                            case 1: //設定
+                                break;
+                        }
                     }
                 }).show(getSupportFragmentManager(), "menu");
     }
@@ -120,7 +123,7 @@ public class MainStreamActivity extends FragmentActivity {
                     }
 
                     this.streams.put(_userId, listener);
-                    this.mAdapter.addTab(TimelineListType.Home, _userId);
+                    //this.mAdapter.addTab(TimelineListType.Home, _userId);
                 }
 
             if (this.streams.size() == 0){
@@ -145,5 +148,57 @@ public class MainStreamActivity extends FragmentActivity {
         intent.putExtra(EXTRA_USER_ID, userId);
         intent.putExtra(EXTRA_FROM_AUTH, true);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Realm realm = Realm.getInstance(this);
+        for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()){
+            mAdapter.addTab(TimelineListType.getType(listObject.getListType()), listObject.getUserId());
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (this.mAdapter != null) {
+            Realm realm = Realm.getInstance(this);
+            realm.beginTransaction();
+            for (int i = 0; i < this.mAdapter.getCount(); i++) {
+                ModelListObject listObject = new ModelListObject();
+                Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
+                listObject.setListType(item.second.getListType().getIndex());
+                listObject.setUserId(item.first);
+                realm.copyToRealm(listObject);
+            }
+            realm.commitTransaction();
+            realm.close();
+
+        }
+        super.onStop();
+    }
+
+    public void removeTab(){
+                Realm realm = Realm.getInstance(this);
+        Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
+        ModelListObject result =
+                realm.where(ModelListObject.class)
+                .equalTo("userId", item.first).equalTo("listType", item.second.getListType().getIndex()).findFirst();
+        if (result != null){
+            realm.beginTransaction();
+            result.removeFromRealm();
+            realm.commitTransaction();
+            realm.close();
+        }
+
+        int current = viewPager.getCurrentItem();
+        mAdapter.remove(current);
+        ArrayList<Pair<Long, CommonStreamFragment>> list = new ArrayList<>();
+        list.addAll(mAdapter.getTab());
+        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
+        viewPager.setAdapter(mAdapter);
+        viewPager.setCurrentItem(current, false);
+
+        BHLogger.println("removed");
     }
 }

@@ -25,6 +25,15 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
+    public MyFragmentPagerAdapter(FragmentManager fm,  ArrayList<Pair<Long, CommonStreamFragment>> list) {
+        super(fm);
+        this.tab = list;
+    }
+
+    public ArrayList<Pair<Long, CommonStreamFragment>> getTab() {
+        return tab;
+    }
+
     /**
      * 新しくタブを追加する
      * @param timelineListType 表示するリストのタイプ
@@ -35,7 +44,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
          * 既に同じ種類のリストが追加されてないかを確認する
          * 追加されていたら何もしない
          */
-        if (search(userId, timelineListType) != null){
+        if (userId == -1  || search(userId, timelineListType) != null){
             return;
         }
 
@@ -160,6 +169,10 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
      */
     public Pair<Long, CommonStreamFragment> getItemAtIndex(int position){
         return tab.get(position);
+    }
+
+    public void remove(int potision){
+        this.tab.remove(potision);
     }
 
     @Override
