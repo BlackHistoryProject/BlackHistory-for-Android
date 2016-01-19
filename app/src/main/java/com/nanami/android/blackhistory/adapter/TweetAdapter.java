@@ -3,17 +3,23 @@ package com.nanami.android.blackhistory.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
+import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
 import com.nanami.android.blackhistory.activity.TweetActivity;
+import com.nanami.android.blackhistory.utils.UserAction;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -28,17 +34,18 @@ public class TweetAdapter extends ArrayAdapter<Status> {
 
     private LayoutInflater mInflater;
 
-    final private Long ownerUserId;
+    protected CommonStreamFragment owner;
 
-    public TweetAdapter(Context context, Long ownerUserId) {
-        super(context, android.R.layout.simple_list_item_1);
-        this.ownerUserId = ownerUserId;
-        mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+    public TweetAdapter(CommonStreamFragment owner) {
+        super(owner.getContext(), android.R.layout.simple_list_item_1);
+        this.owner = owner;
+        mInflater = (LayoutInflater) owner.getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
     static class ViewHolder {
+        private TweetAdapter adapter;
         private final Long ownerUserId;
-        private final Context context;
+        private final Activity context;
         private Status status;
 
         @Bind(R.id.icon) PicassoImageView icon;
@@ -48,16 +55,47 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         @Bind(R.id.time) TextView time;
         @Bind(R.id.via) TextView via;
 
+        @Bind(R.id.reply) ImageButton replyButton;
         @OnClick(R.id.reply) void OnClickReply(){
             TweetActivity.startActivity(context, this.ownerUserId, status, true);
         }
 
-        @OnClick(R.id.retweet) void OnClickReTweet(){
-
+        @Bind(R.id.retweet)
+        ImageButton retweetButton;
+        @OnClick(R.id.retweet) void OnClickReTweet(ImageButton button){
+            BHLogger.toast("一時的に止めています");
+//            UserAction.retweet(context, button, ownerUserId, status, new UserAction.Callback() {
+//                @Override
+//                public void finish(Status status) {
+//                    adapter.updateStatus(status);
+//                }
+//            });
+//            , new UserAction.Response() {
+//                @Override
+//                public void response(Status result) {
+//                    adapter.updateStatus(status);
+//                }
+//            });
         }
 
-        @OnClick(R.id.favorite) void OnClickFavorite(){
+        @Bind(R.id.favorite)
+        ImageButton favoriteButton;
+        @OnClick(R.id.favorite) void OnClickFavorite(ImageButton button){
 
+            BHLogger.toast("一時的に止めています");
+
+//            UserAction.favorite(context, button, ownerUserId, status, new UserAction.Callback() {
+//                @Override
+//                public void finish(Status status) {
+//                    adapter.updateStatus(status);
+//                }
+//            });
+//                    , new UserAction.Response() {
+//                @Override
+//                public void response(Status result) {
+//                    adapter.updateStatus(status);
+//                }
+//            });
         }
 
         @OnClick(R.id.menu) void OnClickMenu(){
@@ -68,9 +106,10 @@ public class TweetAdapter extends ArrayAdapter<Status> {
             TweetExpansionTweetActivity.startActivity(context, status);
         }
 
-        public ViewHolder(View view, Long ownerUserId){
+        public ViewHolder(View view, TweetAdapter adapter, Long ownerUserId){
             ButterKnife.bind(this, view);
-            this.context = view.getContext();
+            this.adapter = adapter;
+            this.context = adapter.owner.getActivity();
             this.ownerUserId = ownerUserId;
         }
 
@@ -84,7 +123,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_tweet, parent, false);
-            holder = new ViewHolder(convertView, ownerUserId);
+            holder = new ViewHolder(convertView, this, owner.getUserId());
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -100,8 +139,49 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         holder.time.setText(BlackUtil.getDateFormat(item.getCreatedAt()));
         holder.via.setText("via " + BlackUtil.getVia(item.getSource()));
 
+        holder.favoriteButton.setImageResource(item.isFavorited() ? android.R.drawable.star_on : android.R.drawable.star_off);
+        holder.retweetButton.setImageResource(item.isRetweetedByMe() ? android.R.drawable.checkbox_on_background : android.R.drawable.checkbox_off_background);
+
         return convertView;
     }
+
+    @Nullable
+    public Status getItemObject(Long statusId){
+        for (int i = 0; i < this.getCount(); i ++){
+            Status item = this.getItem(i);
+            if (item.getId() == statusId) return item;
+        }
+        return null;
+    }
+
+    public int indexOf(Long statusId){
+        for (int i = 0; i < this.getCount(); i ++){
+            Status item = this.getItem(i);
+            if (item.getId() == statusId) return i;
+        }
+        return -1;
+    }
+
+    public void updateStatus(Status status){
+        /// ツイートが見つからなかった時はとりあえず何もしない
+        final int pos = indexOf(status.getId());
+        if (pos == -1){
+            BHLogger.println("Status not found");
+            return;
+        }
+
+        this.remove(getItem(pos));
+        this.insert(status, pos);
+        this.notifyDataSetChanged();
+
+        try {
+            this.owner.invalidateListView(pos);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        BHLogger.println("Status updated");
+    }
+
     public void deleteTweet(long paramLong)
     {
         Status status = null;

@@ -99,7 +99,7 @@ abstract public class CommonStreamFragment extends ListFragment {
             this.setParams(listType, userId);
 
             LinearLayout ll = (LinearLayout) inflater.inflate(R.layout.fragment_common_list, container, false);
-            mAdapter = new TweetAdapter(getActivity(), getUserId());
+            this.mAdapter = new TweetAdapter(this);
             setListAdapter(mAdapter);
 
             mTwitter = TwitterUtils.getTwitterInstance(getActivity(), getUserId());
@@ -258,5 +258,10 @@ abstract public class CommonStreamFragment extends ListFragment {
         bundle.putInt(ARGS_LIST_TYPE, listType.getIndex());
         bundle.putSerializable(ARGS_LISTENER, listener);
         this.setArguments(bundle);
+    }
+
+    public void invalidateListView(int targetPosition){
+        ListView listView = getListView();
+        listView.getAdapter().getView(targetPosition, listView.getChildAt(targetPosition), listView);
     }
 }
