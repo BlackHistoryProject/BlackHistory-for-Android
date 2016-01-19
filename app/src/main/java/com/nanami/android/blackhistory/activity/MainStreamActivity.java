@@ -100,7 +100,6 @@ public class MainStreamActivity extends FragmentActivity {
             Long userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
                 for (Long _userId :TwitterUtils.getAccountIds(this)) {
                     if (this.streams.containsKey(_userId)) continue;
-                    BHLogger.println(userId + " load");
                     TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
                     if (twitterStream == null){
                         continue;
@@ -145,8 +144,7 @@ public class MainStreamActivity extends FragmentActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu1:
-                Pair<Long, CommonStreamFragment> pair = this.mAdapter.getItemAtIndex(viewPager.getCurrentItem());
-                this.mAdapter.deleteTab(pair);
+                this.mAdapter.deleteTab(this.mAdapter.getItemAtIndex(viewPager.getCurrentItem()));
             default:
                 return super.onContextItemSelected(item);
         }

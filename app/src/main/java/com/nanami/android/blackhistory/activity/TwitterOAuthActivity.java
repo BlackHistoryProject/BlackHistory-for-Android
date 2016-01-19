@@ -26,8 +26,6 @@ public class TwitterOAuthActivity extends CommonActivityAbstract{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_twitter_oauth);
-
         startAuthorize();
     }
 
