@@ -77,11 +77,10 @@ public class MainStreamActivity extends FragmentActivity {
         startActivity(new Intent(this, TweetActivity.class));
     }
 
-    @Bind(R.id.menuber_menu)
-    ImageButton menuBar;
-//    @OnClick(R.id.menuber_menu) void OnClickMenu(){
-//
-//    }
+    @Bind(R.id.menuber_menu) ImageButton menuBar;
+    @OnClick(R.id.menuber_menu) void OnClickMenu(){
+
+    }
     //////////////////////////////
     HashMap<Long, ObservableUserStreamListener> streams = new HashMap<>();
     //////////////////////////////

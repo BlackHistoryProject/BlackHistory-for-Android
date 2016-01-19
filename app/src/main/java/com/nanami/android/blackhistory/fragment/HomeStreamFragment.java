@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nanami.android.blackhistory.event.EventBusHolder;
@@ -19,6 +22,7 @@ import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.adapter.TweetAdapter;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+import com.nanami.android.blackhistory.fragment.listener.ListStreamListener;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 import com.nanami.android.blackhistory.event.TwitterStreamEvent;
@@ -35,77 +39,39 @@ import twitter4j.TwitterException;
  */
 public class HomeStreamFragment extends CommonStreamFragment {
 
-    public static HomeStreamFragment newInstance(Long userId, TimelineListType listType){
+    public static HomeStreamFragment newInstance(Long userId){
         HomeStreamFragment fragment = new HomeStreamFragment();
-        Bundle bundle = new Bundle();
-        bundle.putLong(fragment.ARGS_USER_ID, userId);
-        bundle.putInt(fragment.ARGS_LIST_TYPE, listType.getIndex());
-        fragment.setArguments(bundle);
+        fragment.setArguments(userId, TimelineListType.Home, new StreamListener());
         return fragment;
     }
 
-    @Override
-    public void reloadTimeLine() {
-        AsyncTask<Void, Void, List<Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
-            @Override
-            protected List<twitter4j.Status> doInBackground(Void... params) {
-                try {
-                    return getTwitter().getHomeTimeline();
-                } catch (TwitterException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
+    static class StreamListener implements ListStreamListener {
+        @Override
+        public void response(ListView listView, TweetAdapter adapter, @NonNull List<Status> result) {
+            adapter.clear();
+            adapter.addAll(result);
+            listView.setSelection(0);
+        }
 
-            @Override
-            protected void onPostExecute(List<twitter4j.Status> result) {
-                if (result != null) {
-                    getAdapter().clear();
-                    getAdapter().addAll(result);
-                    getListView().setSelection(0);
-                } else {
-                    BHLogger.toast("タイムラインの取得に失敗しました。");
-                }
-            }
-        };
-        task.execute();
+        @Nullable
+        @Override
+        public List<Status> call(Twitter twitter) throws TwitterException {
+            return twitter.getHomeTimeline();
+        }
     }
 
-
     @Subscribe
-    public void OnTwitterStreamEvent(TwitterStreamEvent event){
-        BHLogger.println("ついーとがあったぞい " + event.getUserId());
-        if(event.getUserId() != getUserId()) return;
-        final Status status = event.getStatus();
+    public void OnTwitterStreamEvent(final TwitterStreamEvent event) {
+        if (getUserId() != null && event.getUserId() != getUserId()) return;
         try {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            refreshView(status);
-                        }
-                    });
+                    refreshView(event.getStatus());
                 }
             });
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-    }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // EventBus の登録
-        EventBusHolder.EVENT_BUS.register(this);
-    }
-
-    @Override
-    public void onPause() {
-        // 登録の解除
-        EventBusHolder.EVENT_BUS.unregister(this);
-        super.onPause();
     }
 }

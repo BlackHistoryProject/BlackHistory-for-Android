@@ -32,14 +32,14 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
         switch (timelineListType){
             case Home:
-                additionalFragment = HomeStreamFragment.newInstance(userId, TimelineListType.Home);
+                additionalFragment = HomeStreamFragment.newInstance(userId);
                 break;
             case Notification:
                 break;
             case Mentions:
                 break;
             case Favorites:
-                additionalFragment = FavoriteStreamFragment.newInstance(userId, TimelineListType.Favorites);
+                additionalFragment = FavoriteStreamFragment.newInstance(userId);
                 break;
             case Lists:
                 break;
