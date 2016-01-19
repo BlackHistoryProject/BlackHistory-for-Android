@@ -12,9 +12,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -22,8 +24,8 @@ import android.widget.TextView;
 
 import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
-import com.nanami.android.blackhistory.serialize.TweetSerialize;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 
 import java.io.ByteArrayInputStream;
@@ -46,24 +48,27 @@ import twitter4j.UploadedMedia;
  */
 public class TweetActivity extends CommonActivityAbstract{
 
-    static  final int REQUEST_CAPTURE_IMAGE = 100;
-    static final int REQUEST_SELECT_IMAGE = 120;
+    private final static String EXTRA_USER_ID = "extra_user_id";
+    private final static String EXTRA_SERIALIZE = "extra_serialize";
+    private final static String EXTRA_FROM_REPLY = "extra_from_reply";
 
-    boolean isReply = false;
+    private final static int REQUEST_CAPTURE_IMAGE = 100;
+    private final static int REQUEST_SELECT_IMAGE = 120;
 
-    Bitmap mBitmap = null;
-
-    Status status;
+    @Nullable private Status status;
+    @NonNull private Long userId;
+    @NonNull private Boolean fromReply;
 
     @Bind(R.id.tweet_taskbar) TextView textTaskBar;
     @Bind(R.id.reply_user_info) RelativeLayout layoutReplayInfo;
-    @Bind(R.id.expansion_icon)
-    PicassoImageView imageIconView;
+
+    @Bind(R.id.expansion_icon) PicassoImageView imageIconView;
     @Bind(R.id.expansion_name) TextView textName;
     @Bind(R.id.expansion_screen_name) TextView textScreenName;
     @Bind(R.id.expansion_text) TextView textText;
     @Bind(R.id.expansion_time) TextView textTime;
     @Bind(R.id.expansion_via) TextView textVia;
+
     @Bind(R.id.input_text) EditText editText;
 
     @Bind(R.id.upload_image_1) ImageButton imageBtnUpload1;
@@ -87,23 +92,40 @@ public class TweetActivity extends CommonActivityAbstract{
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
-    Long userId;
+    public static void startActivity(Context context, Long userId){
+        startActivity(context, userId, null, false);
+    }
+
+    public static void startActivity(Context context, Long userId, Status tweet, Boolean isReply){
+        Intent intent = new Intent(context, TweetActivity.class);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_SERIALIZE, tweet);
+        intent.putExtra(EXTRA_FROM_REPLY, isReply);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
         setContentView(R.layout.activity_tweet);                                                    //  指定したIDのレイアウトを読み込んでいる
 
-        this.userId = getIntent().getLongExtra("user_id", -1);
+        this.userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
+        this.status = (Status) getIntent().getSerializableExtra(EXTRA_SERIALIZE);
+        this.fromReply = getIntent().getBooleanExtra(EXTRA_FROM_REPLY, false);
 
-        if (userId == -1) return;
+        if (userId == -1L || (fromReply && status == null)) {
+            BHLogger.toast("ツイートの読み込みに失敗しました");
+            finish();
+            return;
+        }
 
-        Serializable serializable = getIntent().getSerializableExtra("tweet");                      // setContentViewで指定したIDの中にあるものは全部使える
-        if(serializable == null){}
-        else{
-            status = ((TweetSerialize)serializable).getStatus();
+        if (fromReply) {
             textTaskBar.setText("Reply");
-            layoutReplayInfo.setVisibility(View.VISIBLE);                                           // findViewByID　指定したIDのViewを見つける
+            layoutReplayInfo.setVisibility(View.VISIBLE);
 
             imageIconView.loadImage(status.getUser().getProfileImageURL());
             textName.setText(status.getUser().getName());
@@ -113,14 +135,16 @@ public class TweetActivity extends CommonActivityAbstract{
             textVia.setText("via " + BlackUtil.getVia(status.getSource()));
 
             String str = status.getInReplyToScreenName();
-            if(str == null || str.equals("null") || str.equals("")){
+            if (str == null || str.equals("null") || str.equals("")) {
                 str = status.getUser().getScreenName();
             }
-
             editText.setText("@" + str + " ");                                                      // ()の中のstrはReplyの相手のScreenName(相手の@以下のID)
             editText.setSelection(editText.getText().length());                                     //　setSelectionの中には数字が入る（今回は今入っている（）の中身が数字を持ってきてくれている
             editText.getText().length();                                                            // lengthは"長さ"であって、物の長さではなくて文字の長さ(サイズ)だそうで、プログラミングではそう呼ばれている
-            isReply = true;
+
+        } else {
+            textTaskBar.setText("Tweet");
+            layoutReplayInfo.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -128,7 +152,9 @@ public class TweetActivity extends CommonActivityAbstract{
     protected void onActivityResult(int requestCoda, int resultCode, Intent data) {
         Bitmap mBitmap = null;
         if (REQUEST_CAPTURE_IMAGE == requestCoda && resultCode == Activity.RESULT_OK){
+
             mBitmap = (Bitmap) data.getExtras().get("data");
+
         }else if(REQUEST_SELECT_IMAGE == requestCoda){
             try {
                 InputStream in = getContentResolver().openInputStream(data.getData());
@@ -136,7 +162,9 @@ public class TweetActivity extends CommonActivityAbstract{
                 options.inSampleSize = 2;
 
                 mBitmap = BitmapFactory.decodeStream(in, null, options);
-                in.close();
+                if (in != null) {
+                    in.close();
+                }
 
             }catch (Exception e){
                 e.printStackTrace();
@@ -149,18 +177,33 @@ public class TweetActivity extends CommonActivityAbstract{
         else System.out.println("いっぱいだよ。");
     }
 
+    /**
+     * ツイートをします
+     */
     private void tweet() {
-
+        /**
+         * ツイートをしている旨を通知
+         */
         showNotification(R.drawable.ic_launcher2,"送信中","送信しています...",1);
-
         AsyncTask<String, Void, Boolean> task = new AsyncTask<String, Void, Boolean>() {
             @Override
             protected Boolean doInBackground(String... params) {
                 try {
                     Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this, userId);
 
+                    /**
+                     * テキストビューの中身をセット (params に入ってる)
+                     */
                     final StatusUpdate statusUpdate = new StatusUpdate(String.valueOf(params[0]));
+
+                    /**
+                     * 画像もアップロードするか
+                     */
                     if (setedImage()) {
+
+                        /**
+                         * セットされている枚数分だけ、ツイートのインスタンスにセットする
+                         */
                         UploadedMedia[] medias = new UploadedMedia[4];
                         int i = 0;
                         for (Bitmap bitmap : getImages()){
@@ -175,8 +218,8 @@ public class TweetActivity extends CommonActivityAbstract{
 
                         statusUpdate.setMediaIds(getMediaIDs(medias));
                     }
-                    if (isReply) {
-                        statusUpdate.setInReplyToStatusId(status.getInReplyToStatusId());
+                    if (fromReply && status != null) {
+                        statusUpdate.setInReplyToStatusId(status.getId());
                     }
                     twitter.updateStatus(statusUpdate);
                     return true;

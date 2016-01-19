@@ -1,11 +1,6 @@
 package com.nanami.android.blackhistory.utils;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -35,7 +30,7 @@ final public class TwitterUtils {
      * @return
      */
 
-    public static Twitter getTwitterInstance(Context context,@Nullable Long userId){
+    public static Twitter getTwitterInstance(@NonNull Context context,@Nullable Long userId){
         String consumerKey = context.getString(R.string.twitter_consumer_key);
         String consumerSecret = context.getString(R.string.twitter_consumer_secret);
 
@@ -49,7 +44,7 @@ final public class TwitterUtils {
         return twitter;
     }
 
-    public static TwitterStream getTwitterStreamInstance(Context context, Long userId){
+    public static TwitterStream getTwitterStreamInstance(@NonNull Context context, Long userId){
         String consumerKey = context.getString(R.string.twitter_consumer_key);
         String consumerSecret = context.getString(R.string.twitter_consumer_secret);
         ConfigurationBuilder builder = new ConfigurationBuilder();
@@ -84,13 +79,15 @@ final public class TwitterUtils {
      * アクセストークンが存在する場合はtrueを返します。
      * @return false or true
      */
-    public static boolean hasAccessToken(Context context) {
-        return Realm.getInstance(context).where(ModelAccessTokenObject.class).count() > 0;
+    public static boolean hasAccessToken(@NonNull Context context) {
+        Realm realm = Realm.getInstance(context);
+        RealmResults<ModelAccessTokenObject> s = realm.where(ModelAccessTokenObject.class).findAll();
+        return s.size() > 0;
     }
 
     /* ---  database 操作 --- */
 
-    public static void addAccount(Context context, AccessToken accessToken){
+    public static void addAccount(@NonNull Context context, AccessToken accessToken){
         ModelAccessTokenObject tokenObject = new ModelAccessTokenObject();
         tokenObject.setUserId(accessToken.getUserId());
         tokenObject.setUserName(accessToken.getScreenName());
@@ -100,11 +97,11 @@ final public class TwitterUtils {
 
         Realm realm = Realm.getInstance(context);
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(tokenObject);
+        realm.copyToRealm(tokenObject);
         realm.commitTransaction();
     }
 
-    public static void deleteAccount(Context context, Long userId){
+    public static void deleteAccount(@NonNull Context context, Long userId){
         BHLogger.println("あかうんとけしたぞいｗｗｗ");
         Realm realm = Realm.getInstance(context);
         ModelAccessTokenObject result = realm.where(ModelAccessTokenObject.class).equalTo("userId", userId).findFirst();
@@ -116,7 +113,7 @@ final public class TwitterUtils {
         realm.commitTransaction();
     }
 
-    public static void deleteAllAccount(Context context){
+    public static void deleteAllAccount(@NonNull Context context){
         BHLogger.println("あかうんとぜんぶけすぞいｗｗｗ");
         Realm realm = Realm.getInstance(context);
         RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
@@ -125,7 +122,7 @@ final public class TwitterUtils {
         realm.commitTransaction();
     }
 
-    public static ArrayList<Long> getAccountIds(Context context) {
+    public static ArrayList<Long> getAccountIds(@NonNull Context context) {
         Realm realm = Realm.getInstance(context);
         ArrayList<Long> results = new ArrayList<>();
         for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()){
@@ -134,7 +131,7 @@ final public class TwitterUtils {
         return results;
     }
 
-    public static ArrayList<ModelAccessTokenObject> getAccounts(Context context) {
+    public static ArrayList<ModelAccessTokenObject> getAccounts(@NonNull Context context) {
         Realm realm = Realm.getInstance(context);
         ArrayList<ModelAccessTokenObject> results = new ArrayList<>();
         for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()){

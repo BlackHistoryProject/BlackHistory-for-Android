@@ -13,7 +13,6 @@ import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
-import com.nanami.android.blackhistory.serialize.TweetSerialize;
 import com.nanami.android.blackhistory.activity.TweetActivity;
 
 import butterknife.Bind;
@@ -29,21 +28,20 @@ public class TweetAdapter extends ArrayAdapter<Status> {
 
     private LayoutInflater mInflater;
 
-    final private Long userId;
+    final private Long ownerUserId;
 
-    public TweetAdapter(Context context, Long userId) {
+    public TweetAdapter(Context context, Long ownerUserId) {
         super(context, android.R.layout.simple_list_item_1);
-        this.userId = userId;
+        this.ownerUserId = ownerUserId;
         mInflater = (LayoutInflater) context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
     static class ViewHolder {
-
-        private Context context;
+        private final Long ownerUserId;
+        private final Context context;
         private Status status;
 
-        @Bind(R.id.icon)
-        PicassoImageView icon;
+        @Bind(R.id.icon) PicassoImageView icon;
         @Bind(R.id.name) TextView name;
         @Bind(R.id.screen_name) TextView screenName;
         @Bind(R.id.text) TextView text;
@@ -51,11 +49,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         @Bind(R.id.via) TextView via;
 
         @OnClick(R.id.reply) void OnClickReply(){
-
-            Intent intent = new Intent(context, TweetActivity.class);
-            intent.putExtra("tweet", new TweetSerialize(status));
-            intent.putExtra("user_id", this.userId);
-            context.startActivity(intent);
+            TweetActivity.startActivity(context, this.ownerUserId, status, true);
         }
 
         @OnClick(R.id.retweet) void OnClickReTweet(){
@@ -71,16 +65,13 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         }
 
         @OnClick(R.id.tweet_item_main) void OnClickStatus(){
-            Intent intent = new Intent(context, TweetExpansionTweetActivity.class);              // TLのツイートを押した時そのツイートが拡大される
-            intent.putExtra("tweet", new TweetSerialize(status));
-            context.startActivity(intent);
+            TweetExpansionTweetActivity.startActivity(context, status);
         }
 
-        final Long userId;
-        public ViewHolder(View view, Long userId){
+        public ViewHolder(View view, Long ownerUserId){
             ButterKnife.bind(this, view);
             this.context = view.getContext();
-            this.userId = userId;
+            this.ownerUserId = ownerUserId;
         }
 
         public void setStatus(Status status){
@@ -93,7 +84,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         final ViewHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_tweet, parent, false);
-            holder = new ViewHolder(convertView, userId);
+            holder = new ViewHolder(convertView, ownerUserId);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();

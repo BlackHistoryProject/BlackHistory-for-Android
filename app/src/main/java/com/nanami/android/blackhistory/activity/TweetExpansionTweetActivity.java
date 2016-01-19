@@ -1,13 +1,15 @@
 package com.nanami.android.blackhistory.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
-import com.nanami.android.blackhistory.serialize.TweetSerialize;
 
 import butterknife.Bind;
 import twitter4j.Status;
@@ -16,7 +18,8 @@ import twitter4j.Status;
  * Created by nanami on 2014/09/11.
  */
 public class TweetExpansionTweetActivity extends CommonActivityAbstract{
-    Status status;                                                                              //StatusはここではTLにある１つ１つのツイートの事
+    final private static String EXTRA_STATUS = "extra_status";
+    private Status status;                                                                              //StatusはここではTLにある１つ１つのツイートの事
 
     @Bind(R.id.expansion_icon)
     PicassoImageView imageUserIcon;
@@ -30,15 +33,27 @@ public class TweetExpansionTweetActivity extends CommonActivityAbstract{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.onetap_expansion_tweet);
 
-        status = ((TweetSerialize) getIntent().getSerializableExtra("tweet")).getStatus();
-        imageUserIcon.loadImage(status.getUser().getProfileImageURL());
-        textUserName.setText(status.getUser().getName());
-        textUserScreenName.setText("@" + status.getUser().getScreenName());
-        textUserTweet.setText(status.getText());
-        textUserTime.setText(BlackUtil.getDateFormat(status.getCreatedAt()));
-        textUserVia.setText("via " + BlackUtil.getVia(status.getSource()));
+        this.status = (Status) getIntent().getSerializableExtra(EXTRA_STATUS);
+        if (this.status == null){
+            BHLogger.toast("ツイートの読み込みに失敗しました");
+            finish();
+            return;
+        }
+
+        this.imageUserIcon.loadImage(status.getUser().getProfileImageURL());
+        this.textUserName.setText(status.getUser().getName());
+        this.textUserScreenName.setText("@" + this.status.getUser().getScreenName());
+        this.textUserTweet.setText(status.getText());
+        this.textUserTime.setText(BlackUtil.getDateFormat(status.getCreatedAt()));
+        this.textUserVia.setText("via " + BlackUtil.getVia(this.status.getSource()));
     }
+
+    public static void startActivity(Context context, Status status){
+        Intent intent = new Intent(context, TweetExpansionTweetActivity.class);
+        intent.putExtra(EXTRA_STATUS, status);
+        context.startActivity(intent);
+    }
+
 }

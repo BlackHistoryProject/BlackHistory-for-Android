@@ -49,7 +49,6 @@ public class MainStreamActivity extends FragmentActivity {
     final static public String EXTRA_USER_ID = "extra_user_id";
     final static public String EXTRA_FROM_AUTH = "extra_from_auth";
 
-    // View Injecter //
     @Bind(R.id.pager) ViewPager viewPager;
     public MyFragmentPagerAdapter mAdapter;
 
@@ -74,7 +73,7 @@ public class MainStreamActivity extends FragmentActivity {
 
     @OnClick(R.id.menu_tweet) void OnClickTweet(){
         //アクティビティを開く　ここだとつぶやきに飛ぶ
-        startActivity(new Intent(this, TweetActivity.class));
+        TweetActivity.startActivity(this, getCurrentTabUserId());
     }
 
     @Bind(R.id.menuber_menu) ImageButton menuBar;
@@ -114,17 +113,18 @@ public class MainStreamActivity extends FragmentActivity {
             if (this.streams.size() == 0){
                 TwitterUtils.deleteAllAccount(this);
                 startActivity(new Intent(this, TwitterOAuthActivity.class));
-
             }
 
             if (fromAuth && userId > 0){
                 this.mAdapter.addTab(TimelineListType.Home, userId);
             }
-
-
         }else {
             startActivity(new Intent(this, TwitterOAuthActivity.class));
         }
+    }
+
+    public Long getCurrentTabUserId(){
+        return this.mAdapter.getItemAtIndex(this.viewPager.getCurrentItem()).first;
     }
 
     public static void startActivity(Context context, Long userId){
@@ -132,21 +132,5 @@ public class MainStreamActivity extends FragmentActivity {
         intent.putExtra(EXTRA_USER_ID, userId);
         intent.putExtra(EXTRA_FROM_AUTH, true);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        getMenuInflater().inflate(R.menu.menu_activity_main_stream, menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu1:
-                this.mAdapter.deleteTab(this.mAdapter.getItemAtIndex(viewPager.getCurrentItem()));
-            default:
-                return super.onContextItemSelected(item);
-        }
     }
 }
