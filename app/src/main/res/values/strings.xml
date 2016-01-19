@@ -14,4 +14,9 @@
     <string name="SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT">SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT</string>
     <string name="SELECT_ACCOUNT_TYPE__CREATE_TAB">SELECT_ACCOUNT_TYPE__CREATE_TAB</string>
 
+    <string-array name="menu">
+        <item>リストの削除</item>
+        <item>設定</item>
+    </string-array>
+
 </resources>

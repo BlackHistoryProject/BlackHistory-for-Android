@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.nanami.android.blackhistory.dialog.CustomDialogFragment;
 import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.utils.BHLogger;
@@ -73,12 +74,25 @@ public class MainStreamActivity extends FragmentActivity {
 
     @OnClick(R.id.menu_tweet) void OnClickTweet(){
         //アクティビティを開く　ここだとつぶやきに飛ぶ
-        TweetActivity.startActivity(this, getCurrentTabUserId());
+        TweetActivity.startActivity(this, getCurrentTabUserId().first);
     }
 
     @Bind(R.id.menuber_menu) ImageButton menuBar;
     @OnClick(R.id.menuber_menu) void OnClickMenu(){
-
+        CustomDialogFragment.newInstance("", R.array.menu,
+                new CustomDialogFragment.DialogListener() {
+                    @Override
+                    public void onClick(String[] menuRes, int position) {
+//                        switch (position){
+//                            case 0: //リスト削除
+//                                mAdapter.deleteTab(getCurrentTabUserId());
+//                                viewPager.invalidate();
+//                                break;
+//                            case 1: //設定
+//                                break;
+//                        }
+                    }
+                }).show(getSupportFragmentManager(), "menu");
     }
     //////////////////////////////
     HashMap<Long, ObservableUserStreamListener> streams = new HashMap<>();
@@ -91,7 +105,6 @@ public class MainStreamActivity extends FragmentActivity {
         if (TwitterUtils.hasAccessToken(this)) {
             setContentView(R.layout.fragment_main_stream);
             ButterKnife.bind(this);
-            registerForContextMenu(menuBar);
             this.mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
             this.viewPager.setAdapter(this.mAdapter);
 
@@ -99,20 +112,20 @@ public class MainStreamActivity extends FragmentActivity {
             Long userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
                 for (Long _userId :TwitterUtils.getAccountIds(this)) {
                     if (this.streams.containsKey(_userId)) continue;
-                    TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, userId);
-                    if (twitterStream == null){
-                        continue;
+                    TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, _userId);
+                    ObservableUserStreamListener listener =  new ObservableUserStreamListener(this, _userId);
+                    if (twitterStream != null) {
+                        twitterStream.addListener(listener);
+                        twitterStream.user();
                     }
-                    ObservableUserStreamListener listener =  new ObservableUserStreamListener(this, userId);
-                    twitterStream.addListener(listener);
-                    twitterStream.user();
 
-                    this.streams.put(userId, listener);
+                    this.streams.put(_userId, listener);
+                    this.mAdapter.addTab(TimelineListType.Home, _userId);
                 }
 
             if (this.streams.size() == 0){
-                TwitterUtils.deleteAllAccount(this);
-                startActivity(new Intent(this, TwitterOAuthActivity.class));
+                //TwitterUtils.deleteAllAccount(this);
+                //startActivity(new Intent(this, TwitterOAuthActivity.class));
             }
 
             if (fromAuth && userId > 0){
@@ -123,8 +136,8 @@ public class MainStreamActivity extends FragmentActivity {
         }
     }
 
-    public Long getCurrentTabUserId(){
-        return this.mAdapter.getItemAtIndex(this.viewPager.getCurrentItem()).first;
+    public Pair<Long, CommonStreamFragment> getCurrentTabUserId(){
+        return this.mAdapter.getItemAtIndex(this.viewPager.getCurrentItem());
     }
 
     public static void startActivity(Context context, Long userId){

@@ -11,6 +11,7 @@ import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import twitter4j.AsyncTwitter;
 import twitter4j.AsyncTwitterFactory;
@@ -46,7 +47,6 @@ final public class TwitterUtils {
         return twitter;
     }
 
-    @Nullable
     public static TwitterStream getTwitterStreamInstance(@NonNull Context context, Long userId){
         String consumerKey = context.getString(R.string.twitter_consumer_key);
         String consumerSecret = context.getString(R.string.twitter_consumer_secret);
@@ -114,29 +114,34 @@ final public class TwitterUtils {
 
         Realm realm = Realm.getInstance(context);
         realm.beginTransaction();
-        realm.copyToRealm(tokenObject);
+        realm.copyToRealmOrUpdate(tokenObject);
         realm.commitTransaction();
+
+        realm.close();
+
+        BHLogger.println("saved token");
+        BHLogger.println(tokenObject.getUserScreenName());
     }
 
     public static void deleteAccount(@NonNull Context context, Long userId){
-        BHLogger.println("あかうんとけしたぞいｗｗｗ");
-        Realm realm = Realm.getInstance(context);
-        ModelAccessTokenObject result = realm.where(ModelAccessTokenObject.class).equalTo("userId", userId).findFirst();
-        if (result == null){
-            return;
-        }
-        realm.beginTransaction();
-        result.removeFromRealm();
-        realm.commitTransaction();
+//        BHLogger.println("あかうんとけしたぞいｗｗｗ");
+//        Realm realm = Realm.getInstance(context);
+//        ModelAccessTokenObject result = realm.where(ModelAccessTokenObject.class).equalTo("userId", userId).findFirst();
+//        if (result == null){
+//            return;
+//        }
+//        realm.beginTransaction();
+//        result.removeFromRealm();
+//        realm.commitTransaction();
     }
 
     public static void deleteAllAccount(@NonNull Context context){
-        BHLogger.println("あかうんとぜんぶけすぞいｗｗｗ");
-        Realm realm = Realm.getInstance(context);
-        RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
-        realm.beginTransaction();
-        result.clear();
-        realm.commitTransaction();
+//        BHLogger.println("あかうんとぜんぶけすぞいｗｗｗ");
+//        Realm realm = Realm.getInstance(context);
+//        RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
+//        realm.beginTransaction();
+//        result.clear();
+//        realm.commitTransaction();
     }
 
     public static ArrayList<Long> getAccountIds(@NonNull Context context) {
