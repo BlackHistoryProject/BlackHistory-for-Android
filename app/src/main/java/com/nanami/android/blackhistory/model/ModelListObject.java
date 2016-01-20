@@ -7,22 +7,27 @@ import io.realm.annotations.PrimaryKey;
  * Created by atsumi on 2016/01/10.
  */
 public class ModelListObject extends RealmObject {
-    private Long userId;
-    private Integer listType;
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    /**
+     * ListData Format
+     *    $UserId-$ListName
+     */
+    @PrimaryKey
+    private String listData;
+
+    /**
+     * リストデータを取得します
+     * @return $UserId-$ListName
+     */
+    public String getListData() {
+        return listData;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setListType(Integer listType) {
-        this.listType = listType;
-    }
-
-    public Integer getListType() {
-        return listType;
+    /**
+     * リストデータをセットします
+     * @param listData $UserId-$ListName
+     */
+    public void setListData(String listData) {
+        this.listData = listData;
     }
 }

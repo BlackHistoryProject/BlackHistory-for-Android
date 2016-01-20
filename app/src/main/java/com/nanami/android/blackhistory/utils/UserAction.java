@@ -6,18 +6,9 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.widget.ImageButton;
 
-import com.nanami.android.blackhistory.fragment.listener.BaseStreamListener;
-import com.nanami.android.blackhistory.fragment.listener.ListStreamListener;
-import com.nanami.android.blackhistory.fragment.listener.SimpleStreamListener;
-
-import java.util.List;
-
-import twitter4j.AsyncTwitter;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterAdapter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterListener;
 
 /**
  * Created by atsumi on 2016/01/19.

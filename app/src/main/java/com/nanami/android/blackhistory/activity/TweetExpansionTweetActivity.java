@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.BHLogger;
@@ -17,7 +18,7 @@ import twitter4j.Status;
 /**
  * Created by nanami on 2014/09/11.
  */
-public class TweetExpansionTweetActivity extends CommonActivityAbstract{
+public class TweetExpansionTweetActivity extends BaseActivity {
     final private static String EXTRA_STATUS = "extra_status";
     private Status status;                                                                              //StatusはここではTLにある１つ１つのツイートの事
 

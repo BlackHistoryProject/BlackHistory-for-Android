@@ -1,5 +1,12 @@
 package com.nanami.android.blackhistory.utils;
 
+import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
+
+import com.nanami.android.blackhistory.fragment.list.TimelineListType;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,12 +21,11 @@ public class BlackUtil {
 
     /*曜日の設定*/
 
-    static Map<Integer, String> days = new HashMap<Integer, String>();
+    static Map<Integer, String> days = new HashMap<>();
 
-    static String getDayKind(int dayOfWweek) {
+    static String getDayKind(int dayOfweek) {
         if(days.size() == 0) initialize();
-        return days.get(dayOfWweek);
-
+        return days.get(dayOfweek);
    }
 
    static void initialize(){
@@ -32,14 +38,14 @@ public class BlackUtil {
        days.put(7, "土");
    }
 
-    static String converrInt(int val) {
+    static String convertInt(int val) {
         return (10 > val)?"0" + String.valueOf(val):String.valueOf(val);
     }
 
+    @SuppressLint("DefaultLocale")
     public static String getDateFormat(Date date) {
         Calendar datetime = Calendar.getInstance();
         datetime.setTime(date);
-        String dateString = "";
 
         int year = datetime.get(Calendar.YEAR);
         int month = datetime.get(Calendar.MONTH)+1;
@@ -64,4 +70,40 @@ public class BlackUtil {
         return "";
     }
 
+    //////////////////////////
+    //ListDataUtils
+    private static String ListDataDelimiter = "-";
+    private static Pattern ListDataFormat = Pattern.compile("(\\d+)" + ListDataDelimiter + "(.*)");
+
+    @NonNull
+    public static String genListDataString(@NonNull Long userId, @NonNull TimelineListType listType){
+        String txt = "";
+        try {
+            txt = userId + ListDataDelimiter + listType.name();
+            txt = ListDataFormat.matcher(txt).groupCount() == 3 ? txt : "";
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if (txt.isEmpty()){
+            BHLogger.printlnDetail("Failed generate ListData", String.format("%s" + ListDataDelimiter + "%s", userId, listType.name()));
+        }
+        return txt;
+    }
+
+    @Nullable
+    public static Pair<Long, TimelineListType> genListData(@NonNull String txt) {
+        Pair<Long, TimelineListType> dat = null;
+        Matcher matcher = ListDataFormat.matcher(txt);
+        try {
+            if (matcher.groupCount() == 3) {
+                dat = new Pair<>(Long.getLong(matcher.group(1)), TimelineListType.getType(matcher.group(2)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (dat == null){
+            BHLogger.printlnDetail("Failed parse ListData", txt);
+        }
+        return dat;
+    }
 }

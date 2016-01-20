@@ -2,24 +2,19 @@ package com.nanami.android.blackhistory.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
-import android.view.ContextMenu;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
+import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.dialog.CustomDialogFragment;
-import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
+import com.nanami.android.blackhistory.fragment.list.CommonStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
-import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import com.nanami.android.blackhistory.model.ModelListObject;
 import com.nanami.android.blackhistory.utils.BHLogger;
+import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.utils.ObservableUserStreamListener;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
@@ -35,22 +30,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import io.realm.RealmResults;
-import twitter4j.DirectMessage;
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
-import twitter4j.User;
-import twitter4j.UserList;
-import twitter4j.UserStreamListener;
-import twitter4j.auth.RequestToken;
 
 /**
  * Created by nanami on 2014/09/05.
  */
-public class MainStreamActivity extends FragmentActivity {
+public class MainStreamActivity extends BaseActivity {
     final static public String EXTRA_USER_ID = "extra_user_id";
     final static public String EXTRA_FROM_AUTH = "extra_from_auth";
 
@@ -153,42 +138,67 @@ public class MainStreamActivity extends FragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        BHLogger.printlnDetail("Load Saved ListData");
         Realm realm = Realm.getInstance(this);
         for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()){
-            mAdapter.addTab(TimelineListType.getType(listObject.getListType()), listObject.getUserId());
+//            String listData = listObject.getListData();
+            Pair<Long, TimelineListType> listData = BlackUtil.genListData(listObject.getListData());
+
+            if (listData == null){
+                BHLogger.println("Load Failed ListData", listObject);
+                continue;
+            }
+            mAdapter.addTab(listData.second, listData.first);
         }
     }
 
     @Override
     protected void onStop() {
+        BHLogger.printlnDetail("Save ListData");
         if (this.mAdapter != null) {
             Realm realm = Realm.getInstance(this);
             realm.beginTransaction();
             for (int i = 0; i < this.mAdapter.getCount(); i++) {
-                ModelListObject listObject = new ModelListObject();
-                Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
-                listObject.setListType(item.second.getListType().getIndex());
-                listObject.setUserId(item.first);
-                realm.copyToRealm(listObject);
+                try {
+                    ModelListObject listObject = new ModelListObject();
+                    Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
+                    String listData = BlackUtil.genListDataString(item.first, item.second.getListType());
+                    if (listData.isEmpty()) {
+                        BHLogger.println("Save Failed ListData", item);
+                        continue;
+                    }
+                    listObject.setListData(listData);
+                    realm.copyToRealmOrUpdate(listObject);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             }
             realm.commitTransaction();
             realm.close();
-
         }
         super.onStop();
     }
 
-    public void removeTab(){
-                Realm realm = Realm.getInstance(this);
-        Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
-        ModelListObject result =
-                realm.where(ModelListObject.class)
-                .equalTo("userId", item.first).equalTo("listType", item.second.getListType().getIndex()).findFirst();
-        if (result != null){
-            realm.beginTransaction();
-            result.removeFromRealm();
-            realm.commitTransaction();
-            realm.close();
+    public void removeTab() {
+        try {
+            Realm realm = Realm.getInstance(this);
+            Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
+            RealmResults<ModelListObject> result =
+                    realm.where(ModelListObject.class)
+                            .equalTo("listData", BlackUtil.genListDataString(item.first, item.second.getListType()))
+                            .findAll();
+            if (result != null) {
+                realm.beginTransaction();
+                for (ModelListObject listObject : result) {
+                    listObject.removeFromRealm();
+                }
+                realm.commitTransaction();
+                realm.close();
+                BHLogger.println("データベースからタブを削除");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         int current = viewPager.getCurrentItem();

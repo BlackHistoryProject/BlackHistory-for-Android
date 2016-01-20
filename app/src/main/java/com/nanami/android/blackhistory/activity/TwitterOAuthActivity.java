@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
 
@@ -18,7 +18,7 @@ import twitter4j.auth.RequestToken;
 /**
  * Created by nanami on 2014/09/03.
  */
-public class TwitterOAuthActivity extends CommonActivityAbstract{
+public class TwitterOAuthActivity extends BaseActivity {
     private String mCallBackURL;
     private Twitter mTwitter;
     private RequestToken mRequestToken;

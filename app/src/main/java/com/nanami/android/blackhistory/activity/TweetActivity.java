@@ -22,6 +22,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.BHLogger;
@@ -32,7 +33,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -46,7 +46,7 @@ import twitter4j.UploadedMedia;
 /**
  * Created by nanami on 2014/09/04.
  */
-public class TweetActivity extends CommonActivityAbstract{
+public class TweetActivity extends BaseActivity {
 
     private final static String EXTRA_USER_ID = "extra_user_id";
     private final static String EXTRA_SERIALIZE = "extra_serialize";

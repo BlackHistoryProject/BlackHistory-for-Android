@@ -2,6 +2,7 @@ package com.nanami.android.blackhistory.fragment.list;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -18,26 +19,24 @@ public enum TimelineListType {
     Messages(7),
     User(8);
 
-    final private Integer index;
+    final public Integer index;
     TimelineListType(Integer index){
         this.index = index;
     }
 
-    public Integer getIndex() {
-        return index;
+    @Nullable
+    static public TimelineListType getType(int index){
+        for (TimelineListType type : TimelineListType.values()){
+            if (type.index == index) return type;
+        }
+        return null;
     }
 
     @Nullable
-    static public TimelineListType getType(int index){
-        if (index == 0) return Home;
-        if (index == 1) return Notification;
-        if (index == 2) return Mentions;
-        if (index == 3) return Favorites;
-        if (index == 4) return Lists;
-        if (index == 5) return Search;
-        if (index == 6) return Followers;
-        if (index == 7) return Messages;
-        if (index == 8) return User;
+    static public TimelineListType getType(String name){
+        for (TimelineListType type : TimelineListType.values()){
+            if (type.name().equals(name)) return type;
+        }
         return null;
     }
 

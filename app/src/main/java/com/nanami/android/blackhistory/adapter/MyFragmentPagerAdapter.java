@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.Pair;
 
-import com.nanami.android.blackhistory.fragment.CommonStreamFragment;
-import com.nanami.android.blackhistory.fragment.FavoriteStreamFragment;
-import com.nanami.android.blackhistory.fragment.HomeStreamFragment;
-import com.nanami.android.blackhistory.fragment.MentionsStreamFragment;
+import com.nanami.android.blackhistory.fragment.list.CommonStreamFragment;
+import com.nanami.android.blackhistory.fragment.list.FavoriteStreamFragment;
+import com.nanami.android.blackhistory.fragment.list.HomeStreamFragment;
+import com.nanami.android.blackhistory.fragment.list.MentionsStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.utils.BHLogger;
 
@@ -171,8 +171,8 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         return tab.get(position);
     }
 
-    public void remove(int potision){
-        this.tab.remove(potision);
+    public void remove(int position){
+        this.tab.remove(position);
     }
 
     @Override

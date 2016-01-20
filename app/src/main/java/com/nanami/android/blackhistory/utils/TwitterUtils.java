@@ -148,7 +148,12 @@ final public class TwitterUtils {
         Realm realm = Realm.getInstance(context);
         ArrayList<Long> results = new ArrayList<>();
         for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()){
-            results.add(token.getUserId());
+            try {
+                BHLogger.println("TOKEN-", token);
+                results.add(token.getUserId());
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return results;
     }
