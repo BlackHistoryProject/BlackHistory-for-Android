@@ -77,15 +77,15 @@ public class BlackUtil {
 
     @NonNull
     public static String genListDataString(@NonNull Long userId, @NonNull TimelineListType listType){
-        String txt = "";
+        String txt = String.format("%s" + ListDataDelimiter + "%s", userId, listType.name());
         try {
-            txt = userId + ListDataDelimiter + listType.name();
-            txt = ListDataFormat.matcher(txt).groupCount() == 3 ? txt : "";
+            txt = ListDataFormat.matcher(txt).groupCount() > 1 ? txt : "";
         } catch (Exception e){
+            txt = "";
             e.printStackTrace();
         }
-        if (txt.isEmpty()){
-            BHLogger.printlnDetail("Failed generate ListData", String.format("%s" + ListDataDelimiter + "%s", userId, listType.name()));
+        if (txt.equals("")){
+            BHLogger.printlnDetail("Failed generate ListData", txt);
         }
         return txt;
     }
@@ -95,14 +95,25 @@ public class BlackUtil {
         Pair<Long, TimelineListType> dat = null;
         Matcher matcher = ListDataFormat.matcher(txt);
         try {
-            if (matcher.groupCount() == 3) {
-                dat = new Pair<>(Long.getLong(matcher.group(1)), TimelineListType.getType(matcher.group(2)));
+            if (matcher.find()) {
+                BHLogger.printlnDetail("みつかりはした。");
+                String val = matcher.group(1);
+                String type = matcher.group(2);
+                dat = new Pair<>(Long.parseLong(val), TimelineListType.getType(type));
+            } else {
+                BHLogger.printlnDetail("ぱーすだめです。");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            BHLogger.printlnDetail(e.toString());
         }
         if (dat == null){
             BHLogger.printlnDetail("Failed parse ListData", txt);
+        }else {
+            if (dat.first == null || dat.second == null) {
+                BHLogger.printlnDetail("Failed parse ListData Regex", matcher.group());
+            } else {
+                BHLogger.printlnDetail("ぱーすいいです。");
+            }
         }
         return dat;
     }

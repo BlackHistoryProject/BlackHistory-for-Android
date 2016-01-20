@@ -138,8 +138,11 @@ public class MainStreamActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        BHLogger.printlnDetail("Load Saved ListData");
+        BHLogger.printlnDetail("Loading ListData");
         Realm realm = Realm.getInstance(this);
+        RealmResults<ModelListObject> t = realm.where(ModelListObject.class).findAll();
+        BHLogger.println(t.size());
+
         for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()){
 //            String listData = listObject.getListData();
             Pair<Long, TimelineListType> listData = BlackUtil.genListData(listObject.getListData());
@@ -147,9 +150,13 @@ public class MainStreamActivity extends BaseActivity {
             if (listData == null){
                 BHLogger.println("Load Failed ListData", listObject);
                 continue;
+            } else  {
+                BHLogger.println("Load Success ListData", listData.first);
+                BHLogger.println("Load Success ListData", listData.second);
             }
             mAdapter.addTab(listData.second, listData.first);
         }
+        BHLogger.printlnDetail("Load End ListData");
     }
 
     @Override
@@ -163,9 +170,11 @@ public class MainStreamActivity extends BaseActivity {
                     ModelListObject listObject = new ModelListObject();
                     Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
                     String listData = BlackUtil.genListDataString(item.first, item.second.getListType());
-                    if (listData.isEmpty()) {
+                    if (listData.equals("")) {
                         BHLogger.println("Save Failed ListData", item);
                         continue;
+                    } else {
+                        BHLogger.println("Save Success ListData", listData);
                     }
                     listObject.setListData(listData);
                     realm.copyToRealmOrUpdate(listObject);
