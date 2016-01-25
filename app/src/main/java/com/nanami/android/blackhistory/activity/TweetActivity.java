@@ -107,10 +107,6 @@ public class TweetActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
-
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_tweet);                                                    //  指定したIDのレイアウトを読み込んでいる
 
         this.userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
@@ -144,7 +140,7 @@ public class TweetActivity extends BaseActivity {
 
         } else {
             textTaskBar.setText("Tweet");
-            layoutReplayInfo.setVisibility(View.INVISIBLE);
+            layoutReplayInfo.setVisibility(View.GONE);
         }
     }
 
