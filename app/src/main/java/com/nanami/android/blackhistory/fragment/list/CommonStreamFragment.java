@@ -153,16 +153,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
      * @param status
      */
     final protected void insertTweet(final Status status) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    mAdapter.insert(status, 0);
-                    mAdapter.notifyDataSetChanged();
-                    listView.invalidateViews();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        getActivity().runOnUiThread(() -> {
+            try {
+                mAdapter.insert(status, 0);
+                mAdapter.notifyDataSetChanged();
+                listView.invalidateViews();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -172,16 +169,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     }
 
     final protected void insertAllTweet(@NonNull final List<Status> result,final Boolean clear) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (clear) mAdapter.clear();
-                    mAdapter.addAll(result);
-                    if (clear) listView.setSelection(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        getActivity().runOnUiThread(() -> {
+            try {
+                if (clear) mAdapter.clear();
+                mAdapter.addAll(result);
+                if (clear) listView.setSelection(0);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }

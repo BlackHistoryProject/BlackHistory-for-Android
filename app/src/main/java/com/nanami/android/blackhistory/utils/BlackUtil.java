@@ -38,10 +38,6 @@ public class BlackUtil {
        days.put(7, "土");
    }
 
-    static String convertInt(int val) {
-        return (10 > val)?"0" + String.valueOf(val):String.valueOf(val);
-    }
-
     @SuppressLint("DefaultLocale")
     public static String getDateFormat(Date date) {
         Calendar datetime = Calendar.getInstance();

@@ -158,9 +158,7 @@ public class TweetActivity extends BaseActivity {
                 options.inSampleSize = 2;
 
                 mBitmap = BitmapFactory.decodeStream(in, null, options);
-                if (in != null) {
-                    in.close();
-                }
+                if (in != null) in.close();
 
             }catch (Exception e){
                 e.printStackTrace();

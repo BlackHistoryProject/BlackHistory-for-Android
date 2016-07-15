@@ -39,22 +39,12 @@ final public class ObservableUserStreamListener implements UserStreamListener {
 
     @Override
     public void onFriendList(final long[] friendIds) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                EventBusHolder.EVENT_BUS.post(new TwitterFriendListEvent(userId, friendIds));
-            }
-        });
+        context.runOnUiThread(() -> EventBusHolder.EVENT_BUS.post(new TwitterFriendListEvent(userId, friendIds)));
     }
 
     @Override
     public void onFavorite(final User source, final User target, final Status favoritedStatus) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                EventBusHolder.EVENT_BUS.post(new TwitterFavoriteEvent(userId, source, target, favoritedStatus));
-            }
-        });
+        context.runOnUiThread(() -> EventBusHolder.EVENT_BUS.post(new TwitterFavoriteEvent(userId, source, target, favoritedStatus)));
     }
 
     @Override

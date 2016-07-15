@@ -2,20 +2,33 @@ package com.nanami.android.blackhistory.utils;
 
 import android.content.Context;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpDownloader;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
-import static android.provider.Settings.System.AIRPLANE_MODE_ON;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 
 /**
  * Created by atsumi on 2016/01/10.
  */
 public class PicassoImage {
+    private static boolean isDebug = false;
+    public static synchronized void setDebug(boolean debug){
+        isDebug = debug;
+    }
+
     public static Picasso Builder(Context context){
-        OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+        if (isDebug){
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(interceptor);
+        }
+
         return new Picasso.Builder(context)
-                .downloader(new OkHttpDownloader(okHttpClient))
+                .downloader(new OkHttp3Downloader(builder.build()))
                 .build();
     }
 }

@@ -41,12 +41,9 @@ public class CustomDialogFragment extends DialogFragment {
         builder.setTitle(title);
         builder.setCancelable(false);
         builder.setIcon(R.drawable.ic_action_compose);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (listener != null) {
-                    listener.onClick((String[]) items, i);
-                }
+        builder.setItems(items, (dialogInterface, i) -> {
+            if (listener != null) {
+                listener.onClick((String[]) items, i);
             }
         });
         return builder.create();

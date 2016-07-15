@@ -63,7 +63,4 @@ abstract public class BaseFragment extends Fragment {
         super.onPause();
     }
 
-    final protected LayoutInflater getInflater() {
-        return inflater;
-    }
 }

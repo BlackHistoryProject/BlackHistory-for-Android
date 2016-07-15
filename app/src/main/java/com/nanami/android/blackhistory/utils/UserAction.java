@@ -37,20 +37,17 @@ public class UserAction {
                     BHLogger.toast("いいねに失敗しました");
                     return;
                 }
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /**
-                         * true : いいね解除
-                         */
-                        if (favorited) {
-                            favButton.setImageResource(android.R.drawable.star_off);
-                        } else {
-                            favButton.setImageResource(android.R.drawable.star_on);
-                        }
-
-                        callback.finish(result);
+                context.runOnUiThread(() -> {
+                    /**
+                     * true : いいね解除
+                     */
+                    if (favorited) {
+                        favButton.setImageResource(android.R.drawable.star_off);
+                    } else {
+                        favButton.setImageResource(android.R.drawable.star_on);
                     }
+
+                    callback.finish(result);
                 });
             }
         });
@@ -74,19 +71,16 @@ public class UserAction {
                     BHLogger.toast("リツイートに失敗しました");
                     return;
                 }
-                context.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        /**
-                         * true : RT解除
-                         */
-                        if (retweeted) {
-                            rtButton.setImageResource(android.R.drawable.checkbox_off_background);
-                        } else {
-                            rtButton.setImageResource(android.R.drawable.checkbox_on_background);
-                        }
-                        callback.finish(result);
+                context.runOnUiThread(() -> {
+                    /**
+                     * true : RT解除
+                     */
+                    if (retweeted) {
+                        rtButton.setImageResource(android.R.drawable.checkbox_off_background);
+                    } else {
+                        rtButton.setImageResource(android.R.drawable.checkbox_on_background);
                     }
+                    callback.finish(result);
                 });
             }
         });

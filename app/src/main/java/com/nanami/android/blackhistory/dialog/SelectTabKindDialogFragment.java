@@ -26,11 +26,8 @@ public class SelectTabKindDialogFragment extends DialogFragment {
         builder.setTitle("タブの種類を選ぶのじゃ");
         builder.setCancelable(false);
         builder.setIcon(R.drawable.ic_action_compose);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                openFragment(i);
-            }
+        builder.setItems(items, (dialogInterface, i) -> {
+            openFragment(i);
         });
         return builder.create();
     }
