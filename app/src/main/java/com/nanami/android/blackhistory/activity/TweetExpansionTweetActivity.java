@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.component.PicassoImageView;
-import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
 

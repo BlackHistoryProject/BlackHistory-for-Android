@@ -1,6 +1,5 @@
 package com.nanami.android.blackhistory.event;
 
-import com.nanami.android.blackhistory.utils.BHLogger;
 import com.squareup.otto.Bus;
 
 /**

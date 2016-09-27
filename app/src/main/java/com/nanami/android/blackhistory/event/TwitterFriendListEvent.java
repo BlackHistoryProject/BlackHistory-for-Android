@@ -1,7 +1,5 @@
 package com.nanami.android.blackhistory.event;
 
-import twitter4j.Status;
-
 /**
  * Created by atsumi on 2016/01/11.
  */

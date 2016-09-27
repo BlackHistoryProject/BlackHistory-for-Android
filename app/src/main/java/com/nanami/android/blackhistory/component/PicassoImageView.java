@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.nanami.android.blackhistory.utils.PicassoImage;
 import com.squareup.picasso.Picasso;
 
 /**

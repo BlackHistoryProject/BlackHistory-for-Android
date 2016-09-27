@@ -2,18 +2,17 @@ package com.nanami.android.blackhistory.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.activity.MainStreamActivity;
 import com.nanami.android.blackhistory.activity.TwitterOAuthActivity;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
-import com.nanami.android.blackhistory.activity.MainStreamActivity;
 
 import java.util.ArrayList;
 

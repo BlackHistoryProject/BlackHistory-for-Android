@@ -16,15 +16,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.component.PicassoImageView;
-import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.utils.TwitterUtils;

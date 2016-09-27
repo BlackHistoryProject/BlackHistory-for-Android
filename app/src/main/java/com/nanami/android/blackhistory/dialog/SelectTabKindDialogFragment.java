@@ -2,14 +2,11 @@ package com.nanami.android.blackhistory.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
-
-import java.util.Arrays;
 
 /**
  * Created by Telneko on 2015/01/17.

@@ -2,7 +2,6 @@ package com.nanami.android.blackhistory.fragment.list;
 
 import android.support.annotation.Nullable;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**

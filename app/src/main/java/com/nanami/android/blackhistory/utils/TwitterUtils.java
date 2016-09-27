@@ -11,10 +11,7 @@ import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import twitter4j.AsyncTwitter;
-import twitter4j.AsyncTwitterFactory;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
@@ -67,20 +64,6 @@ final public class TwitterUtils {
         }
         twitter4j.conf.Configuration configuration = builder.build();
         return new TwitterStreamFactory(configuration).getInstance();
-    }
-
-    public static AsyncTwitter getTwitterAsyncInstance(@NonNull Context context,@Nullable Long userId){
-        String consumerKey = context.getString(R.string.twitter_consumer_key);
-        String consumerSecret = context.getString(R.string.twitter_consumer_secret);
-
-        AsyncTwitterFactory factory = new AsyncTwitterFactory();
-        AsyncTwitter twitter = factory.getInstance();
-        twitter.setOAuthConsumer(consumerKey, consumerSecret);
-
-        if ( userId != null && hasAccessToken(context)) {
-            twitter.setOAuthAccessToken(loadAccessToken(userId));
-        }
-        return twitter;
     }
 
     @Nullable

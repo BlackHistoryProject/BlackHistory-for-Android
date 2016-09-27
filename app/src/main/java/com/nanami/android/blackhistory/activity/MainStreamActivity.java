@@ -3,24 +3,23 @@ package com.nanami.android.blackhistory.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageButton;
 
+import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.adapter.MyFragmentPagerAdapter;
 import com.nanami.android.blackhistory.base.BaseActivity;
 import com.nanami.android.blackhistory.dialog.CustomDialogFragment;
+import com.nanami.android.blackhistory.dialog.SelectAccountDialogFragment;
+import com.nanami.android.blackhistory.dialog.SelectTabKindDialogFragment;
 import com.nanami.android.blackhistory.fragment.list.CommonStreamFragment;
 import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.model.ModelListObject;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
 import com.nanami.android.blackhistory.utils.ObservableUserStreamListener;
-import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
-import com.nanami.android.blackhistory.adapter.MyFragmentPagerAdapter;
-import com.nanami.android.blackhistory.dialog.SelectAccountDialogFragment;
-import com.nanami.android.blackhistory.dialog.SelectTabKindDialogFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

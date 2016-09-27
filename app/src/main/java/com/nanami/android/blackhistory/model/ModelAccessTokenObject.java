@@ -2,7 +2,6 @@ package com.nanami.android.blackhistory.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import twitter4j.auth.AccessToken;
 
 /**
  * Created by atsumi on 2016/01/10.

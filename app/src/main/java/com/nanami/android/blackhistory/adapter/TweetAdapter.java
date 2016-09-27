@@ -9,13 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.R;
+import com.nanami.android.blackhistory.activity.TweetActivity;
+import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
+import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.fragment.list.CommonStreamFragment;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
-import com.nanami.android.blackhistory.activity.TweetExpansionTweetActivity;
-import com.nanami.android.blackhistory.activity.TweetActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -12,15 +12,14 @@ import android.widget.ListView;
 
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.activity.MainStreamActivity;
+import com.nanami.android.blackhistory.adapter.TweetAdapter;
 import com.nanami.android.blackhistory.base.BaseFragment;
-import com.nanami.android.blackhistory.fragment.list.TimelineListType;
 import com.nanami.android.blackhistory.base.BaseStreamListener;
 import com.nanami.android.blackhistory.fragment.listener.ListStreamListener;
 import com.nanami.android.blackhistory.fragment.listener.SimpleStreamListener;
 import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
-import com.nanami.android.blackhistory.adapter.TweetAdapter;
 
 import java.util.List;
 
