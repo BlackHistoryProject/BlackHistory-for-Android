@@ -2,16 +2,16 @@ package com.nanami.android.blackhistory.activity;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.base.BaseActivity;
-import com.nanami.android.blackhistory.utils.BHLogger;
+import com.nanami.android.blackhistory.utils.RxWrap;
+import com.nanami.android.blackhistory.utils.ShowToast;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
+import com.nanami.android.blackhistory.utils.UserAction;
 
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
@@ -39,30 +39,16 @@ public class TwitterOAuthActivity extends BaseActivity {
         mCallBackURL = getString(R.string.twitter_callback_url);
         mTwitter = TwitterUtils.getTwitterInstance(this, null);
 
-        AsyncTask<Void, Void,String> task = new AsyncTask<Void, Void, String>() {
-            @Override
-            protected String doInBackground(Void... params) {
-                try {
-                    mTwitter.setOAuthAccessToken(null);
-                    mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
-                    return mRequestToken.getAuthorizationURL();
-                } catch (TwitterException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void  onPostExecute(String url){
-                if (url != null){
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    startActivity(intent);
-                } else {
-                    // 失敗。。。
-                }
-            }
-        };
-        task.execute();
+        RxWrap.create(UserAction.createObservable(() -> {
+            mTwitter.setOAuthAccessToken(null);
+            mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
+            return mRequestToken.getAuthorizationURL();
+        })).subscribe(s -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(s));
+            startActivity(intent);
+        }, throwable -> {
+            ShowToast.showToast(throwable.getLocalizedMessage());
+        });
     }
 
     @Override
@@ -73,31 +59,10 @@ public class TwitterOAuthActivity extends BaseActivity {
             return;
         }
         String verifier = intent.getData().getQueryParameter("oauth_verifier");
-        AsyncTask<String, Void, AccessToken> task = new AsyncTask<String, Void, AccessToken>() {
-            @Override
-            protected AccessToken doInBackground(String... params) {
-                try {
-                    return  mTwitter.getOAuthAccessToken(mRequestToken,params[0]);
-                } catch (TwitterException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(AccessToken accessToken) {
-                if (accessToken != null){
-                    // 認証成功！
-                    BHLogger.toast("認証成功！");
-                    successOAuth(accessToken);
-                } else {
-                    // 認証失敗
-                    BHLogger.toast("認証失敗！");
-                }
-            }
-        };
-        task.execute(verifier);
-
+        RxWrap.create(UserAction.createObservable(() -> mTwitter.getOAuthAccessToken(mRequestToken, verifier)))
+                .subscribe(this::successOAuth, throwable -> {
+                    ShowToast.showToast(throwable.getLocalizedMessage());
+                });
     }
 
     private void successOAuth(AccessToken accessToken) {

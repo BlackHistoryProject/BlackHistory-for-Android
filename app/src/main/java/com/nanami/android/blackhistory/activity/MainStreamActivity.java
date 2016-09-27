@@ -62,7 +62,7 @@ public class MainStreamActivity extends BaseActivity {
 
     @OnClick(R.id.menu_tweet) void OnClickTweet(){
         //アクティビティを開く　ここだとつぶやきに飛ぶ
-        TweetActivity.startActivity(this, getCurrentTabUserId().first);
+        TweetActivity.createIntent(this, getCurrentTabUserId().first);
     }
 
     @Bind(R.id.menuber_menu) ImageButton menuBar;
@@ -109,7 +109,7 @@ public class MainStreamActivity extends BaseActivity {
 
             if (this.streams.size() == 0){
                 //TwitterUtils.deleteAllAccount(this);
-                //startActivity(new Intent(this, TwitterOAuthActivity.class));
+                //createIntent(new Intent(this, TwitterOAuthActivity.class));
             }
 
             if (fromAuth && userId > 0){

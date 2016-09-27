@@ -4,13 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nanami.android.blackhistory.R;
 import com.nanami.android.blackhistory.base.BaseActivity;
-import com.nanami.android.blackhistory.component.PicassoImageView;
 import com.nanami.android.blackhistory.utils.BHLogger;
 import com.nanami.android.blackhistory.utils.BlackUtil;
+import com.nanami.android.blackhistory.utils.ImageManager;
 
 import butterknife.Bind;
 import twitter4j.Status;
@@ -20,10 +21,9 @@ import twitter4j.Status;
  */
 public class TweetExpansionTweetActivity extends BaseActivity {
     final private static String EXTRA_STATUS = "extra_status";
-    private Status status;                                                                              //StatusはここではTLにある１つ１つのツイートの事
 
     @Bind(R.id.expansion_icon)
-    PicassoImageView imageUserIcon;
+    ImageView imageUserIcon;
     @Bind(R.id.expansion_name) TextView textUserName;
     @Bind(R.id.expansion_screen_name) TextView textUserScreenName;
     @Bind(R.id.expansion_text) TextView textUserTweet;
@@ -36,22 +36,23 @@ public class TweetExpansionTweetActivity extends BaseActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.onetap_expansion_tweet);
 
-        this.status = (Status) getIntent().getSerializableExtra(EXTRA_STATUS);
-        if (this.status == null){
+        Status status = (Status) getIntent().getSerializableExtra(EXTRA_STATUS);
+        if (status == null){
             BHLogger.toast("ツイートの読み込みに失敗しました");
             finish();
             return;
         }
 
-        this.imageUserIcon.loadImage(status.getUser().getProfileImageURL());
+        ImageManager.getPicasso().load(status.getUser().getProfileImageURL()).into(this.imageUserIcon);
+
         this.textUserName.setText(status.getUser().getName());
-        this.textUserScreenName.setText("@" + this.status.getUser().getScreenName());
+        this.textUserScreenName.setText("@" + status.getUser().getScreenName());
         this.textUserTweet.setText(status.getText());
         this.textUserTime.setText(BlackUtil.getDateFormat(status.getCreatedAt()));
-        this.textUserVia.setText("via " + BlackUtil.getVia(this.status.getSource()));
+        this.textUserVia.setText("via " + BlackUtil.getVia(status.getSource()));
     }
 
-    public static void startActivity(Context context, Status status){
+    public static void createIntent(Context context, Status status){
         Intent intent = new Intent(context, TweetExpansionTweetActivity.class);
         intent.putExtra(EXTRA_STATUS, status);
         context.startActivity(intent);

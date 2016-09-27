@@ -19,4 +19,10 @@
         <item>設定</item>
     </string-array>
 
+    <!-- Context -->
+    <string name="status_uploading_image">ツイートしています</string>
+    <string name="user_icon">User Icon</string>
+    <string name="via">via</string>
+    <string name="menu_icon">Menu Icon</string>
+
 </resources>

@@ -139,7 +139,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
      */
     public CommonStreamFragment search(Long userId, TimelineListType listType){
         for (Pair<Long, CommonStreamFragment> item : this.tab){
-            if (item.first.equals(userId) && item.second.getListType() != null && item.second.getListType().equals(listType)){
+            if (item.first.equals(userId) && item.second.getListType().equals(listType)){
                 return item.second;
             }
         }
