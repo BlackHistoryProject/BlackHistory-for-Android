@@ -260,6 +260,7 @@ public class BlackUtil {
         }
     }
 
+    @Nullable
     public static View getInflateView(@LayoutRes int resourceID) {
         Context context = AppController.get().getApplicationContext();
         try {

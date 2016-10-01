@@ -4,6 +4,9 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 
+import rx.Observable;
+import rx.functions.Func1;
+
 /**
  * Created by atsumi on 2016/01/12.
  */
@@ -41,9 +44,7 @@ public enum TimelineListType {
 
     static public String[] getValues(){
         ArrayList<String> _ret = new ArrayList<>();
-        for (TimelineListType type : TimelineListType.values()){
-            _ret.add(type.name());
-        }
+        _ret.addAll(Observable.from(TimelineListType.values()).map(Enum::name).toList().toBlocking().single());
         String[] ret = new String[_ret.size()];
         ret = _ret.toArray(ret);
         return ret;

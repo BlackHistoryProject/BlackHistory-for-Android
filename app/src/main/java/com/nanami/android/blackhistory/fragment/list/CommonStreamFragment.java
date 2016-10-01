@@ -19,13 +19,17 @@ import com.nanami.android.blackhistory.fragment.listener.ListStreamListener;
 import com.nanami.android.blackhistory.fragment.listener.SimpleStreamListener;
 import com.nanami.android.blackhistory.model.ModelAccessTokenObject;
 import com.nanami.android.blackhistory.utils.BHLogger;
+import com.nanami.android.blackhistory.utils.RxWrap;
 import com.nanami.android.blackhistory.utils.TwitterUtils;
+import com.nanami.android.blackhistory.utils.UserAction;
 
 import java.util.List;
 
 import butterknife.Bind;
+import rx.functions.Action1;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 /**
  * Created by Telneko on 2015/01/17.
@@ -113,38 +117,18 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
      * 初回呼び出しや、リストをスクロールした時など
      */
     final protected void reloadTimeLine(){
-        AsyncTask<Void, Void, List<Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
-            @Override
-            protected List<twitter4j.Status> doInBackground(Void... params) {
-                try {
-                    return listener.call(mTwitter);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(List<twitter4j.Status> result) {
-                try {
-                    if (result != null) {
-                        if (listener instanceof SimpleStreamListener) {
-                            ((SimpleStreamListener) listener).response(result);
-                        } else if (listener instanceof ListStreamListener) {
-                            ((ListStreamListener) listener).response(listView, mAdapter, result);
-                        } else {
-                            BHLogger.toast("Unknown Listener");
-                        }
+        RxWrap.create(RxWrap.createObservable(() -> listener.call(mTwitter)))
+                .subscribe(statuses -> {
+                    if (listener instanceof SimpleStreamListener) {
+                        ((SimpleStreamListener) listener).response(statuses);
+                    } else if (listener instanceof ListStreamListener) {
+                        ((ListStreamListener) listener).response(listView, mAdapter, statuses);
                     } else {
-                        BHLogger.toast("Response is invalid");
+                        BHLogger.toast("Unknown Listener");
                     }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        };
-        task.execute();
+                }, throwable -> {
+                    BHLogger.toast("Response is invalid");
+                });
     }
 
     /**
