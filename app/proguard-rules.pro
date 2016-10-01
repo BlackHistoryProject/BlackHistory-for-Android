@@ -121,7 +121,7 @@
 -dontwarn twitter4j.management.**
 -dontwarn twitter4j.TwitterAPIMonitor
 -dontwarn twitter4j.internal.**
--dontwarn twitter4j.Annotation
+-dontwarn twitter4j.**
 -keep class twitter4j.** { *; }
 
 #------------ Realm ----------

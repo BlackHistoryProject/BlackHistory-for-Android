@@ -22,7 +22,7 @@
         android:id="@+id/expansion_icon"
         android:layout_width="65dp"
         android:layout_height="65dp"
-        android:src="@drawable/ic_launcher"
+        android:src="@mipmap/ic_launcher"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="15dp"
         android:layout_below="@+id/expansion_text"

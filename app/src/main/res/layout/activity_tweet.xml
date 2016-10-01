@@ -41,7 +41,7 @@
                     android:layout_height="65dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:src="@drawable/ic_launcher"
+                    android:src="@mipmap/ic_launcher"
                     android:layout_below="@+id/expansion_text"
                     android:layout_alignParentLeft="@+id/expansion_text"
                     android:layout_alignParentStart="@+id/expansion_text" />
