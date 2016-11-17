@@ -1,23 +1,3 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in C:\Users\nanami\AppData\Local\Android\android-studio\sdk/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-
-# Add any project specific keep options here:
-
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
-
--keep class com.facebook.stetho.** {*;}
-
 ##--------------- Default Settings  ----------
 -optimizationpasses 10
 -dontusemixedcaseclassnames
@@ -35,6 +15,12 @@
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
@@ -47,11 +33,51 @@
 }
 -keep public class * extends android.view.View {
     public <init>(android.content.Context);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet, int);
     public void set*(...);
 }
+-keep class * extends android.webkit.WebViewClient
+-keepclassmembers class * extends android.webkit.WebViewClient {
+    <methods>;
+}
+
+-keepattributes Signature
+
 -keep public class **.R
+
+-dontwarn java.**
+-dontnote java.**
+-keep class java.** { *; }
+
+-dontwarn javax.**
+-dontnote javax.**
 -keep class javax.** { *; }
+
+-dontwarn org.**
+-dontnote org.**
 -keep class org.** { *; }
+
+-dontwarn android.**
+-dontnote android.**
+-keep class android.** { *; }
+
+-dontwarn com.android.**
+-dontnote com.android.**
+-keep class com.android.** { *; }
+
+-dontwarn com.google.**
+-dontnote com.google.**
+-keep class com.google.** { *; }
+
+-dontwarn org.w3c.**
+-dontnote org.w3c.**
+-keep class org.w3c.** { *; }
+
+-dontwarn com.facebook.**
+-dontnote com.facebook.**
+-keep class com.facebook.** { *; }
+
 ##---------------End: Default Settings  ----------
 
 ##--------------- Gson  ----------
@@ -64,8 +90,6 @@
 -keep class com.fasterxml.** { *; }
 -keep interface com.fasterxml.** {*;}
 -dontwarn com.fasterxml.**
--dontwarn org.w3c**
--keep class org.w3c**
 
 ##--------------- Butterknife  ----------
 -keep class butterknife.** { *; }
@@ -83,30 +107,21 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn com.squareup.**
 -keep class com.squareup.** { *; }
-##--------------- Android Support Library ----------
--dontwarn android.support.v4.**
--dontwarn android.support.v7.**
--keep class android.support.v4.** { *; }
--keep class android.support.v7.** {*;}
--keep class com.facebook.** { *; }
--keep class android.webkit.WebViewClient
--keep class * extends android.webkit.WebViewClient
--keepclassmembers class * extends android.webkit.WebViewClient {
-    <methods>;
-}
 
 #-------------- Log ----------------
 -assumenosideeffects class android.util.Log {
     <methods>;
 }
--assumenosideeffects class com.nanami.android.blackhistory.utils.BHLogger {
+-assumenosideeffects class jp.promin.android.blackhistory.utils.BHLogger {
    <methods>;
 }
 -keepattributes Signature
 
-#------------- Retrolambda ----------
--dontwarn java.lang.invoke.*
 #------------- RxJava ------------
+-dontwarn rx.**
+-dontnote rx.**
+-keep class rx.**  { *; }
+
 -dontwarn sun.misc.Unsafe
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
    long producerIndex;
@@ -118,11 +133,9 @@
 }
 
 #------------- Twitter4j -------------
--dontwarn twitter4j.management.**
--dontwarn twitter4j.TwitterAPIMonitor
--dontwarn twitter4j.internal.**
 -dontwarn twitter4j.**
--keep class twitter4j.** { *; }
+-dontnote twitter4j.**
+-keep class twitter4j.**  { *; }
 
 #------------ Realm ----------
 -dontwarn io.realm.**
