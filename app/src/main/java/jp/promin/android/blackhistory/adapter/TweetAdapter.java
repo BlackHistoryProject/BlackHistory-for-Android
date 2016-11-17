@@ -1,9 +1,12 @@
 package jp.promin.android.blackhistory.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import jp.promin.android.blackhistory.fragment.list.CommonStreamFragment;
 import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.ImageManager;
+import jp.promin.android.blackhistory.utils.LinkText;
 import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.UserAction;
 
@@ -167,7 +171,16 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         ImageManager.getPicasso().load(item.getUser().getProfileImageURL()).into(holder.icon);
         holder.name.setText(item.getUser().getName());
         holder.screenName.setText("@" + item.getUser().getScreenName());
-        holder.text.setText(item.getText());
+
+        holder.text.setText(LinkText.setLinkText(getContext(), item.getText(), (widget, isUrl, clickText) -> {
+            if (isUrl) {
+                getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(clickText)));
+            } else {
+                ShowToast.showToast(String.format("タグやで %s", clickText));
+            }
+        }));
+        holder.text.setMovementMethod(LinkMovementMethod.getInstance());
+
         holder.time.setText(BlackUtil.getDateFormat(item.getCreatedAt()));
         holder.favoriteButton.setImageResource(item.isFavorited() ? R.drawable.iconlarge_favourite : android.R.drawable.star_off);
         holder.retweetButton.setImageResource(item.isRetweetedByMe() ? R.drawable.iconlarge_retweet : R.drawable.iconlarge_retweet);
