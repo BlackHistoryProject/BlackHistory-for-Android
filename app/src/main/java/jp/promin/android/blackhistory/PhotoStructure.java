@@ -55,8 +55,8 @@ public class PhotoStructure {
         }
     }
 
-    private Matrix getMatrix(){
-        if(this.exif == null) return null;
+    private Matrix getMatrix() {
+        if (this.exif == null) return null;
         Matrix matrix = new Matrix();
         final int attr = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_NORMAL);

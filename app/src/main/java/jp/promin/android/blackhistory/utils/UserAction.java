@@ -127,20 +127,6 @@ public class UserAction {
                 .subscribe(finishCallback::result, Throwable::printStackTrace);
     }
 
-    public interface UploadMedia {
-        List<UploadedMedia> medias();
-    }
-
-    public interface Callback {
-        void result(Status status);
-
-        void error(Throwable error);
-    }
-
-    public interface Callable<T> {
-        T call() throws TwitterException;
-    }
-
     public static <T> Observable<T> createObservable(Callable<T> observable) {
         return Observable.create(new Observable.OnSubscribe<T>() {
             @Override
@@ -153,5 +139,19 @@ public class UserAction {
                 }
             }
         });
+    }
+
+    public interface UploadMedia {
+        List<UploadedMedia> medias();
+    }
+
+    public interface Callback {
+        void result(Status status);
+
+        void error(Throwable error);
+    }
+
+    public interface Callable<T> {
+        T call() throws TwitterException;
     }
 }

@@ -29,7 +29,8 @@ import twitter4j.Twitter;
 public abstract class CommonStreamFragment extends BaseFragment implements ListStreamListener {
     final static String ARGS_USER_ID = "args_user_id";
     final static String ARGS_LIST_TYPE = "args_list_type";
-
+    @Bind(android.R.id.list)
+    ListView listView;
     //////// getter setter //////////
     @NonNull
     private TimelineListType listType;
@@ -37,7 +38,6 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     private ModelAccessTokenObject userObject;
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
-
     private BaseStreamListener listener;
 
     @NonNull
@@ -63,18 +63,15 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
         return mTwitter;
     }
 
-    final public void setListener(BaseStreamListener listener) {
-        this.listener = listener;
-    }
-
     final public BaseStreamListener getListener() {
         return listener;
     }
 
     //////////////////////////////////
 
-    @Bind(android.R.id.list)
-    ListView listView;
+    final public void setListener(BaseStreamListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     final protected int getLayoutID() {

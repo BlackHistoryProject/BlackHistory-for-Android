@@ -20,11 +20,22 @@ public class TweetExpansionTweetActivity extends BaseActivity {
 
     @Bind(R.id.expansion_icon)
     ImageView imageUserIcon;
-    @Bind(R.id.expansion_name) TextView textUserName;
-    @Bind(R.id.expansion_screen_name) TextView textUserScreenName;
-    @Bind(R.id.expansion_text) TextView textUserTweet;
-    @Bind(R.id.expansion_time) TextView textUserTime;
-    @Bind(R.id.expansion_via) TextView textUserVia;
+    @Bind(R.id.expansion_name)
+    TextView textUserName;
+    @Bind(R.id.expansion_screen_name)
+    TextView textUserScreenName;
+    @Bind(R.id.expansion_text)
+    TextView textUserTweet;
+    @Bind(R.id.expansion_time)
+    TextView textUserTime;
+    @Bind(R.id.expansion_via)
+    TextView textUserVia;
+
+    public static void createIntent(Context context, Status status) {
+        Intent intent = new Intent(context, TweetExpansionTweetActivity.class);
+        intent.putExtra(EXTRA_STATUS, status);
+        context.startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,7 +44,7 @@ public class TweetExpansionTweetActivity extends BaseActivity {
         setContentView(R.layout.onetap_expansion_tweet);
 
         Status status = (Status) getIntent().getSerializableExtra(EXTRA_STATUS);
-        if (status == null){
+        if (status == null) {
             BHLogger.toast("ツイートの読み込みに失敗しました");
             finish();
             return;
@@ -46,12 +57,6 @@ public class TweetExpansionTweetActivity extends BaseActivity {
         this.textUserTweet.setText(status.getText());
         this.textUserTime.setText(BlackUtil.getDateFormat(status.getCreatedAt()));
         this.textUserVia.setText("via " + BlackUtil.getVia(status.getSource()));
-    }
-
-    public static void createIntent(Context context, Status status){
-        Intent intent = new Intent(context, TweetExpansionTweetActivity.class);
-        intent.putExtra(EXTRA_STATUS, status);
-        context.startActivity(intent);
     }
 
 }

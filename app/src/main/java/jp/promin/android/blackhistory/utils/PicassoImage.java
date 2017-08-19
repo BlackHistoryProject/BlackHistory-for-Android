@@ -14,7 +14,7 @@ public class PicassoImage {
     private final static int DISK_CACHE_SIZE_MB = 100;
     private final static int MEMORY_CACHE_SIZE_MB = 5;
 
-    public static Picasso Builder(Context context){
+    public static Picasso Builder(Context context) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.cache(new Cache(context.getCacheDir(), DISK_CACHE_SIZE_MB * 1024 * 1024));
 

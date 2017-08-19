@@ -18,13 +18,14 @@ final public class ObservableUserStreamListener implements UserStreamListener {
 
     final Activity context;
     final long userId;
-    public ObservableUserStreamListener(Activity context, long userId){
+
+    public ObservableUserStreamListener(Activity context, long userId) {
         this.userId = userId;
         this.context = context;
         BHLogger.println("Initialize Listener");
     }
 
-    public Long getUserId(){
+    public Long getUserId() {
         return userId;
     }
 

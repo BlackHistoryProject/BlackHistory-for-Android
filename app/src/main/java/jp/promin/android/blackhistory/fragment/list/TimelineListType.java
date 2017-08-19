@@ -18,28 +18,29 @@ public enum TimelineListType {
     User(8);
 
     final public Integer index;
-    TimelineListType(Integer index){
+
+    TimelineListType(Integer index) {
         this.index = index;
     }
 
     @Nullable
-    static public TimelineListType getType(int index){
-        for (TimelineListType type : TimelineListType.values()){
+    static public TimelineListType getType(int index) {
+        for (TimelineListType type : TimelineListType.values()) {
             if (type.index == index) return type;
         }
         return null;
     }
 
     @Nullable
-    static public TimelineListType getType(String name){
-        for (TimelineListType type : TimelineListType.values()){
+    static public TimelineListType getType(String name) {
+        for (TimelineListType type : TimelineListType.values()) {
             if (type.name().equals(name)) return type;
         }
         return null;
     }
 
     @SuppressWarnings("rawtypes")
-    static public String[] getValues(){
+    static public String[] getValues() {
         ArrayList<String> _ret = new ArrayList<>();
         _ret.addAll(Observable.from(TimelineListType.values()).map(Enum::name).toList().toBlocking().single());
         String[] ret = new String[_ret.size()];

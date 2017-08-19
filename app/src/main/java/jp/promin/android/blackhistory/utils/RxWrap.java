@@ -62,20 +62,6 @@ public class RxWrap {
                 .toBlocking().single();
     }
 
-    public interface UploadMedia {
-        List<UploadedMedia> medias();
-    }
-
-    public interface Callback {
-        void result(Status status);
-
-        void error(Throwable error);
-    }
-
-    public interface Callable<T> {
-        T call() throws TwitterException;
-    }
-
     public static <T> Observable<T> createObservable(UserAction.Callable<T> observable) {
         return Observable.create(new Observable.OnSubscribe<T>() {
             @Override
@@ -88,5 +74,19 @@ public class RxWrap {
                 }
             }
         });
+    }
+
+    public interface UploadMedia {
+        List<UploadedMedia> medias();
+    }
+
+    public interface Callback {
+        void result(Status status);
+
+        void error(Throwable error);
+    }
+
+    public interface Callable<T> {
+        T call() throws TwitterException;
     }
 }

@@ -9,11 +9,12 @@ import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.fragment.list.TimelineListType;
 
 public class SelectTabKindDialogFragment extends DialogFragment {
-    public static SelectTabKindDialogFragment newInstance(){
+    public static SelectTabKindDialogFragment newInstance() {
         return new SelectTabKindDialogFragment();
     }
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         final CharSequence[] items = TimelineListType.getValues();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -26,7 +27,7 @@ public class SelectTabKindDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void openFragment(int pos){
+    public void openFragment(int pos) {
         SelectAccountDialogFragment fragment = SelectAccountDialogFragment
                 .newInstance(R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB, pos);
         fragment.show(getFragmentManager(), "ext_menu");

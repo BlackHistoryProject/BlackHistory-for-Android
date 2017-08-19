@@ -51,19 +51,10 @@ public class TweetActivity extends BaseActivity {
 
     private final static int REQUEST_CAPTURE_IMAGE = 100;
     private final static int REQUEST_SELECT_IMAGE = 120;
-
-    @Nullable
-    private Status status;
-    @NonNull
-    private Long userId;
-    @NonNull
-    private Boolean fromReply;
-
     @Bind(R.id.tweet_taskbar)
     TextView textTaskBar;
     @Bind(R.id.reply_user_info)
     RelativeLayout layoutReplayInfo;
-
     @Bind(R.id.expansion_icon)
     ImageView imageIconView;
     @Bind(R.id.expansion_name)
@@ -76,10 +67,8 @@ public class TweetActivity extends BaseActivity {
     TextView textTime;
     @Bind(R.id.expansion_via)
     TextView textVia;
-
     @Bind(R.id.input_text)
     EditText editText;
-
     @Bind(R.id.upload_image_1)
     ImageButton imageBtnUpload1;
     @Bind(R.id.upload_image_2)
@@ -88,6 +77,24 @@ public class TweetActivity extends BaseActivity {
     ImageButton imageBtnUpload3;
     @Bind(R.id.upload_image_4)
     ImageButton imageBtnUpload4;
+    @Nullable
+    private Status status;
+    @NonNull
+    private Long userId;
+    @NonNull
+    private Boolean fromReply;
+
+    public static void createIntent(Context context, Long userId) {
+        createIntent(context, userId, null, false);
+    }
+
+    public static void createIntent(Context context, Long userId, Status tweet, Boolean isReply) {
+        Intent intent = new Intent(context, TweetActivity.class);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_SERIALIZE, tweet);
+        intent.putExtra(EXTRA_FROM_REPLY, isReply);
+        context.startActivity(intent);
+    }
 
     @OnClick(R.id.tweet_button)
     void OnClickTweet() {
@@ -105,18 +112,6 @@ public class TweetActivity extends BaseActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
-    }
-
-    public static void createIntent(Context context, Long userId) {
-        createIntent(context, userId, null, false);
-    }
-
-    public static void createIntent(Context context, Long userId, Status tweet, Boolean isReply) {
-        Intent intent = new Intent(context, TweetActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
-        intent.putExtra(EXTRA_SERIALIZE, tweet);
-        intent.putExtra(EXTRA_FROM_REPLY, isReply);
-        context.startActivity(intent);
     }
 
     @Override

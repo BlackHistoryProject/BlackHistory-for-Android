@@ -17,7 +17,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions{
+    lintOptions {
         abortOnError false
     }
 
@@ -34,7 +34,7 @@ android {
         exclude 'META-INF/LICENSE.txt'
     }
 
-    buildTypes{
+    buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

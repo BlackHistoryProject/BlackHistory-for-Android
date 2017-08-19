@@ -26,7 +26,7 @@ final public class TwitterUtils {
      * @param context
      * @return
      */
-    public static Twitter getTwitterInstance(@NonNull Context context,@Nullable Long userId){
+    public static Twitter getTwitterInstance(@NonNull Context context, @Nullable Long userId) {
         String consumerKey = context.getString(R.string.twitter_consumer_key);
         String consumerSecret = context.getString(R.string.twitter_consumer_secret);
 
@@ -34,29 +34,29 @@ final public class TwitterUtils {
         Twitter twitter = factory.getInstance();
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
 
-        if ( userId != null && hasAccessToken(context)) {
+        if (userId != null && hasAccessToken(context)) {
             twitter.setOAuthAccessToken(loadAccessToken(userId));
         }
         return twitter;
     }
 
-    public static TwitterStream getTwitterStreamInstance(@NonNull Context context, Long userId){
+    public static TwitterStream getTwitterStreamInstance(@NonNull Context context, Long userId) {
         String consumerKey = context.getString(R.string.twitter_consumer_key);
         String consumerSecret = context.getString(R.string.twitter_consumer_secret);
         ConfigurationBuilder builder = new ConfigurationBuilder();
         {
-                builder.setOAuthConsumerKey(consumerKey);
-                builder.setOAuthConsumerSecret(consumerSecret);
-                AccessToken accessToken = loadAccessToken(userId);
-                if (accessToken != null) {
-                    builder.setOAuthAccessToken(accessToken.getToken());
-                    builder.setOAuthAccessTokenSecret(accessToken.getTokenSecret());
-                    BHLogger.println(accessToken.getToken() + " " + accessToken.getTokenSecret());
-                } else {
-                    BHLogger.println("Access token is null");
-                    deleteAccount(context, userId);
-                    return null;
-                }
+            builder.setOAuthConsumerKey(consumerKey);
+            builder.setOAuthConsumerSecret(consumerSecret);
+            AccessToken accessToken = loadAccessToken(userId);
+            if (accessToken != null) {
+                builder.setOAuthAccessToken(accessToken.getToken());
+                builder.setOAuthAccessTokenSecret(accessToken.getTokenSecret());
+                BHLogger.println(accessToken.getToken() + " " + accessToken.getTokenSecret());
+            } else {
+                BHLogger.println("Access token is null");
+                deleteAccount(context, userId);
+                return null;
+            }
         }
         twitter4j.conf.Configuration configuration = builder.build();
         return new TwitterStreamFactory(configuration).getInstance();
@@ -65,7 +65,7 @@ final public class TwitterUtils {
     @Nullable
     public static AccessToken loadAccessToken(long userId) {
         ModelAccessTokenObject tokenObject = getAccount(userId);
-        if (tokenObject == null){
+        if (tokenObject == null) {
             return null;
         }
         return new AccessToken(tokenObject.getUserToken(), tokenObject.getUserTokenSecret(), tokenObject.getUserId());
@@ -83,7 +83,7 @@ final public class TwitterUtils {
 
     /* ---  database 操作 --- */
 
-    public static void addAccount(@NonNull Context context, AccessToken accessToken){
+    public static void addAccount(@NonNull Context context, AccessToken accessToken) {
         ModelAccessTokenObject tokenObject = new ModelAccessTokenObject();
         tokenObject.setUserId(accessToken.getUserId());
         tokenObject.setUserName(accessToken.getScreenName());
@@ -102,7 +102,7 @@ final public class TwitterUtils {
         BHLogger.println(tokenObject.getUserScreenName());
     }
 
-    public static void deleteAccount(@NonNull Context context, Long userId){
+    public static void deleteAccount(@NonNull Context context, Long userId) {
 //        BHLogger.println("あかうんとけしたぞいｗｗｗ");
 //        Realm realm = Realm.getInstance(context);
 //        ModelAccessTokenObject result = realm.where(ModelAccessTokenObject.class).equalTo("userId", userId).findFirst();
@@ -114,7 +114,7 @@ final public class TwitterUtils {
 //        realm.commitTransaction();
     }
 
-    public static void deleteAllAccount(@NonNull Context context){
+    public static void deleteAllAccount(@NonNull Context context) {
 //        BHLogger.println("あかうんとぜんぶけすぞいｗｗｗ");
 //        Realm realm = Realm.getInstance(context);
 //        RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
@@ -126,11 +126,11 @@ final public class TwitterUtils {
     public static ArrayList<Long> getAccountIds(@NonNull Context context) {
         Realm realm = Realm.getInstance(context);
         ArrayList<Long> results = new ArrayList<>();
-        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()){
+        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()) {
             try {
                 BHLogger.println("TOKEN-", token);
                 results.add(token.getUserId());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -140,7 +140,7 @@ final public class TwitterUtils {
     public static ArrayList<ModelAccessTokenObject> getAccounts(@NonNull Context context) {
         Realm realm = Realm.getInstance(context);
         ArrayList<ModelAccessTokenObject> results = new ArrayList<>();
-        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()){
+        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()) {
             results.add(token);
         }
         return results;

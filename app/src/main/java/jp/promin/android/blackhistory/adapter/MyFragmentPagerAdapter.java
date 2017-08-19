@@ -22,7 +22,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    public MyFragmentPagerAdapter(FragmentManager fm,  ArrayList<Pair<Long, CommonStreamFragment>> list) {
+    public MyFragmentPagerAdapter(FragmentManager fm, ArrayList<Pair<Long, CommonStreamFragment>> list) {
         super(fm);
         this.tab = list;
     }
@@ -33,20 +33,21 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     /**
      * 新しくタブを追加する
+     *
      * @param timelineListType 表示するリストのタイプ
-     * @param userId 表示するリストの保持者 イベント受け取る際にも使う
+     * @param userId           表示するリストの保持者 イベント受け取る際にも使う
      */
-    public void addTab(@NonNull TimelineListType timelineListType, @NonNull Long userId){
+    public void addTab(@NonNull TimelineListType timelineListType, @NonNull Long userId) {
         /**
          * 既に同じ種類のリストが追加されてないかを確認する
          * 追加されていたら何もしない
          */
-        if (userId == -1  || search(userId, timelineListType) != null){
+        if (userId == -1 || search(userId, timelineListType) != null) {
             return;
         }
 
         CommonStreamFragment additionalFragment = null;
-        switch (timelineListType){
+        switch (timelineListType) {
             /**
              * 基本的なユーザーストリーム
              * * 自分のツイート/Fav/RT
@@ -122,7 +123,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
             case User:
                 break;
         }
-        if (additionalFragment != null){
+        if (additionalFragment != null) {
             tab.add(new Pair<>(userId, additionalFragment));
             this.notifyDataSetChanged();
         }
@@ -130,13 +131,14 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     /**
      * 指定した要素を含むタブが存在するかを確認
+     *
      * @param userId
      * @param listType
      * @return
      */
-    public CommonStreamFragment search(Long userId, TimelineListType listType){
-        for (Pair<Long, CommonStreamFragment> item : this.tab){
-            if (item.first.equals(userId) && item.second.getListType().equals(listType)){
+    public CommonStreamFragment search(Long userId, TimelineListType listType) {
+        for (Pair<Long, CommonStreamFragment> item : this.tab) {
+            if (item.first.equals(userId) && item.second.getListType().equals(listType)) {
                 return item.second;
             }
         }
@@ -145,11 +147,12 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     /**
      * 指定した要素を含むタブを削除する
+     *
      * @param item
      */
-    public void deleteTab(Pair<Long, CommonStreamFragment> item){
-        for (Pair<Long, CommonStreamFragment> _item : this.tab){
-            if (_item.equals(item)){
+    public void deleteTab(Pair<Long, CommonStreamFragment> item) {
+        for (Pair<Long, CommonStreamFragment> _item : this.tab) {
+            if (_item.equals(item)) {
                 this.tab.remove(item);
                 this.notifyDataSetChanged();
                 BHLogger.toast("削除しました");
@@ -161,14 +164,15 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     /**
      * indexからリストオブジェクトを取得する
      * タブ削除の時とかに使う
+     *
      * @param position
      * @return
      */
-    public Pair<Long, CommonStreamFragment> getItemAtIndex(int position){
+    public Pair<Long, CommonStreamFragment> getItemAtIndex(int position) {
         return tab.get(position);
     }
 
-    public void remove(int position){
+    public void remove(int position) {
         this.tab.remove(position);
     }
 
@@ -191,7 +195,7 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
                 e.printStackTrace();
                 return String.valueOf(position);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "Non-Title";
         }

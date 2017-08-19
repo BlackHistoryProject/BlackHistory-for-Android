@@ -19,6 +19,7 @@ import jp.promin.android.blackhistory.utils.TwitterUtils;
 public class SelectAccountDialogFragment extends DialogFragment {
     public static final String SELECT_TYPE = "selectType";
     public static final String SELECT_TAB_POSITION = "selectTabPosition";
+    ArrayList<ModelAccessTokenObject> tokens;
 
     /***
      * 前の画面が、選択画面じゃない時や、　前の選択によって結果が影響されない時に使う。
@@ -26,7 +27,7 @@ public class SelectAccountDialogFragment extends DialogFragment {
      * @param selectTypeID
      * @return
      */
-    public static SelectAccountDialogFragment newInstance(int selectTypeID){
+    public static SelectAccountDialogFragment newInstance(int selectTypeID) {
         Bundle bundle = new Bundle();
         bundle.putInt(SELECT_TYPE, selectTypeID);
         SelectAccountDialogFragment dialog = new SelectAccountDialogFragment();
@@ -41,7 +42,7 @@ public class SelectAccountDialogFragment extends DialogFragment {
      * @param selectTabPosition
      * @return
      */
-    public static SelectAccountDialogFragment newInstance(int selectTypeID, int selectTabPosition){
+    public static SelectAccountDialogFragment newInstance(int selectTypeID, int selectTabPosition) {
         Bundle bundle = new Bundle();
         bundle.putInt(SELECT_TYPE, selectTypeID);
         bundle.putInt(SELECT_TAB_POSITION, selectTabPosition);
@@ -49,8 +50,6 @@ public class SelectAccountDialogFragment extends DialogFragment {
         dialog.setArguments(bundle);
         return dialog;
     }
-
-    ArrayList<ModelAccessTokenObject> tokens;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -60,11 +59,11 @@ public class SelectAccountDialogFragment extends DialogFragment {
 
         ArrayList<String> menu = new ArrayList<>();
 
-        for (ModelAccessTokenObject tokenObject : tokens){
+        for (ModelAccessTokenObject tokenObject : tokens) {
             menu.add(tokenObject.getUserScreenName());
         }
 
-        if(bundle.getInt(SELECT_TYPE) == R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT){
+        if (bundle.getInt(SELECT_TYPE) == R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT) {
             menu.add("アカウントの追加");
         }
 
@@ -74,7 +73,7 @@ public class SelectAccountDialogFragment extends DialogFragment {
         builder.setTitle("アカウントを選びたまえ");
         builder.setIcon(R.drawable.iconlarge_more);
         builder.setItems(items, (dialogInterface, i) -> {
-            switch (bundle.getInt(SELECT_TYPE)){ //前の画面の種類
+            switch (bundle.getInt(SELECT_TYPE)) { //前の画面の種類
                 // タブ洗濯の画面から来たとき
                 case R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB:
                     tabCreate(i, bundle.getInt(SELECT_TAB_POSITION));
@@ -89,7 +88,7 @@ public class SelectAccountDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    public void tabCreate(int accountNum, int sel){
+    public void tabCreate(int accountNum, int sel) {
         ModelAccessTokenObject token = this.tokens.get(accountNum);
 
         ((MainStreamActivity) getActivity()).mAdapter.addTab(TimelineListType.getType(sel), token.getUserId());
@@ -97,9 +96,9 @@ public class SelectAccountDialogFragment extends DialogFragment {
         Toast.makeText(getActivity(), "タブを作成しました", Toast.LENGTH_SHORT).show();
     }
 
-    public void changeAccount(int sel){
+    public void changeAccount(int sel) {
         // アカウントの追加を押したときは、Twitter認証に飛ばす
-        if(sel == this.tokens.size()){
+        if (sel == this.tokens.size()) {
             startActivity(new Intent(getActivity(), TwitterOAuthActivity.class));
         }
     }

@@ -4,6 +4,7 @@ import twitter4j.Status;
 
 final public class TwitterReplyEvent extends TwitterAbstractEvent {
     final private Status status;
+
     public TwitterReplyEvent(long userId, Status tweet) {
         super(userId);
         this.status = tweet;

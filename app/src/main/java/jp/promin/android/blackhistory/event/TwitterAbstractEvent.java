@@ -7,7 +7,7 @@ abstract public class TwitterAbstractEvent {
         this.userId = userId;
     }
 
-    final public long getUserId(){
+    final public long getUserId() {
         return this.userId;
     }
 }

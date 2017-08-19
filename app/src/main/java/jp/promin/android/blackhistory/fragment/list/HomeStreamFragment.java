@@ -14,10 +14,10 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-final public class HomeStreamFragment extends CommonStreamFragment{
+final public class HomeStreamFragment extends CommonStreamFragment {
 
     @Nullable
-    public static HomeStreamFragment newInstance(@NonNull Long userId){
+    public static HomeStreamFragment newInstance(@NonNull Long userId) {
         if (2 > userId) return null;
         HomeStreamFragment fragment = new HomeStreamFragment();
         fragment.setArguments(userId, TimelineListType.Home);

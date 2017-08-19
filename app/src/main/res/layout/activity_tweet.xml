@@ -1,177 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000"
-    android:padding="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000"
+                android:padding="8dp">
 
     <TextView
         android:id="@+id/tweet_taskbar"
         android:layout_width="fill_parent"
         android:layout_height="30dp"
-        android:textColor="#FFF"
+        android:gravity="center"
         android:text="Tweet"
-        android:textSize="15sp"
-        android:gravity="center" />
+        android:textColor="#FFF"
+        android:textSize="15sp"/>
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/tweet_taskbar">
+
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:id="@+id/reply_user_info"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone">
+
                 <TextView
                     android:id="@+id/expansion_text"
-                    android:textSize="20sp"
-                    android:textColor="#ffd3d3d3"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="私の名前は山田太郎です。" />
+                    android:text="私の名前は山田太郎です。"
+                    android:textColor="#ffd3d3d3"
+                    android:textSize="20sp"/>
+
                 <ImageView
                     android:id="@+id/expansion_icon"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
+                    android:layout_alignParentLeft="@+id/expansion_text"
+                    android:layout_alignParentStart="@+id/expansion_text"
+                    android:layout_below="@+id/expansion_text"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_below="@+id/expansion_text"
-                    android:layout_alignParentLeft="@+id/expansion_text"
-                    android:layout_alignParentStart="@+id/expansion_text" />
+                    android:src="@mipmap/ic_launcher"/>
+
                 <TextView
-                    android:textSize="16sp"
-                    android:textColor="#ffd3d3d3"
                     android:id="@+id/expansion_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/expansion_icon"
                     android:layout_marginLeft="8dp"
-                    android:text="山田太郎"
                     android:layout_toRightOf="@id/expansion_icon"
-                    android:layout_alignTop="@id/expansion_icon" />
-                <TextView
-                    android:textSize="13sp"
+                    android:text="山田太郎"
                     android:textColor="#ffd3d3d3"
+                    android:textSize="16sp"/>
+
+                <TextView
                     android:id="@+id/expansion_screen_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="＠taro_yamada"
-                    android:layout_below="@id/expansion_name"
                     android:layout_alignLeft="@id/expansion_name"
-                    android:layout_alignStart="@id/expansion_name" />
-                <TextView
-                    android:textSize="11sp"
+                    android:layout_alignStart="@id/expansion_name"
+                    android:layout_below="@id/expansion_name"
+                    android:text="＠taro_yamada"
                     android:textColor="#ffd3d3d3"
+                    android:textSize="13sp"/>
+
+                <TextView
                     android:id="@+id/expansion_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/expansion_screen_name"
+                    android:layout_below="@id/expansion_screen_name"
                     android:layout_marginTop="1.0dip"
                     android:text="年月日時間"
-                    android:layout_below="@id/expansion_screen_name"
-                    android:layout_alignLeft="@id/expansion_screen_name" />
-                <TextView
-                    android:textSize="11sp"
                     android:textColor="#ffd3d3d3"
+                    android:textSize="11sp"/>
+
+                <TextView
                     android:id="@+id/expansion_via"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/expansion_time"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="1dp"
-                    android:text="via"
                     android:layout_toRightOf="@id/expansion_icon"
-                    android:layout_below="@id/expansion_time" />
+                    android:text="via"
+                    android:textColor="#ffd3d3d3"
+                    android:textSize="11sp"/>
             </RelativeLayout>
+
             <EditText
                 android:id="@+id/input_text"
-                android:layout_below="@id/reply_user_info"
                 android:layout_width="match_parent"
-                android:background="@drawable/back_tweetarea"
                 android:layout_height="140dp"
-                android:textColor="#D3D3D3"
-                android:padding="5dp"
+                android:layout_below="@id/reply_user_info"
                 android:layout_marginBottom="8dp"
-                android:ems="10"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/back_tweetarea"
+                android:ems="10"
                 android:gravity="start"
-                android:inputType="textMultiLine" >
-                <requestFocus />
+                android:inputType="textMultiLine"
+                android:padding="5dp"
+                android:textColor="#D3D3D3">
+
+                <requestFocus/>
             </EditText>
+
             <RelativeLayout
                 android:id="@+id/otherbutton1"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="5dp"
+                android:layout_below="@id/input_text"
                 android:layout_centerInParent="true"
-                android:layout_below="@id/input_text">
+                android:layout_marginTop="5dp">
 
                 <ImageButton
                     android:id="@+id/upload_image_1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:padding="8dp"
                     android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:background="@drawable/lay_text_blick" />
+                    android:background="@drawable/lay_text_blick"
+                    android:padding="8dp"/>
+
                 <ImageButton
                     android:id="@+id/upload_image_2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:background="@drawable/lay_text_blick"
-                    android:layout_toRightOf="@id/upload_image_1"/>
+                    android:layout_toRightOf="@id/upload_image_1"
+                    android:background="@drawable/lay_text_blick"/>
+
                 <ImageButton
                     android:id="@+id/upload_image_3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:background="@drawable/lay_text_blick"
-                    android:layout_toRightOf="@id/upload_image_2"/>
+                    android:layout_toRightOf="@id/upload_image_2"
+                    android:background="@drawable/lay_text_blick"/>
+
                 <ImageButton
                     android:id="@+id/upload_image_4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:background="@drawable/lay_text_blick"
-                    android:layout_toRightOf="@id/upload_image_3"/>
+                    android:layout_toRightOf="@id/upload_image_3"
+                    android:background="@drawable/lay_text_blick"/>
 
                 <Button
                     android:id="@+id/tweet_button"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_toRightOf="@id/upload_image_4"
                     android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/upload_image_4"
                     android:text="Send"
-                    android:textColor="#FFF" />
+                    android:textColor="#FFF"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/otherbutton2"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="1dp"
+                android:layout_below="@id/otherbutton1"
                 android:layout_centerInParent="true"
-                android:layout_below="@id/otherbutton1">
+                android:layout_marginTop="1dp">
+
                 <ImageButton
                     android:id="@+id/tweet_camera"
                     android:layout_width="70dp"
                     android:layout_height="fill_parent"
                     android:layout_alignParentRight="true"
+                    android:contentDescription=""
                     android:src="@android:drawable/ic_menu_camera"
-                    android:textColor="#FFF"
-                    android:contentDescription="" />
+                    android:textColor="#FFF"/>
+
                 <Button
                     android:id="@+id/tweet_picture"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:drawableLeft="@drawable/iconcompose_gallery"
-                    android:textColor="#FFF"
                     android:layout_toLeftOf="@id/tweet_camera"
-                    android:text="Add Picture" />
+                    android:drawableLeft="@drawable/iconcompose_gallery"
+                    android:text="Add Picture"
+                    android:textColor="#FFF"/>
             </RelativeLayout>
         </RelativeLayout>
     </ScrollView>

@@ -11,6 +11,9 @@ public class ImageManager {
     @SuppressLint("StaticFieldLeak")
     private static Picasso picasso;
 
+    private ImageManager() {
+    }
+
     static public synchronized void Initialize(Context applicationContext) {
         context = applicationContext;
         picasso = PicassoImage.Builder(applicationContext);
@@ -22,8 +25,5 @@ public class ImageManager {
 
     static public synchronized Picasso getPicasso() {
         return picasso;
-    }
-
-    private ImageManager() {
     }
 }

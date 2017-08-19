@@ -14,7 +14,8 @@ public class CustomDialogFragment extends DialogFragment {
     public static final String EXTRA_TITLE = "extra_title";
     public static final String EXTRA_STRING_RES = "extra_string_res";
     public static final String EXTRA_DIALOG = "extra_dialog";
-    public static CustomDialogFragment newInstance(String title, @ArrayRes int menuRes, DialogListener listener){
+
+    public static CustomDialogFragment newInstance(String title, @ArrayRes int menuRes, DialogListener listener) {
         CustomDialogFragment fragment = new CustomDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(EXTRA_TITLE, title);
@@ -23,8 +24,9 @@ public class CustomDialogFragment extends DialogFragment {
         fragment.setArguments(bundle);
         return fragment;
     }
+
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         final String title = getArguments().getString(EXTRA_TITLE);
         final int menuRes = getArguments().getInt(EXTRA_STRING_RES, -1);
         final DialogListener listener = (DialogListener) getArguments().getSerializable(EXTRA_DIALOG);

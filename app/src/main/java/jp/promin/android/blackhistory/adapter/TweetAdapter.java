@@ -43,98 +43,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         mInflater = (LayoutInflater) owner.getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     }
 
-    static class ViewHolder {
-        private TweetAdapter adapter;
-        private final Long ownerUserId;
-        private final Activity context;
-        private Status status;
-
-        @Bind(R.id.tweet_item_main)
-        RelativeLayout main;
-
-        @Bind(R.id.icon)
-        ImageView icon;
-        @Bind(R.id.name)
-        TextView name;
-        @Bind(R.id.screen_name)
-        TextView screenName;
-        @Bind(R.id.text)
-        TextView text;
-        @Bind(R.id.time)
-        TextView time;
-        @Bind(R.id.via)
-        TextView via;
-
-        @Bind(R.id.reply)
-        ImageButton replyButton;
-
-        @OnClick(R.id.reply)
-        void OnClickReply() {
-            TweetActivity.createIntent(context, this.ownerUserId, status, true);
-        }
-
-        @Bind(R.id.retweet)
-        ImageButton retweetButton;
-
-        @OnClick(R.id.retweet)
-        void OnClickReTweet(ImageButton button) {
-            // リツイート
-            UserAction.retweet(this.adapter.getContext(), button, this.ownerUserId, status, new UserAction.Callback() {
-                @Override
-                public void result(Status status) {
-                    ShowToast.showToast("RTしました");
-                    adapter.updateStatus(status);
-                }
-
-                @Override
-                public void error(Throwable error) {
-                    ShowToast.showToast(error.getLocalizedMessage());
-                }
-            });
-        }
-
-        @Bind(R.id.favorite)
-        ImageButton favoriteButton;
-
-        @OnClick(R.id.favorite)
-        void OnClickFavorite(ImageButton button) {
-            // お気に入り
-            UserAction.favorite(this.adapter.getContext(), button, this.ownerUserId, status, new UserAction.Callback() {
-                @Override
-                public void result(Status status) {
-                    ShowToast.showToast("ふぁぼった");
-                    adapter.updateStatus(status);
-                }
-
-                @Override
-                public void error(Throwable error) {
-                    ShowToast.showToast(error.getLocalizedMessage());
-                }
-            });
-        }
-
-        @OnClick(R.id.menu)
-        void OnClickMenu() {
-
-        }
-
-        @OnClick(R.id.tweet_item_main)
-        void OnClickStatus() {
-            TweetExpansionTweetActivity.createIntent(context, status);
-        }
-
-        public ViewHolder(View view, TweetAdapter adapter, Long ownerUserId) {
-            ButterKnife.bind(this, view);
-            this.adapter = adapter;
-            this.context = adapter.owner.getActivity();
-            this.ownerUserId = ownerUserId;
-        }
-
-        public void setStatus(Status status) {
-            this.status = status;
-        }
-    }
-
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -231,5 +139,92 @@ public class TweetAdapter extends ArrayAdapter<Status> {
             this.remove(status);
         }
         notifyDataSetInvalidated();
+    }
+
+    static class ViewHolder {
+        private final Long ownerUserId;
+        private final Activity context;
+        @Bind(R.id.tweet_item_main)
+        RelativeLayout main;
+        @Bind(R.id.icon)
+        ImageView icon;
+        @Bind(R.id.name)
+        TextView name;
+        @Bind(R.id.screen_name)
+        TextView screenName;
+        @Bind(R.id.text)
+        TextView text;
+        @Bind(R.id.time)
+        TextView time;
+        @Bind(R.id.via)
+        TextView via;
+        @Bind(R.id.reply)
+        ImageButton replyButton;
+        @Bind(R.id.retweet)
+        ImageButton retweetButton;
+        @Bind(R.id.favorite)
+        ImageButton favoriteButton;
+        private TweetAdapter adapter;
+        private Status status;
+
+        public ViewHolder(View view, TweetAdapter adapter, Long ownerUserId) {
+            ButterKnife.bind(this, view);
+            this.adapter = adapter;
+            this.context = adapter.owner.getActivity();
+            this.ownerUserId = ownerUserId;
+        }
+
+        @OnClick(R.id.reply)
+        void OnClickReply() {
+            TweetActivity.createIntent(context, this.ownerUserId, status, true);
+        }
+
+        @OnClick(R.id.retweet)
+        void OnClickReTweet(ImageButton button) {
+            // リツイート
+            UserAction.retweet(this.adapter.getContext(), button, this.ownerUserId, status, new UserAction.Callback() {
+                @Override
+                public void result(Status status) {
+                    ShowToast.showToast("RTしました");
+                    adapter.updateStatus(status);
+                }
+
+                @Override
+                public void error(Throwable error) {
+                    ShowToast.showToast(error.getLocalizedMessage());
+                }
+            });
+        }
+
+        @OnClick(R.id.favorite)
+        void OnClickFavorite(ImageButton button) {
+            // お気に入り
+            UserAction.favorite(this.adapter.getContext(), button, this.ownerUserId, status, new UserAction.Callback() {
+                @Override
+                public void result(Status status) {
+                    ShowToast.showToast("ふぁぼった");
+                    adapter.updateStatus(status);
+                }
+
+                @Override
+                public void error(Throwable error) {
+                    ShowToast.showToast(error.getLocalizedMessage());
+                }
+            });
+        }
+
+        @OnClick(R.id.menu)
+        void OnClickMenu() {
+
+        }
+
+        @OnClick(R.id.tweet_item_main)
+        void OnClickStatus() {
+            TweetExpansionTweetActivity.createIntent(context, status);
+        }
+
+        public void setStatus(Status status) {
+            this.status = status;
+        }
     }
 }

@@ -44,21 +44,25 @@ public class BlackUtil {
     /*曜日の設定*/
 
     static Map<Integer, String> days = new HashMap<>();
+    //////////////////////////
+    //ListDataUtils
+    private static String ListDataDelimiter = "-";
+    private static Pattern ListDataFormat = Pattern.compile("(\\d+)" + ListDataDelimiter + "(.*)");
 
     static String getDayKind(int dayOfweek) {
-        if(days.size() == 0) initialize();
+        if (days.size() == 0) initialize();
         return days.get(dayOfweek);
-   }
+    }
 
-   static void initialize(){
-       days.put(1, "日");
-       days.put(2, "月");
-       days.put(3, "火");
-       days.put(4, "水");
-       days.put(5, "木");
-       days.put(6, "金");
-       days.put(7, "土");
-   }
+    static void initialize() {
+        days.put(1, "日");
+        days.put(2, "月");
+        days.put(3, "火");
+        days.put(4, "水");
+        days.put(5, "木");
+        days.put(6, "金");
+        days.put(7, "土");
+    }
 
     @SuppressLint("DefaultLocale")
     public static String getDateFormat(Date date) {
@@ -66,7 +70,7 @@ public class BlackUtil {
         datetime.setTime(date);
 
         int year = datetime.get(Calendar.YEAR);
-        int month = datetime.get(Calendar.MONTH)+1;
+        int month = datetime.get(Calendar.MONTH) + 1;
         int day = datetime.get(Calendar.DAY_OF_MONTH);
         String dayKind = BlackUtil.getDayKind(datetime.get(Calendar.DAY_OF_WEEK));
         int hour = datetime.get(Calendar.HOUR_OF_DAY);
@@ -75,34 +79,30 @@ public class BlackUtil {
 
         return String.format(
                 "%04d年%02d月%02d日(%s) %02d:%02d:%02d",
-                year,month,day,dayKind, hour,minute,second);
+                year, month, day, dayKind, hour, minute, second);
 
-        }
-    public static String getVia(String tweetSource){
+    }
+
+    public static String getVia(String tweetSource) {
         String reg = "<(.*)>(.*)<(.*)>";
         Pattern pattern = Pattern.compile(reg);
         Matcher matcher = pattern.matcher(tweetSource);
-        if (matcher.find()){
+        if (matcher.find()) {
             return matcher.group(2);
         }
         return "";
     }
 
-    //////////////////////////
-    //ListDataUtils
-    private static String ListDataDelimiter = "-";
-    private static Pattern ListDataFormat = Pattern.compile("(\\d+)" + ListDataDelimiter + "(.*)");
-
     @NonNull
-    public static String genListDataString(@NonNull Long userId, @NonNull TimelineListType listType){
+    public static String genListDataString(@NonNull Long userId, @NonNull TimelineListType listType) {
         String txt = String.format("%s" + ListDataDelimiter + "%s", userId, listType.name());
         try {
             txt = ListDataFormat.matcher(txt).groupCount() > 1 ? txt : "";
-        } catch (Exception e){
+        } catch (Exception e) {
             txt = "";
             e.printStackTrace();
         }
-        if (txt.equals("")){
+        if (txt.equals("")) {
             BHLogger.printlnDetail("Failed generate ListData", txt);
         }
         return txt;
@@ -124,9 +124,9 @@ public class BlackUtil {
         } catch (Exception e) {
             BHLogger.printlnDetail(e.toString());
         }
-        if (dat == null){
+        if (dat == null) {
             BHLogger.printlnDetail("Failed parse ListData", txt);
-        }else {
+        } else {
             if (dat.first == null || dat.second == null) {
                 BHLogger.printlnDetail("Failed parse ListData Regex", matcher.group());
             } else {
@@ -136,7 +136,7 @@ public class BlackUtil {
         return dat;
     }
 
-    public static void showNotification(Context context, @DrawableRes int image, String title, String text, int notificationId){
+    public static void showNotification(Context context, @DrawableRes int image, String title, String text, int notificationId) {
         Notification.Builder builder = new Notification.Builder(context);
         builder.setSmallIcon(image);
 
@@ -208,19 +208,11 @@ public class BlackUtil {
         return true;
     }
 
-    public static class Const {
-        public class INTENT_REQUEST {
-            public static final int PERMISSION_REQUIRE_CAMERA = 1000;
-            public static final int PERMISSION_REQUIRE_GALLERY = 2000;
-            public static final int CAMERA = 100;
-            public static final int GALLERY = 200;
-        }
-    }
     /*-- Camera --*/
-    public static Uri wakeUpCamera(Activity activity){
+    public static Uri wakeUpCamera(Activity activity) {
         String folderPath = Environment.getExternalStorageDirectory() + "/BlackHistory/";
         File folder = new File(folderPath);
-        if (!folder.exists() && !folder.mkdirs()){
+        if (!folder.exists() && !folder.mkdirs()) {
             ShowToast.showToast("directory Not found.");
             return null;
         }
@@ -234,12 +226,13 @@ public class BlackUtil {
 
         return bitmapUri;
     }
+
     public static void wakeUpGallery(Activity activity) {
         Intent intent;
         if (Build.VERSION.SDK_INT < 19) {
             intent = new Intent(Intent.ACTION_GET_CONTENT);
 
-        }else{
+        } else {
             intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
         }
@@ -250,7 +243,7 @@ public class BlackUtil {
     public static View getInflateView(@NonNull Context context, @LayoutRes int resourceID) {
         try {
             return LayoutInflater.from(context).inflate(resourceID, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -261,8 +254,17 @@ public class BlackUtil {
         try {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
             return inflater.inflate(resourceID, null);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
+        }
+    }
+
+    public static class Const {
+        public class INTENT_REQUEST {
+            public static final int PERMISSION_REQUIRE_CAMERA = 1000;
+            public static final int PERMISSION_REQUIRE_GALLERY = 2000;
+            public static final int CAMERA = 100;
+            public static final int GALLERY = 200;
         }
     }
 }

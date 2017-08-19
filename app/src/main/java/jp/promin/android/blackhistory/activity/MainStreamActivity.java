@@ -33,39 +33,55 @@ import twitter4j.TwitterStream;
 public class MainStreamActivity extends BaseActivity {
     final static public String EXTRA_USER_ID = "extra_user_id";
     final static public String EXTRA_FROM_AUTH = "extra_from_auth";
-
-    @Bind(R.id.pager) ViewPager viewPager;
     public MyFragmentPagerAdapter mAdapter;
+    @Bind(R.id.pager)
+    ViewPager viewPager;
+    @Bind(R.id.menuber_menu)
+    ImageButton menuBar;
+    //////////////////////////////
+    HashMap<Long, ObservableUserStreamListener> streams = new HashMap<>();
 
     public MainStreamActivity() {
     }
 
-    @OnClick(R.id.Geolocation) void OnClickGeo(){
+    public static void startActivity(Context context, Long userId) {
+        Intent intent = new Intent(context, MainStreamActivity.class);
+        intent.putExtra(EXTRA_USER_ID, userId);
+        intent.putExtra(EXTRA_FROM_AUTH, true);
+        context.startActivity(intent);
+    }
+
+    @OnClick(R.id.Geolocation)
+    void OnClickGeo() {
 
     }
 
-    @OnClick(R.id.account) void  OnClickAccount(){
+    @OnClick(R.id.account)
+    void OnClickAccount() {
         SelectAccountDialogFragment
                 .newInstance(R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT)
                 .show(getSupportFragmentManager(), "select_account");
     }
 
-    @OnClick(R.id.addList) void  OnClickAddList(){
+    @OnClick(R.id.addList)
+    void OnClickAddList() {
         SelectTabKindDialogFragment
                 .newInstance()
                 .show(getSupportFragmentManager(), "a");
     }
 
-    @OnClick(R.id.menu_tweet) void OnClickTweet(){
+    @OnClick(R.id.menu_tweet)
+    void OnClickTweet() {
         //アクティビティを開く　ここだとつぶやきに飛ぶ
         TweetActivity.createIntent(this, getCurrentTabUserId().first);
     }
+    //////////////////////////////
 
-    @Bind(R.id.menuber_menu) ImageButton menuBar;
-    @OnClick(R.id.menuber_menu) void OnClickMenu(){
+    @OnClick(R.id.menuber_menu)
+    void OnClickMenu() {
         CustomDialogFragment.newInstance("", R.array.menu,
                 (CustomDialogFragment.DialogListener) (menuRes, position) -> {
-                    switch (position){
+                    switch (position) {
                         case 0: //リスト削除
                             removeTab();
                             break;
@@ -74,9 +90,6 @@ public class MainStreamActivity extends BaseActivity {
                     }
                 }).show(getSupportFragmentManager(), "menu");
     }
-    //////////////////////////////
-    HashMap<Long, ObservableUserStreamListener> streams = new HashMap<>();
-    //////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,41 +103,34 @@ public class MainStreamActivity extends BaseActivity {
 
             Boolean fromAuth = getIntent().getBooleanExtra(EXTRA_FROM_AUTH, false);
             Long userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
-                for (Long _userId :TwitterUtils.getAccountIds(this)) {
-                    if (this.streams.containsKey(_userId)) continue;
-                    TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, _userId);
-                    ObservableUserStreamListener listener =  new ObservableUserStreamListener(this, _userId);
-                    if (twitterStream != null) {
-                        twitterStream.addListener(listener);
-                        twitterStream.user();
-                    }
-
-                    this.streams.put(_userId, listener);
-                    //this.mAdapter.addTab(TimelineListType.Home, _userId);
+            for (Long _userId : TwitterUtils.getAccountIds(this)) {
+                if (this.streams.containsKey(_userId)) continue;
+                TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, _userId);
+                ObservableUserStreamListener listener = new ObservableUserStreamListener(this, _userId);
+                if (twitterStream != null) {
+                    twitterStream.addListener(listener);
+                    twitterStream.user();
                 }
 
-            if (this.streams.size() == 0){
+                this.streams.put(_userId, listener);
+                //this.mAdapter.addTab(TimelineListType.Home, _userId);
+            }
+
+            if (this.streams.size() == 0) {
                 //TwitterUtils.deleteAllAccount(this);
                 //createIntent(new Intent(this, TwitterOAuthActivity.class));
             }
 
-            if (fromAuth && userId > 0){
+            if (fromAuth && userId > 0) {
                 this.mAdapter.addTab(TimelineListType.Home, userId);
             }
-        }else {
+        } else {
             startActivity(new Intent(this, TwitterOAuthActivity.class));
         }
     }
 
-    public Pair<Long, CommonStreamFragment> getCurrentTabUserId(){
+    public Pair<Long, CommonStreamFragment> getCurrentTabUserId() {
         return this.mAdapter.getItemAtIndex(this.viewPager.getCurrentItem());
-    }
-
-    public static void startActivity(Context context, Long userId){
-        Intent intent = new Intent(context, MainStreamActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
-        intent.putExtra(EXTRA_FROM_AUTH, true);
-        context.startActivity(intent);
     }
 
     @Override
@@ -135,14 +141,14 @@ public class MainStreamActivity extends BaseActivity {
         RealmResults<ModelListObject> t = realm.where(ModelListObject.class).findAll();
         BHLogger.println(t.size());
 
-        for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()){
+        for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()) {
 //            String listData = listObject.getListData();
             Pair<Long, TimelineListType> listData = BlackUtil.genListData(listObject.getListData());
 
-            if (listData == null){
+            if (listData == null) {
                 BHLogger.println("Load Failed ListData", listObject);
                 continue;
-            } else  {
+            } else {
                 BHLogger.println("Load Success ListData", listData.first);
                 BHLogger.println("Load Success ListData", listData.second);
             }
@@ -170,8 +176,7 @@ public class MainStreamActivity extends BaseActivity {
                     }
                     listObject.setListData(listData);
                     realm.copyToRealmOrUpdate(listObject);
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

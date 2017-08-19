@@ -1,132 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tweet_item_main"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp">
+                android:id="@+id/tweet_item_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
     <RelativeLayout
         android:id="@+id/tweet_body"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="@string/user_icon" />
-    
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#D3D3D3"
-        android:layout_alignTop="@+id/icon"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/icon"
-        android:textSize="12sp"/>
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/user_icon"
+            android:src="@mipmap/ic_launcher"/>
 
-    <TextView
-        android:id="@+id/screen_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#D3D3D3"
-        android:layout_alignTop="@+id/name"
-        android:layout_marginStart="8dp"
-        android:layout_toEndOf="@+id/name"
-        android:textSize="12sp"/>
-    
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#D3D3D3"
-        android:layout_alignStart="@+id/name"
-        android:layout_below="@+id/name"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/icon"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/icon"
+            android:textColor="#D3D3D3"
+            android:textSize="12sp"/>
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#D3D3D3"
-        android:layout_alignStart="@+id/name"
-        android:layout_below="@+id/text"
-        android:layout_marginTop="5dp"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/screen_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/name"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/name"
+            android:textColor="#D3D3D3"
+            android:textSize="12sp"/>
 
-    <TextView
-        android:id="@+id/via"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#D3D3D3"
-        android:layout_toEndOf="@+id/icon"
-        android:layout_below="@+id/time"
-        android:text="@string/via"
-        android:layout_marginTop="1dp"
-        android:layout_marginStart="8dp"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/name"
+            android:textColor="#D3D3D3"
+            android:textSize="12sp"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/time"
-        android:layout_below="@+id/text" >
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/name"
+            android:layout_below="@+id/text"
+            android:layout_marginTop="5dp"
+            android:textColor="#D3D3D3"
+            android:textSize="12sp"/>
 
-        <ImageButton
-            android:id="@+id/menu"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="#0000"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/iconlarge_more"
-            android:contentDescription="@string/menu_icon" />
-
-        <ImageButton
-            android:id="@+id/favorite"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+        <TextView
+            android:id="@+id/via"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/time"
-            android:background="#0000"
-            android:layout_toStartOf="@id/menu"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:layout_toEndOf="@+id/icon"
+            android:text="@string/via"
+            android:textColor="#D3D3D3"
+            android:textSize="12sp"/>
 
-            android:src="@drawable/iconlarge_favourite"
-            android:layout_marginEnd="10dp" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text"
+            android:layout_toEndOf="@+id/time">
 
-        <ImageButton
-            android:id="@+id/retweet"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/time"
-            android:background="#0000"
-            android:layout_toLeftOf="@id/favorite"
-            android:src="@drawable/iconlarge_retweet"
-            android:layout_marginRight="10dp"
-            />
+            <ImageButton
+                android:id="@+id/menu"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:background="#0000"
+                android:contentDescription="@string/menu_icon"
+                android:src="@drawable/iconlarge_more"/>
 
-        <ImageButton
-            android:id="@+id/reply"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/time"
-            android:background="#0000"
-            android:layout_toLeftOf="@id/retweet"
-            android:src="@drawable/iconlarge_reply"
-            android:layout_marginRight="10dp"
-            />
+            <ImageButton
+                android:id="@+id/favorite"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/time"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@id/menu"
 
+                android:background="#0000"
+                android:src="@drawable/iconlarge_favourite"/>
+
+            <ImageButton
+                android:id="@+id/retweet"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/time"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/favorite"
+                android:background="#0000"
+                android:src="@drawable/iconlarge_retweet"
+                />
+
+            <ImageButton
+                android:id="@+id/reply"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_below="@+id/time"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@id/retweet"
+                android:background="#0000"
+                android:src="@drawable/iconlarge_reply"
+                />
+
+        </RelativeLayout>
     </RelativeLayout>
-    </RelativeLayout>
+
     <View
-        android:background="#ffffffff"
         android:layout_width="fill_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tweet_body"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        android:background="#ffffffff"/>
 
 </RelativeLayout>
 
