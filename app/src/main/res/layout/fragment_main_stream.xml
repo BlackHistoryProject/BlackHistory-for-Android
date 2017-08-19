@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
     >
 
     <android.support.v4.view.ViewPager
@@ -13,14 +13,15 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="50dp"
         android:background="#000">
+
         <android.support.v4.view.PagerTitleStrip
             android:layout_width="match_parent"
             android:layout_height="25dp"
             android:layout_gravity="top"
             android:background="@drawable/back_actionbar"
-            android:textColor="#FFFFFF"
+            android:paddingBottom="4dp"
             android:paddingTop="2dp"
-            android:paddingBottom="4dp"/>
+            android:textColor="#FFFFFF"/>
         <!--
         android:layout_height =>　上のHomeとかのサイズ
         android:paddingTop    =>　アクションバーの上からどれだけ離すか　(ここではHome)
@@ -33,18 +34,19 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/actions_grad"
-        android:gravity="center" >
+        android:gravity="center">
+
         <ImageButton
             android:id="@+id/menuber_menu"
-            android:layout_height="40dp"
             android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/wdg_iconlist_grey"
             android:background="@drawable/press_button"
             android:orderInCategory="250"
             android:showAsAction="always"
+            android:src="@drawable/wdg_iconlist_grey"
             android:title="@string/menu_tweet"/>
 
         <LinearLayout
@@ -53,59 +55,59 @@
             android:layout_toLeftOf="@id/menuber_menu"
             android:orientation="horizontal">
 
-        <!--位置情報-->
-        <ImageButton
-            android:id="@+id/Geolocation"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/toolbaricon_map2"
-            android:background="@drawable/press_button"
-            android:orderInCategory="50"
-            android:showAsAction="always"
-            android:title="位置情報"
-            />
+            <!--位置情報-->
+            <ImageButton
+                android:id="@+id/Geolocation"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:orderInCategory="50"
+                android:scaleType="fitCenter"
+                android:showAsAction="always"
+                android:src="@drawable/toolbaricon_map2"
+                android:title="位置情報"
+                />
 
-       <!--アカウントの追加-->
-        <ImageButton
-            android:id="@+id/account"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:scaleType="fitCenter"
-            android:src="@drawable/toolbaricon_contacts2"
-            android:background="@drawable/press_button"
-            android:orderInCategory="100"
-            android:showAsAction="always"
-            android:title="アカウントの追加と削除"
-            />
+            <!--アカウントの追加-->
+            <ImageButton
+                android:id="@+id/account"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:orderInCategory="100"
+                android:scaleType="fitCenter"
+                android:showAsAction="always"
+                android:src="@drawable/toolbaricon_contacts2"
+                android:title="アカウントの追加と削除"
+                />
 
-        <!--リストの追加と削除-->
-        <ImageButton
-            android:id="@+id/addList"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/toolbaricon_add2"
-            android:background="@drawable/press_button"
-            android:orderInCategory="150"
-            android:showAsAction="always"
-            android:title="リストの追加と削除"
-            />
+            <!--リストの追加と削除-->
+            <ImageButton
+                android:id="@+id/addList"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:orderInCategory="150"
+                android:showAsAction="always"
+                android:src="@drawable/toolbaricon_add2"
+                android:title="リストの追加と削除"
+                />
 
-        <!--つぶやく-->
-        <ImageButton
-            android:id="@+id/menu_tweet"
-            android:layout_height="fill_parent"
-            android:layout_width="fill_parent"
-            android:layout_weight="1"
-            android:src="@drawable/toolbaricon_compose2"
-            android:background="@drawable/press_button"
-            android:orderInCategory="200"
-            android:showAsAction="always"
-            android:title="@string/menu_tweet"
-            />
+            <!--つぶやく-->
+            <ImageButton
+                android:id="@+id/menu_tweet"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:orderInCategory="200"
+                android:showAsAction="always"
+                android:src="@drawable/toolbaricon_compose2"
+                android:title="@string/menu_tweet"
+                />
         </LinearLayout>
 
     </RelativeLayout>

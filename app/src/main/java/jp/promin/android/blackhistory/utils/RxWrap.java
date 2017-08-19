@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.Collections;
 import java.util.List;
 
+import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -13,10 +14,6 @@ import rx.schedulers.Schedulers;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.UploadedMedia;
-
-/**
- * Created by atsumi on 2016/09/27.
- */
 
 public class RxWrap {
     public static <T> Observable<T> create(Observable<T> observable) {
@@ -66,6 +63,20 @@ public class RxWrap {
                 .toBlocking().single();
     }
 
+    public static <T> Observable<T> createObservable(TwitterAction.Callable<T> observable) {
+        return Observable.create(new Observable.OnSubscribe<T>() {
+            @Override
+            public void call(Subscriber<? super T> subscriber) {
+                try {
+                    subscriber.onNext(observable.call());
+                    subscriber.onCompleted();
+                } catch (TwitterException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
     public interface UploadMedia {
         List<UploadedMedia> medias();
     }
@@ -78,19 +89,5 @@ public class RxWrap {
 
     public interface Callable<T> {
         T call() throws TwitterException;
-    }
-
-    public static <T> Observable<T> createObservable(UserAction.Callable<T> observable) {
-        return Observable.create(new Observable.OnSubscribe<T>() {
-            @Override
-            public void call(Subscriber<? super T> subscriber) {
-                try {
-                    subscriber.onNext(observable.call());
-                    subscriber.onCompleted();
-                } catch (TwitterException e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
     }
 }

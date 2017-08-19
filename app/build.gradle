@@ -2,29 +2,23 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'android-apt'
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
+apply from: 'findbugs.gradle'
+check.dependsOn 'findbugs'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId 'jp.promin.android.blackhistory'
-
         minSdkVersion 19
         targetSdkVersion 25
-
         versionCode 3
         versionName '3ページ目'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    lintOptions{
-        checkReleaseBuilds false
+    lintOptions {
         abortOnError false
-        check 'NewApi', 'InlinedApi'
-        ignoreWarnings true
     }
 
     dataBinding {
@@ -40,21 +34,14 @@ android {
         exclude 'META-INF/LICENSE.txt'
     }
 
-    buildTypes{
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                output.outputFile = new File(
-                        output.outputFile.parent,
-                        output.outputFile.name.replace(".apk", "-${variant.versionName}-${variant.versionCode}.apk"))
-            }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled true
-            proguardFiles 'proguard-rules.pro'
-        }
-        debug {
-            minifyEnabled false
-            proguardFiles 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -68,15 +55,10 @@ android {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-
-    compile 'com.android.support:support-v4:25.0.1'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
 
     // Twitter
     compile 'org.twitter4j:twitter4j-http2-support:4.0.5'
@@ -105,6 +87,3 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
 }
-
-apply from: '../tasks/findbugs.gradle'
-check.dependsOn 'findbugs'

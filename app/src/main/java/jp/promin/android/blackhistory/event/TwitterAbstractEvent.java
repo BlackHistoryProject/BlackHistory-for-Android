@@ -1,8 +1,5 @@
 package jp.promin.android.blackhistory.event;
 
-/**
- * Created by atsumi on 2016/01/09.
- */
 abstract public class TwitterAbstractEvent {
     private final long userId;
 
@@ -10,7 +7,7 @@ abstract public class TwitterAbstractEvent {
         this.userId = userId;
     }
 
-    final public long getUserId(){
+    final public long getUserId() {
         return this.userId;
     }
 }

@@ -10,13 +10,10 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
-
 public class FileUtils {
 
-    private FileUtils() {} //private constructor to enforce Singleton pattern
+    private FileUtils() {
+    } //private constructor to enforce Singleton pattern
 
     /**
      * @param uri The Uri to check.
@@ -57,15 +54,16 @@ public class FileUtils {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      * @author paulburke
      */
-    @Nullable public static Uri getDataColumn(Context context, Uri uri, String selection,
-                                              String[] selectionArgs) {
+    @Nullable
+    public static Uri getDataColumn(Context context, Uri uri, String selection,
+                                    String[] selectionArgs) {
 
         Cursor cursor = null;
         final String column = "_data";
@@ -125,7 +123,7 @@ public class FileUtils {
             // Return the remote address
             if (isGooglePhotosUri(uri)) return Uri.parse(uri.getLastPathSegment());
             return getDataColumn(context, uri, null, null);
-        }  else if ("file".equalsIgnoreCase(uri.getScheme())) {
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
             return Uri.parse(uri.getPath());
         }
 
