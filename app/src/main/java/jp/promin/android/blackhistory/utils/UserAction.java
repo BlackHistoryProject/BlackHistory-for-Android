@@ -5,10 +5,9 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.ImageButton;
 
-import jp.promin.android.blackhistory.R;
-
 import java.util.List;
 
+import jp.promin.android.blackhistory.R;
 import rx.Observable;
 import rx.Subscriber;
 import twitter4j.Status;
@@ -17,9 +16,6 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.UploadedMedia;
 
-/**
- * Created by atsumi on 2016/01/19.
- */
 public class UserAction {
     public static void favorite(@NonNull final Context context,
                                 @NonNull final ImageButton favButton,

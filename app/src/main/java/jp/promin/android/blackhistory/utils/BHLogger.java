@@ -4,9 +4,6 @@ import android.widget.Toast;
 
 import jp.promin.android.blackhistory.AppController;
 
-/**
- * Created by atsumi on 2016/01/12.
- */
 public class BHLogger {
     public static void toast(String text) {
         Toast.makeText(AppController.get().getApplicationContext(), text, Toast.LENGTH_SHORT).show();

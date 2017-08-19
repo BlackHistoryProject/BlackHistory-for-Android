@@ -4,14 +4,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import jp.promin.android.blackhistory.AppController;
-import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
-
 import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import jp.promin.android.blackhistory.AppController;
+import jp.promin.android.blackhistory.R;
+import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
@@ -19,9 +18,6 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
-/**
- * Created by nanami on 2014/09/03.
- */
 final public class TwitterUtils {
 
     /*

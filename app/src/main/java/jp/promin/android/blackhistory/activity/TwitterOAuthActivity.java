@@ -10,14 +10,10 @@ import jp.promin.android.blackhistory.utils.RxWrap;
 import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.TwitterUtils;
 import jp.promin.android.blackhistory.utils.UserAction;
-
 import twitter4j.Twitter;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-/**
- * Created by nanami on 2014/09/03.
- */
 public class TwitterOAuthActivity extends BaseActivity {
     private String mCallBackURL;
     private Twitter mTwitter;
@@ -39,23 +35,20 @@ public class TwitterOAuthActivity extends BaseActivity {
         mCallBackURL = getString(R.string.twitter_callback_url);
         mTwitter = TwitterUtils.getTwitterInstance(this, null);
 
-        RxWrap.create(UserAction.createObservable(() -> {
-            mTwitter.setOAuthAccessToken(null);
-            mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
-            return mRequestToken.getAuthorizationURL();
-        })).subscribe(s -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(s));
-            startActivity(intent);
-        }, throwable -> {
-            ShowToast.showToast(throwable.getLocalizedMessage());
-        });
+        RxWrap
+                .create(UserAction.createObservable(() -> {
+                    mTwitter.setOAuthAccessToken(null);
+                    mRequestToken = mTwitter.getOAuthRequestToken(mCallBackURL);
+                    return mRequestToken.getAuthorizationURL();
+                }))
+                .subscribe(uri -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uri))), Throwable::printStackTrace);
     }
 
     @Override
     public void onNewIntent(Intent intent) {
         if (intent == null
                 || intent.getData() == null
-                || !intent.getData().toString().startsWith(mCallBackURL)){
+                || !intent.getData().toString().startsWith(mCallBackURL)) {
             return;
         }
         String verifier = intent.getData().getQueryParameter("oauth_verifier");

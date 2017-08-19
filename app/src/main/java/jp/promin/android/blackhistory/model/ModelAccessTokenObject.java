@@ -3,9 +3,6 @@ package jp.promin.android.blackhistory.model;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by atsumi on 2016/01/10.
- */
 @SuppressWarnings("unchecked")
 public class ModelAccessTokenObject extends RealmObject {
 

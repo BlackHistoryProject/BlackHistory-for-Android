@@ -10,9 +10,6 @@ import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 
 
-/**
- * Created by atsumi on 2016/01/10.
- */
 public class PicassoImage {
     private final static int DISK_CACHE_SIZE_MB = 100;
     private final static int MEMORY_CACHE_SIZE_MB = 5;

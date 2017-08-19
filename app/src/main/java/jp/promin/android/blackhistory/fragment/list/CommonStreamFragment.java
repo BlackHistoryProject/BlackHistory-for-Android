@@ -3,13 +3,15 @@ package jp.promin.android.blackhistory.fragment.list;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.widget.ListView;
 
+import java.util.List;
+
+import butterknife.Bind;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.activity.MainStreamActivity;
 import jp.promin.android.blackhistory.adapter.TweetAdapter;
@@ -21,25 +23,16 @@ import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
 import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.RxWrap;
 import jp.promin.android.blackhistory.utils.TwitterUtils;
-import jp.promin.android.blackhistory.utils.UserAction;
-
-import java.util.List;
-
-import butterknife.Bind;
-import rx.functions.Action1;
 import twitter4j.Status;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 
-/**
- * Created by Telneko on 2015/01/17.
- */
 public abstract class CommonStreamFragment extends BaseFragment implements ListStreamListener {
     final static String ARGS_USER_ID = "args_user_id";
     final static String ARGS_LIST_TYPE = "args_list_type";
 
     //////// getter setter //////////
-    @NonNull private TimelineListType listType;
+    @NonNull
+    private TimelineListType listType;
     private Long userId;
     private ModelAccessTokenObject userObject;
     private TweetAdapter mAdapter;
@@ -80,7 +73,8 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     //////////////////////////////////
 
-    @Bind(android.R.id.list) ListView listView;
+    @Bind(android.R.id.list)
+    ListView listView;
 
     @Override
     final protected int getLayoutID() {
@@ -100,12 +94,12 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     final public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (this.mAdapter == null){
+        if (this.mAdapter == null) {
             this.mAdapter = new TweetAdapter(this);
             this.listView.setAdapter(this.mAdapter);
         }
-        if (this.mTwitter == null){
-            this.mTwitter =  TwitterUtils.getTwitterInstance(getActivity(), userId);
+        if (this.mTwitter == null) {
+            this.mTwitter = TwitterUtils.getTwitterInstance(getActivity(), userId);
         }
 
         setListener(this);
@@ -116,7 +110,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
      * タイムラインの更新
      * 初回呼び出しや、リストをスクロールした時など
      */
-    final protected void reloadTimeLine(){
+    final protected void reloadTimeLine() {
         RxWrap.create(RxWrap.createObservable(() -> listener.call(mTwitter)))
                 .subscribe(statuses -> {
                     if (listener instanceof SimpleStreamListener) {
@@ -133,6 +127,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     /**
      * 一つのツイートをリストに追加する時につかうよ
+     *
      * @param status
      */
     final protected void insertTweet(final Status status) {
@@ -151,7 +146,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
         insertAllTweet(result, true);
     }
 
-    final protected void insertAllTweet(@NonNull final List<Status> result,final Boolean clear) {
+    final protected void insertAllTweet(@NonNull final List<Status> result, final Boolean clear) {
         getActivity().runOnUiThread(() -> {
             try {
                 if (clear) mAdapter.clear();
@@ -166,7 +161,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     /**
      * Androidの通知用メソッド
      */
-    final public void showNotification(int image, String title, String text, int id){
+    final public void showNotification(int image, String title, String text, int id) {
         Notification.Builder builder = new Notification.Builder(getContext());
         builder.setSmallIcon(image);
 
@@ -189,23 +184,23 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     /**
      * タブに表示されるカラム名を返すよ
+     *
      * @return
      */
-    final public String getTitle(){
+    final public String getTitle() {
         try {
             BHLogger.println("getUserId", userId);
             BHLogger.println("getListType", listType);
             BHLogger.println("getUserObject", userObject);
 
             return this.listType.name() + " - " + this.userObject.getUserScreenName();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "-";
         }
     }
 
-    final protected void setArguments(@NonNull Long userId, @NonNull TimelineListType listType){
+    final protected void setArguments(@NonNull Long userId, @NonNull TimelineListType listType) {
         Bundle bundle = new Bundle();
         bundle.putLong(ARGS_USER_ID, userId);
         bundle.putInt(ARGS_LIST_TYPE, listType.index);
@@ -216,7 +211,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
         this.listType = listType;
     }
 
-    public void invalidateListView(int targetPosition){
+    public void invalidateListView(int targetPosition) {
         this.listView.getAdapter().getView(targetPosition, this.listView.getChildAt(targetPosition), this.listView);
     }
 }

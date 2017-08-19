@@ -7,18 +7,14 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.base.BaseActivity;
 import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.ImageManager;
-
-import butterknife.Bind;
 import twitter4j.Status;
 
-/**
- * Created by nanami on 2014/09/11.
- */
 public class TweetExpansionTweetActivity extends BaseActivity {
     final private static String EXTRA_STATUS = "extra_status";
 

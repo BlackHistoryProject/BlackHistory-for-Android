@@ -4,19 +4,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.ListView;
 
-import jp.promin.android.blackhistory.adapter.TweetAdapter;
-import jp.promin.android.blackhistory.event.TwitterStreamEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import jp.promin.android.blackhistory.adapter.TweetAdapter;
+import jp.promin.android.blackhistory.event.TwitterStreamEvent;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-/**
- * Created by nanami on 2014/09/05.
- */
 final public class HomeStreamFragment extends CommonStreamFragment{
 
     @Nullable

@@ -7,6 +7,14 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageButton;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.adapter.MyFragmentPagerAdapter;
 import jp.promin.android.blackhistory.base.BaseActivity;
@@ -20,20 +28,8 @@ import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.ObservableUserStreamListener;
 import jp.promin.android.blackhistory.utils.TwitterUtils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
 import twitter4j.TwitterStream;
 
-/**
- * Created by nanami on 2014/09/05.
- */
 public class MainStreamActivity extends BaseActivity {
     final static public String EXTRA_USER_ID = "extra_user_id";
     final static public String EXTRA_FROM_AUTH = "extra_from_auth";

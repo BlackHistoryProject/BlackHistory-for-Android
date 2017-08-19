@@ -8,10 +8,6 @@ import android.widget.Toast;
 import jp.promin.android.blackhistory.AppController;
 import jp.promin.android.blackhistory.R;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
-
 public class ShowToast {
     public static void showToast(String text, Integer duration){
         Context context = AppController.get().getApplicationContext();

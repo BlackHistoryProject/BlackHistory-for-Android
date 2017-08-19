@@ -21,6 +21,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.OnClick;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.base.BaseActivity;
 import jp.promin.android.blackhistory.utils.BHLogger;
@@ -31,22 +39,10 @@ import jp.promin.android.blackhistory.utils.RxWrap;
 import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.TwitterUtils;
 import jp.promin.android.blackhistory.utils.UserAction;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.OnClick;
 import rx.Observable;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
-/**
- * Created by nanami on 2014/09/04.
- */
 public class TweetActivity extends BaseActivity {
 
     private final static String EXTRA_USER_ID = "extra_user_id";

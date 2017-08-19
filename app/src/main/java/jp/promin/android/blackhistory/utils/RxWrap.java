@@ -14,10 +14,6 @@ import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.UploadedMedia;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
-
 public class RxWrap {
     public static <T> Observable<T> create(Observable<T> observable) {
         return observable

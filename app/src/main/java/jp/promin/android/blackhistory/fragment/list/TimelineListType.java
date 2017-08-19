@@ -5,11 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 
 import rx.Observable;
-import rx.functions.Func1;
 
-/**
- * Created by atsumi on 2016/01/12.
- */
 public enum TimelineListType {
     Home(0),
     Notification(1),

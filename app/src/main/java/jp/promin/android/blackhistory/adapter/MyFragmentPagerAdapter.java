@@ -6,6 +6,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.Pair;
 
+import java.util.ArrayList;
+
 import jp.promin.android.blackhistory.fragment.list.CommonStreamFragment;
 import jp.promin.android.blackhistory.fragment.list.FavoriteStreamFragment;
 import jp.promin.android.blackhistory.fragment.list.HomeStreamFragment;
@@ -13,11 +15,6 @@ import jp.promin.android.blackhistory.fragment.list.MentionsStreamFragment;
 import jp.promin.android.blackhistory.fragment.list.TimelineListType;
 import jp.promin.android.blackhistory.utils.BHLogger;
 
-import java.util.ArrayList;
-
-/**
- * Created by nanami on 2014/09/05.
- */
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     ArrayList<Pair<Long, CommonStreamFragment>> tab = new ArrayList<>();
 

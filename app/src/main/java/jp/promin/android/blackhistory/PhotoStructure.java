@@ -12,9 +12,6 @@ import android.support.annotation.NonNull;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
 public class PhotoStructure {
     private String path;
     private Context context;

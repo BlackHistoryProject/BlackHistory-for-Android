@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.activity.MainStreamActivity;
 import jp.promin.android.blackhistory.activity.TwitterOAuthActivity;
@@ -14,11 +16,6 @@ import jp.promin.android.blackhistory.fragment.list.TimelineListType;
 import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
 import jp.promin.android.blackhistory.utils.TwitterUtils;
 
-import java.util.ArrayList;
-
-/**
- * Created by Telneko on 2015/01/17.
- */
 public class SelectAccountDialogFragment extends DialogFragment {
     public static final String SELECT_TYPE = "selectType";
     public static final String SELECT_TAB_POSITION = "selectTabPosition";

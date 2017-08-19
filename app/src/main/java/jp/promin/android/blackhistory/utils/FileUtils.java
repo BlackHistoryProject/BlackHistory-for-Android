@@ -10,10 +10,6 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
-
 public class FileUtils {
 
     private FileUtils() {} //private constructor to enforce Singleton pattern

@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.ArrayRes;
 import android.support.v4.app.DialogFragment;
 
-import jp.promin.android.blackhistory.R;
-
 import java.io.Serializable;
 
-/**
- * Created by Telneko on 2015/01/17.
- */
+import jp.promin.android.blackhistory.R;
+
 public class CustomDialogFragment extends DialogFragment {
     public static final String EXTRA_TITLE = "extra_title";
     public static final String EXTRA_STRING_RES = "extra_string_res";

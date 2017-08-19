@@ -5,10 +5,6 @@ import android.content.Context;
 
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by atsumi on 2016/09/27.
- */
-
 public class ImageManager {
     @SuppressLint("StaticFieldLeak")
     private static Context context;

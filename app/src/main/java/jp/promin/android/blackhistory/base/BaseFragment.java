@@ -8,14 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.ButterKnife;
 import jp.promin.android.blackhistory.event.EventBusHolder;
 import jp.promin.android.blackhistory.utils.BHLogger;
 
-import butterknife.ButterKnife;
-
-/**
- * Created by atsumi on 2016/01/20.
- */
 abstract public class BaseFragment extends Fragment {
     private LayoutInflater inflater;
 

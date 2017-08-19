@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.activity.TweetActivity;
 import jp.promin.android.blackhistory.activity.TweetExpansionTweetActivity;
@@ -26,15 +29,7 @@ import jp.promin.android.blackhistory.utils.ImageManager;
 import jp.promin.android.blackhistory.utils.LinkText;
 import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.UserAction;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import twitter4j.Status;
-
-/**
- * Created by nanami on 2014/09/05.
- */
 
 public class TweetAdapter extends ArrayAdapter<Status> {
 

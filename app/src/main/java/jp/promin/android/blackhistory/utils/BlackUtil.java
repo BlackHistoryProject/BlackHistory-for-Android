@@ -25,12 +25,6 @@ import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import jp.promin.android.blackhistory.AppController;
-import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.activity.MainStreamActivity;
-import jp.promin.android.blackhistory.activity.TweetActivity;
-import jp.promin.android.blackhistory.fragment.list.TimelineListType;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -41,9 +35,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by nanami on 2014/09/06.
- */
+import jp.promin.android.blackhistory.AppController;
+import jp.promin.android.blackhistory.activity.MainStreamActivity;
+import jp.promin.android.blackhistory.fragment.list.TimelineListType;
+
 public class BlackUtil {
 
     /*曜日の設定*/

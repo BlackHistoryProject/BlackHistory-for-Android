@@ -8,9 +8,6 @@ import android.support.v4.app.DialogFragment;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.fragment.list.TimelineListType;
 
-/**
- * Created by Telneko on 2015/01/17.
- */
 public class SelectTabKindDialogFragment extends DialogFragment {
     public static SelectTabKindDialogFragment newInstance(){
         return new SelectTabKindDialogFragment();

@@ -1,8 +1,5 @@
 package jp.promin.android.blackhistory.event;
 
-/**
- * Created by atsumi on 2016/01/11.
- */
 public class TwitterFriendListEvent extends TwitterAbstractEvent {
 
     private final long[] friendIds;

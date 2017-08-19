@@ -6,7 +6,6 @@ import jp.promin.android.blackhistory.event.EventBusHolder;
 import jp.promin.android.blackhistory.event.TwitterFavoriteEvent;
 import jp.promin.android.blackhistory.event.TwitterFriendListEvent;
 import jp.promin.android.blackhistory.event.TwitterStreamEvent;
-
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -15,9 +14,6 @@ import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.UserStreamListener;
 
-/**
- * Created by atsumi on 2016/01/09.
- */
 final public class ObservableUserStreamListener implements UserStreamListener {
 
     final Activity context;
