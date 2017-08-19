@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import java.util.Collections;
 import java.util.List;
 
+import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,7 +63,7 @@ public class RxWrap {
                 .toBlocking().single();
     }
 
-    public static <T> Observable<T> createObservable(UserAction.Callable<T> observable) {
+    public static <T> Observable<T> createObservable(TwitterAction.Callable<T> observable) {
         return Observable.create(new Observable.OnSubscribe<T>() {
             @Override
             public void call(Subscriber<? super T> subscriber) {

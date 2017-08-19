@@ -35,9 +35,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.promin.android.blackhistory.AppController;
-import jp.promin.android.blackhistory.activity.MainStreamActivity;
-import jp.promin.android.blackhistory.fragment.list.TimelineListType;
+import jp.promin.android.blackhistory.BlackHistoryController;
+import jp.promin.android.blackhistory.ui.mainstream.MainStreamActivity;
+import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 
 public class BlackUtil {
 
@@ -250,7 +250,7 @@ public class BlackUtil {
 
     @Nullable
     public static View getInflateView(@LayoutRes int resourceID) {
-        Context context = AppController.get().getApplicationContext();
+        Context context = BlackHistoryController.get().getApplicationContext();
         try {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
             return inflater.inflate(resourceID, null);

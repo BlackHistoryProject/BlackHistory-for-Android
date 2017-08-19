@@ -4,14 +4,14 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".AppController"
+        android:name=".BlackHistoryController"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Theme.AppCompat">
 
         <activity
-            android:name=".activity.TwitterOAuthActivity"
+            android:name=".ui.twitter.TwitterOAuthActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -26,10 +26,10 @@
         </activity>
 
         <activity
-            android:name=".activity.TweetActivity"
+            android:name=".ui.tweet.TweetActivity"
             android:windowSoftInputMode="adjustResize"/>
 
-        <activity android:name=".activity.MainStreamActivity">
+        <activity android:name=".ui.mainstream.MainStreamActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -37,7 +37,7 @@
         </activity>
 
         <activity
-            android:name=".activity.TweetExpansionTweetActivity"
+            android:name=".ui.tweet.TweetExpansionTweetActivity"
             android:uiOptions="splitActionBarWhenNarrow"/>
 
         <service android:name=".event.TwitterStreamService"/>

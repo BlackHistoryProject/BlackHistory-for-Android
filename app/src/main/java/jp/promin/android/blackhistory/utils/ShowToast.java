@@ -5,12 +5,12 @@ import android.view.Gravity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import jp.promin.android.blackhistory.AppController;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 
 public class ShowToast {
     public static void showToast(String text, Integer duration) {
-        Context context = AppController.get().getApplicationContext();
+        Context context = BlackHistoryController.get().getApplicationContext();
         try {
             TextView view = (TextView) BlackUtil.getInflateView(R.layout.item_textview_corner_rect);
             if (view == null) throw new IllegalArgumentException();
@@ -29,7 +29,7 @@ public class ShowToast {
     }
 
     public static void showToast(Integer textID) {
-        Context context = AppController.get().getApplicationContext();
+        Context context = BlackHistoryController.get().getApplicationContext();
         showToast(context.getString(textID), Toast.LENGTH_SHORT);
     }
 

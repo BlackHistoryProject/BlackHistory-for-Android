@@ -2,11 +2,11 @@ package jp.promin.android.blackhistory.utils;
 
 import android.widget.Toast;
 
-import jp.promin.android.blackhistory.AppController;
+import jp.promin.android.blackhistory.BlackHistoryController;
 
 public class BHLogger {
     public static void toast(String text) {
-        Toast.makeText(AppController.get().getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+        Toast.makeText(BlackHistoryController.get().getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public static void println(Object text) {
