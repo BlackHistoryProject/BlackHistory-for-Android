@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'android-apt'
 
 apply from: 'findbugs.gradle'
 check.dependsOn 'findbugs'
@@ -71,8 +70,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
 
     // PermissionDispatcher
-    compile 'com.github.hotchemi:permissionsdispatcher:2.2.0'
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.2.0'
+    compile 'com.github.hotchemi:permissionsdispatcher:2.4.0'
+    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.4.0'
 
     compile 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
 
