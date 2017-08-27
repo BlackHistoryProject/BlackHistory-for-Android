@@ -2,6 +2,7 @@ package jp.promin.android.blackhistory.ui.mainstream;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -71,17 +72,20 @@ public class SelectAccountDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("アカウントを選びたまえ");
         builder.setIcon(R.drawable.iconlarge_more);
-        builder.setItems(items, (dialogInterface, i) -> {
-            switch (bundle.getInt(SELECT_TYPE)) { //前の画面の種類
-                // タブ洗濯の画面から来たとき
-                case R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB:
-                    tabCreate(i, bundle.getInt(SELECT_TAB_POSITION));
-                    break;
-                case R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT:
-                    changeAccount(i);
-                    break;
-                default:
-                    break;
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                switch (bundle.getInt(SELECT_TYPE)) { //前の画面の種類
+                    // タブ洗濯の画面から来たとき
+                    case R.string.SELECT_ACCOUNT_TYPE__CREATE_TAB:
+                        tabCreate(i, bundle.getInt(SELECT_TAB_POSITION));
+                        break;
+                    case R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT:
+                        changeAccount(i);
+                        break;
+                    default:
+                        break;
+                }
             }
         });
         return builder.create();

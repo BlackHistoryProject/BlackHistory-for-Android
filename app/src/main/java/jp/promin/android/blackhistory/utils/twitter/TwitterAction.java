@@ -133,7 +133,7 @@ public class TwitterAction {
      * @param replyTarget リプライするツイート
      * @param mediaIds    アップロードする写真
      */
-    private static void tweetImpl(@NonNull Context context,
+    private static void tweetImpl(@NonNull final Context context,
                                   @NonNull String tweetText,
                                   long userId,
                                   @Nullable Status replyTarget,

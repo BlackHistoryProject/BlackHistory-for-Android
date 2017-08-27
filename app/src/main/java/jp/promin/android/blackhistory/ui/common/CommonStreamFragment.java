@@ -127,15 +127,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     }
 
     protected final void insertTweet(final Status status) {
-        getActivity().runOnUiThread(() -> {
-            try {
-                mAdapter.insert(status, 0);
-                mAdapter.notifyDataSetChanged();
-                listView.invalidateViews();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            mAdapter.insert(status, 0);
+            mAdapter.notifyDataSetChanged();
+            listView.invalidateViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected final void insertAllTweet(@NonNull final List<Status> result) {
@@ -143,15 +141,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     }
 
     protected final void insertAllTweet(@NonNull final List<Status> result, final Boolean clear) {
-        getActivity().runOnUiThread(() -> {
-            try {
-                if (clear) mAdapter.clear();
-                mAdapter.addAll(result);
-                if (clear) listView.setSelection(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        try {
+            if (clear) mAdapter.clear();
+            mAdapter.addAll(result);
+            if (clear) listView.setSelection(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public final String getTitle() {

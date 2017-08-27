@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Function;
 
 public enum TimelineListType {
     Home(0),
@@ -39,11 +41,15 @@ public enum TimelineListType {
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     static public String[] getValues() {
         List<String> list = Observable
                 .fromArray(TimelineListType.values())
-                .map(Enum::name)
+                .map(new Function<TimelineListType, String>() {
+                    @Override
+                    public String apply(@NonNull TimelineListType timelineListType) throws Exception {
+                        return timelineListType.name();
+                    }
+                })
                 .toList()
                 .blockingGet();
         String[] ret = new String[list.size()];

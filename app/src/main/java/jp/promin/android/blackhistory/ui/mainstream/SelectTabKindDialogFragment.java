@@ -2,6 +2,7 @@ package jp.promin.android.blackhistory.ui.mainstream;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
@@ -21,8 +22,11 @@ public class SelectTabKindDialogFragment extends DialogFragment {
         builder.setTitle("タブの種類を選ぶのじゃ");
         builder.setCancelable(false);
         builder.setIcon(R.drawable.ic_action_compose);
-        builder.setItems(items, (dialogInterface, i) -> {
-            openFragment(i);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                openFragment(i);
+            }
         });
         return builder.create();
     }

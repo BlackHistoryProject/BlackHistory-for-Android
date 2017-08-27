@@ -202,9 +202,9 @@ public final class TweetActivity extends BaseActivity {
                     .flatMap(new Function<Bitmap, ObservableSource<UploadedMedia>>() {
                         @Override
                         public ObservableSource<UploadedMedia> apply(@NonNull Bitmap bitmap) throws Exception {
-                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                            InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
+                            final InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
                             return
                                     new RxListener<UploadedMedia>() {
                                         @Override

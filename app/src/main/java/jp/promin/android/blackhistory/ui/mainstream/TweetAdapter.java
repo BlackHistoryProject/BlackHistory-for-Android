@@ -97,11 +97,14 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         holder.name.setText(item.getUser().getName());
         holder.screenName.setText("@" + item.getUser().getScreenName());
 
-        holder.text.setText(LinkText.setLinkText(getContext(), item.getText(), (widget, isUrl, clickText) -> {
-            if (isUrl) {
-                getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(clickText)));
-            } else {
-                ShowToast.showToast(String.format("タグやで %s", clickText));
+        holder.text.setText(LinkText.setLinkText(getContext(), item.getText(), new LinkText.OnClickLinkListener() {
+            @Override
+            public void onClick(View widget, boolean isUrl, String clickText) {
+                if (isUrl) {
+                    getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(clickText)));
+                } else {
+                    ShowToast.showToast(String.format("タグやで %s", clickText));
+                }
             }
         }));
         holder.text.setMovementMethod(LinkMovementMethod.getInstance());

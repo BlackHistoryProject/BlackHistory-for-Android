@@ -79,15 +79,19 @@ public class MainStreamActivity extends BaseActivity {
     @OnClick(R.id.menuber_menu)
     void OnClickMenu() {
         CustomDialogFragment.newInstance("", R.array.menu,
-                (CustomDialogFragment.DialogListener) (menuRes, position) -> {
-                    switch (position) {
-                        case 0: //リスト削除
-                            removeTab();
-                            break;
-                        case 1: //設定
-                            break;
+                new CustomDialogFragment.DialogListener() {
+                    @Override
+                    public void onClick(String[] menuRes, int position) {
+                        switch (position) {
+                            case 0: //リスト削除
+                                removeTab();
+                                break;
+                            case 1: //設定
+                                break;
+                        }
                     }
-                }).show(getSupportFragmentManager(), "menu");
+                })
+                .show(getSupportFragmentManager(), "menu");
     }
 
     @Override
