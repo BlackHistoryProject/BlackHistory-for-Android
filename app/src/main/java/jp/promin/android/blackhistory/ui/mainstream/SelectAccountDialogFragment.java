@@ -11,7 +11,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 import jp.promin.android.blackhistory.ui.twitter.TwitterOAuthActivity;
 import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
@@ -19,7 +19,7 @@ import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
 public class SelectAccountDialogFragment extends DialogFragment {
     public static final String SELECT_TYPE = "selectType";
     public static final String SELECT_TAB_POSITION = "selectTabPosition";
-    ArrayList<ModelAccessTokenObject> tokens;
+    ArrayList<UserToken> tokens;
 
     /***
      * 前の画面が、選択画面じゃない時や、　前の選択によって結果が影響されない時に使う。
@@ -59,7 +59,7 @@ public class SelectAccountDialogFragment extends DialogFragment {
 
         ArrayList<String> menu = new ArrayList<>();
 
-        for (ModelAccessTokenObject tokenObject : tokens) {
+        for (UserToken tokenObject : tokens) {
             menu.add(tokenObject.getUserScreenName());
         }
 
@@ -92,9 +92,9 @@ public class SelectAccountDialogFragment extends DialogFragment {
     }
 
     public void tabCreate(int accountNum, int sel) {
-        ModelAccessTokenObject token = this.tokens.get(accountNum);
+        UserToken token = this.tokens.get(accountNum);
 
-        ((MainStreamActivity) getActivity()).mAdapter.addTab(TimelineListType.getType(sel), token.getUserId());
+        ((MainStreamActivity) getActivity()).mAdapter.addTab(TimelineListType.kindOf(sel), token.getUserId());
 
         Toast.makeText(getActivity(), "タブを作成しました", Toast.LENGTH_SHORT).show();
     }

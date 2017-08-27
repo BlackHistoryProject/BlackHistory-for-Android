@@ -7,24 +7,32 @@ import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageButton;
 
+import com.github.gfx.android.orma.Inserter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
-import io.realm.RealmResults;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.model.ModelListObject;
+import jp.promin.android.blackhistory.model.ShowList;
+import jp.promin.android.blackhistory.model.ShowList_Deleter;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
 import jp.promin.android.blackhistory.ui.common.CommonStreamFragment;
 import jp.promin.android.blackhistory.ui.common.CustomDialogFragment;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 import jp.promin.android.blackhistory.ui.tweet.TweetActivity;
 import jp.promin.android.blackhistory.ui.twitter.TwitterOAuthActivity;
-import jp.promin.android.blackhistory.utils.BHLogger;
-import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.twitter.ObservableUserStreamListener;
 import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
 import twitter4j.TwitterStream;
@@ -139,85 +147,73 @@ public class MainStreamActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        BHLogger.printlnDetail("Loading ListData");
-        Realm realm = Realm.getInstance(this);
-        RealmResults<ModelListObject> t = realm.where(ModelListObject.class).findAll();
-        BHLogger.println(t.size());
-
-        for (ModelListObject listObject : realm.where(ModelListObject.class).findAll()) {
-//            String listData = listObject.getListData();
-            Pair<Long, TimelineListType> listData = BlackUtil.genListData(listObject.getListData());
-
-            if (listData == null) {
-                BHLogger.println("Load Failed ListData", listObject);
-                continue;
-            } else {
-                BHLogger.println("Load Success ListData", listData.first);
-                BHLogger.println("Load Success ListData", listData.second);
-            }
-            mAdapter.addTab(listData.second, listData.first);
-        }
-        BHLogger.printlnDetail("Load End ListData");
+        loadTabs();
     }
 
     @Override
     protected void onStop() {
-        BHLogger.printlnDetail("Save ListData");
-        if (this.mAdapter != null) {
-            Realm realm = Realm.getInstance(this);
-            realm.beginTransaction();
-            for (int i = 0; i < this.mAdapter.getCount(); i++) {
-                try {
-                    ModelListObject listObject = new ModelListObject();
-                    Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
-                    String listData = BlackUtil.genListDataString(item.first, item.second.getListType());
-                    if (listData.equals("")) {
-                        BHLogger.println("Save Failed ListData", item);
-                        continue;
-                    } else {
-                        BHLogger.println("Save Success ListData", listData);
-                    }
-                    listObject.setListData(listData);
-                    realm.copyToRealmOrUpdate(listObject);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            realm.commitTransaction();
-            realm.close();
-        }
+        saveTabs();
         super.onStop();
     }
 
-    public void removeTab() {
-        try {
-            Realm realm = Realm.getInstance(this);
-            Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
-            RealmResults<ModelListObject> result =
-                    realm.where(ModelListObject.class)
-                            .equalTo("listData", BlackUtil.genListDataString(item.first, item.second.getListType()))
-                            .findAll();
-            if (result != null) {
-                realm.beginTransaction();
-                for (ModelListObject listObject : result) {
-                    listObject.removeFromRealm();
-                }
-                realm.commitTransaction();
-                realm.close();
-                BHLogger.println("データベースからタブを削除");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void saveTabs() {
+        final BlackHistoryController app = BlackHistoryController.get(this);
+        final Inserter<ShowList> db = app.getDatabase().relationOfShowList().upserter();
 
-        int current = viewPager.getCurrentItem();
-        mAdapter.remove(current);
-        ArrayList<Pair<Long, CommonStreamFragment>> list = new ArrayList<>();
-        list.addAll(mAdapter.getTab());
-        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
-        viewPager.setAdapter(mAdapter);
-        viewPager.setCurrentItem(current, false);
+        Observable.fromIterable(mAdapter.getTab())
+                .map(new Function<Pair<Long, CommonStreamFragment>, ShowList>() {
+                    @Override
+                    public ShowList apply(@NonNull Pair<Long, CommonStreamFragment> item) throws Exception {
+                        return new ShowList(item.second.getListType(), item.first);
+                    }
+                })
+                .toList()
+                .flatMapObservable(new Function<List<ShowList>, ObservableSource<Long>>() {
+                    @Override
+                    public ObservableSource<Long> apply(@NonNull List<ShowList> showLists) throws Exception {
+                        return db.executeAllAsObservable(showLists);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+    }
 
-        BHLogger.println("removed");
+    private void loadTabs() {
+        BlackHistoryController.get(this).getDatabase()
+                .selectFromShowList().executeAsObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<ShowList>() {
+                    @Override
+                    public void accept(ShowList showList) throws Exception {
+                        mAdapter.addTab(showList.getListType(), showList.getUserId());
+                    }
+                });
+    }
+
+    private void removeTab() {
+        final Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
+        final ShowList targetList = new ShowList(item.second.getListType(), item.first);
+        final BlackHistoryController app = BlackHistoryController.get(this);
+        final ShowList_Deleter deleter = app.getDatabase().relationOfShowList().deleter();
+
+        deleter
+                .where("hash = ?", targetList.getHash())
+                .executeAsSingle()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) throws Exception {
+                        int current = viewPager.getCurrentItem();
+                        mAdapter.remove(current);
+                        ArrayList<Pair<Long, CommonStreamFragment>> list = new ArrayList<>();
+                        list.addAll(mAdapter.getTab());
+                        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
+                        viewPager.setAdapter(mAdapter);
+                        viewPager.setCurrentItem(current, false);
+                    }
+                });
     }
 }
