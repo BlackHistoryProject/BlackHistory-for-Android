@@ -1,11 +1,10 @@
 package jp.promin.android.blackhistory.ui.mainstream;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +19,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.ui.common.CommonStreamFragment;
 import jp.promin.android.blackhistory.ui.tweet.TweetActivity;
 import jp.promin.android.blackhistory.ui.tweet.TweetExpansionTweetActivity;
 import jp.promin.android.blackhistory.utils.BHLogger;
@@ -32,15 +30,39 @@ import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
 import twitter4j.Status;
 
 public class TweetAdapter extends ArrayAdapter<Status> {
+    private final long mUserId;
+    private final Listener mListener;
+    private ViewHolder.Listener mClickListener = new ViewHolder.Listener() {
+        @Override
+        public void onClickReply(@NonNull ImageButton button, @NonNull Status status) {
+            TweetActivity.startActivity(getContext(), mUserId, status);
+        }
 
-    private LayoutInflater mInflater;
+        @Override
+        public void onClickFavorite(@NonNull ImageButton button, @NonNull Status status) {
+            TwitterAction.favorite(getContext(), button, mUserId, status);
+        }
 
-    private CommonStreamFragment owner;
+        @Override
+        public void onClickReTweet(@NonNull ImageButton button, @NonNull Status status) {
+            TwitterAction.reTweet(getContext(), button, mUserId, status);
+        }
 
-    public TweetAdapter(CommonStreamFragment owner) {
-        super(owner.getContext(), android.R.layout.simple_list_item_1);
-        this.owner = owner;
-        mInflater = (LayoutInflater) owner.getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        @Override
+        public void onClickDetail(@NonNull Status status) {
+            TweetExpansionTweetActivity.createIntent(getContext(), status);
+        }
+
+        @Override
+        public void onClickMenu(@NonNull Status status) {
+
+        }
+    };
+
+    public TweetAdapter(@NonNull Context context, long userId, @NonNull Listener listener) {
+        super(context, android.R.layout.simple_list_item_1);
+        mUserId = userId;
+        mListener = listener;
     }
 
     @NonNull
@@ -48,8 +70,8 @@ public class TweetAdapter extends ArrayAdapter<Status> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         final ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_tweet, parent, false);
-            holder = new ViewHolder(convertView, this, owner.getUserId());
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item_tweet, parent, false);
+            holder = new ViewHolder(convertView, mClickListener);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -91,15 +113,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         return convertView;
     }
 
-    @Nullable
-    public Status getItemObject(Long statusId) {
-        for (int i = 0; i < this.getCount(); i++) {
-            Status item = this.getItem(i);
-            if (item.getId() == statusId) return item;
-        }
-        return null;
-    }
-
     private int indexOf(Long statusId) {
         for (int i = 0; i < this.getCount(); i++) {
             Status item = this.getItem(i);
@@ -108,7 +121,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         return -1;
     }
 
-    private void updateStatus(Status status) {
+    public void updateStatus(Status status) {
         /// ツイートが見つからなかった時はとりあえず何もしない
         final int pos = indexOf(status.getId());
         if (pos == -1) {
@@ -121,29 +134,21 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         this.notifyDataSetChanged();
 
         try {
-            this.owner.invalidateListView(pos);
+            // 応急処理
+            mListener.onInvalidateList(pos);
+//            ((CommonStreamFragment) getContext()).invalidateListView(pos);
         } catch (Exception e) {
             e.printStackTrace();
         }
         BHLogger.println("Status updated");
     }
 
-    public void deleteTweet(long paramLong) {
-        Status status = null;
-        for (int i = 0; i < this.getCount(); i++) {
-            if (this.getItem(i).getId() == paramLong) {
-                status = this.getItem(i);
-            }
-        }
-        if (status != null) {
-            this.remove(status);
-        }
-        notifyDataSetInvalidated();
+    public interface Listener {
+        void onInvalidateList(int position);
     }
 
     static class ViewHolder {
-        private final Long ownerUserId;
-        private final Activity context;
+        private final Listener mListener;
         @Bind(R.id.tweet_item_main)
         RelativeLayout main;
         @Bind(R.id.icon)
@@ -164,67 +169,52 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         ImageButton retweetButton;
         @Bind(R.id.favorite)
         ImageButton favoriteButton;
-        private TweetAdapter adapter;
-        private Status status;
 
-        public ViewHolder(View view, TweetAdapter adapter, Long ownerUserId) {
+        private Status mStatus;
+        ViewHolder(View view, @NonNull Listener listener) {
             ButterKnife.bind(this, view);
-            this.adapter = adapter;
-            this.context = adapter.owner.getActivity();
-            this.ownerUserId = ownerUserId;
+            mListener = listener;
         }
 
         @OnClick(R.id.reply)
-        void OnClickReply() {
-            TweetActivity.createIntent(context, this.ownerUserId, status, true);
+        void OnClickReply(ImageButton button) {
+            mListener.onClickReply(button, mStatus);
         }
 
         @OnClick(R.id.retweet)
         void OnClickReTweet(ImageButton button) {
-            // リツイート
-            TwitterAction.retweet(this.adapter.getContext(), button, this.ownerUserId, status, new TwitterAction.Callback() {
-                @Override
-                public void result(Status status) {
-                    ShowToast.showToast("RTしました");
-                    adapter.updateStatus(status);
-                }
-
-                @Override
-                public void error(Throwable error) {
-                    ShowToast.showToast(error.getLocalizedMessage());
-                }
-            });
+            mListener.onClickReTweet(button, mStatus);
         }
 
         @OnClick(R.id.favorite)
         void OnClickFavorite(ImageButton button) {
-            // お気に入り
-            TwitterAction.favorite(this.adapter.getContext(), button, this.ownerUserId, status, new TwitterAction.Callback() {
-                @Override
-                public void result(Status status) {
-                    ShowToast.showToast("ふぁぼった");
-                    adapter.updateStatus(status);
-                }
-
-                @Override
-                public void error(Throwable error) {
-                    ShowToast.showToast(error.getLocalizedMessage());
-                }
-            });
+            mListener.onClickFavorite(button, mStatus);
         }
 
         @OnClick(R.id.menu)
         void OnClickMenu() {
-
+            mListener.onClickMenu(mStatus);
         }
 
         @OnClick(R.id.tweet_item_main)
         void OnClickStatus() {
-            TweetExpansionTweetActivity.createIntent(context, status);
+            mListener.onClickDetail(mStatus);
         }
 
-        public void setStatus(Status status) {
-            this.status = status;
+        public void setStatus(@NonNull Status status) {
+            mStatus = status;
+        }
+
+        interface Listener {
+            void onClickReply(@NonNull ImageButton button, @NonNull Status status);
+
+            void onClickFavorite(@NonNull ImageButton button, @NonNull Status status);
+
+            void onClickReTweet(@NonNull ImageButton button, @NonNull Status status);
+
+            void onClickDetail(@NonNull Status status);
+
+            void onClickMenu(@NonNull Status status);
         }
     }
 }

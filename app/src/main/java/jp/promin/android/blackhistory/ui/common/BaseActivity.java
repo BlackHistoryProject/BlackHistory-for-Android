@@ -1,1 +1,38 @@
-package jp.promin.android.blackhistory.ui.common;import android.content.res.Configuration;import android.os.Bundle;import android.support.annotation.Nullable;import android.support.v7.app.AppCompatActivity;import android.view.Window;import butterknife.ButterKnife;import jp.promin.android.blackhistory.utils.BHLogger;abstract public class BaseActivity extends AppCompatActivity {    @Override    protected void onCreate(@Nullable Bundle savedInstanceState) {        super.onCreate(savedInstanceState);        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);        BHLogger.printlnDetail();    }    @Override    public void setContentView(int layoutResID) {        super.setContentView(layoutResID);        ButterKnife.bind(this);        BHLogger.printlnDetail();    }    @Override    protected void onResume() {        super.onResume();        BHLogger.printlnDetail();    }    @Override    public void onConfigurationChanged(Configuration newConfig) {        super.onConfigurationChanged(newConfig);        BHLogger.printlnDetail();    }    @Override    protected void onStart() {        super.onStart();        BHLogger.printlnDetail();    }    @Override    protected void onStop() {        super.onStop();        BHLogger.printlnDetail();    }}
+package jp.promin.android.blackhistory.ui.common;
+
+import android.support.v7.app.AppCompatActivity;
+
+import org.greenrobot.eventbus.EventBus;
+
+import butterknife.ButterKnife;
+import jp.promin.android.blackhistory.utils.BHLogger;
+
+public abstract class BaseActivity extends AppCompatActivity {
+
+    protected boolean shouldUseEventBus() {
+        return false;
+    }
+
+    @Override
+    public void setContentView(int layoutResId) {
+        super.setContentView(layoutResId);
+        ButterKnife.bind(this);
+        BHLogger.printlnDetail();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (shouldUseEventBus()) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (shouldUseEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+}

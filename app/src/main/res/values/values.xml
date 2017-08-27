@@ -1,1 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><resources>    <dimen name="activity_tweet_image_margin">8dp</dimen></resources>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_tweet_image_margin">8dp</dimen>
+</resources>

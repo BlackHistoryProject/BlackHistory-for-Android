@@ -4,7 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.ListView;
 
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -36,10 +37,10 @@ final public class HomeStreamFragment extends CommonStreamFragment {
         return twitter.getHomeTimeline();
     }
 
-    @Subscribe
-    public void OnTwitterStreamEvent(final TwitterStreamEvent event) {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTwitterStream(TwitterStreamEvent event) {
         // このリストのオーナー宛の情報かどうかのチェック
-        if (event.getUserId() != getUserId()) return;
+        if (event.getUserId() != getOwnerUserId()) return;
 
         insertTweet(event.getStatus());
     }

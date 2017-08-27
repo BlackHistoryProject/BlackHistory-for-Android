@@ -3,14 +3,10 @@ package jp.promin.android.blackhistory.ui.tweet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,33 +17,42 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import jp.promin.android.blackhistory.R;
+import jp.promin.android.blackhistory.event.TweetFailureEvent;
+import jp.promin.android.blackhistory.event.TweetSuccessEvent;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
-import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
-import jp.promin.android.blackhistory.utils.FileUtils;
-import jp.promin.android.blackhistory.utils.RxWrap;
 import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
+import jp.promin.android.blackhistory.utils.rx.RxListener;
 import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
 import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
-import rx.Observable;
 import twitter4j.Status;
 import twitter4j.Twitter;
+import twitter4j.UploadedMedia;
 
-public class TweetActivity extends BaseActivity {
-
-    private final static String EXTRA_USER_ID = "extra_user_id";
-    private final static String EXTRA_SERIALIZE = "extra_serialize";
-    private final static String EXTRA_FROM_REPLY = "extra_from_reply";
+@SuppressWarnings({"Anonymous2MethodRef", "Convert2Lambda"})
+public final class TweetActivity extends BaseActivity {
+    private static final String EXTRA_USER_ID = "extra_user_id";
+    private static final String EXTRA_REPLY_STATUS = "extra_reply_status";
 
     private final static int REQUEST_CAPTURE_IMAGE = 100;
     private final static int REQUEST_SELECT_IMAGE = 120;
@@ -77,22 +82,17 @@ public class TweetActivity extends BaseActivity {
     ImageButton imageBtnUpload3;
     @Bind(R.id.upload_image_4)
     ImageButton imageBtnUpload4;
-    @Nullable
-    private Status status;
-    @NonNull
-    private Long userId;
-    @NonNull
-    private Boolean fromReply;
 
-    public static void createIntent(Context context, Long userId) {
-        createIntent(context, userId, null, false);
+    public static void startActivity(@NonNull Context context, long tweetUserId) {
+        final Intent intent = new Intent(context, TweetActivity.class);
+        intent.putExtra(EXTRA_USER_ID, tweetUserId);
+        context.startActivity(intent);
     }
 
-    public static void createIntent(Context context, Long userId, Status tweet, Boolean isReply) {
-        Intent intent = new Intent(context, TweetActivity.class);
-        intent.putExtra(EXTRA_USER_ID, userId);
-        intent.putExtra(EXTRA_SERIALIZE, tweet);
-        intent.putExtra(EXTRA_FROM_REPLY, isReply);
+    public static void startActivity(@NonNull Context context, long tweetUserId, @NonNull Status replyStatus) {
+        final Intent intent = new Intent(context, TweetActivity.class);
+        intent.putExtra(EXTRA_USER_ID, tweetUserId);
+        intent.putExtra(EXTRA_REPLY_STATUS, replyStatus);
         context.startActivity(intent);
     }
 
@@ -114,44 +114,50 @@ public class TweetActivity extends BaseActivity {
         startActivityForResult(intent, REQUEST_SELECT_IMAGE);
     }
 
+    private long getTweetUserId() {
+        return getIntent().getLongExtra(EXTRA_USER_ID, -1);
+    }
+
+    @Nullable
+    private Status getReplyStatus() {
+        final Serializable status = getIntent().getSerializableExtra(EXTRA_REPLY_STATUS);
+        if (status != null) {
+            return (Status) status;
+        } else {
+            return null;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceStage) {
         super.onCreate(savedInstanceStage);
         setContentView(R.layout.activity_tweet);                                                    //  指定したIDのレイアウトを読み込んでいる
 
-        this.userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
-        this.status = (Status) getIntent().getSerializableExtra(EXTRA_SERIALIZE);
-        this.fromReply = getIntent().getBooleanExtra(EXTRA_FROM_REPLY, false);
-
-        if (userId == -1L || (fromReply && status == null)) {
-            BHLogger.toast("ツイートの読み込みに失敗しました");
-            finish();
-            return;
-        }
-
-        if (fromReply) {
+        final Status replyStatus = getReplyStatus();
+        if (replyStatus == null) {
+            // リプライ対象がセットされていないから普通のツイート
+            textTaskBar.setText("Tweet");
+            layoutReplayInfo.setVisibility(View.GONE);
+        } else {
+            // リプライ対象がセットされているからリプライ
             textTaskBar.setText("Reply");
             layoutReplayInfo.setVisibility(View.VISIBLE);
 
-            ImageManager.getPicasso().load(status.getUser().getProfileImageURL()).into(imageIconView);
+            ImageManager.getPicasso().load(replyStatus.getUser().getProfileImageURL()).into(imageIconView);
 
-            textName.setText(status.getUser().getName());
-            textScreenName.setText("@" + status.getUser().getScreenName());
-            textText.setText(status.getText());
-            textTime.setText(BlackUtil.getDateFormat(status.getCreatedAt()));
-            textVia.setText("via " + BlackUtil.getVia(status.getSource()));
+            textName.setText(replyStatus.getUser().getName());
+            textScreenName.setText("@" + replyStatus.getUser().getScreenName());
+            textText.setText(replyStatus.getText());
+            textTime.setText(BlackUtil.getDateFormat(replyStatus.getCreatedAt()));
+            textVia.setText("via " + BlackUtil.getVia(replyStatus.getSource()));
 
-            String str = status.getInReplyToScreenName();
+            String str = replyStatus.getInReplyToScreenName();
             if (str == null || str.equals("null") || str.equals("")) {
-                str = status.getUser().getScreenName();
+                str = replyStatus.getUser().getScreenName();
             }
             editText.setText("@" + str + " ");                                                      // ()の中のstrはReplyの相手のScreenName(相手の@以下のID)
             editText.setSelection(editText.getText().length());                                     //　setSelectionの中には数字が入る（今回は今入っている（）の中身が数字を持ってきてくれている
             editText.getText().length();                                                            // lengthは"長さ"であって、物の長さではなくて文字の長さ(サイズ)だそうで、プログラミングではそう呼ばれている
-
-        } else {
-            textTaskBar.setText("Tweet");
-            layoutReplayInfo.setVisibility(View.GONE);
         }
     }
 
@@ -186,38 +192,87 @@ public class TweetActivity extends BaseActivity {
      * ツイートをします
      */
     private void tweet() {
-        TwitterAction.tweet(this, editText.getText().toString(), userId, (fromReply ? status : null), () -> {
-            if (setedImage()) {
-                Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this, userId);
-                return Observable.from(getImages()).map(bitmap -> {
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                    InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
-                    return RxWrap.create(
-                            TwitterAction.createObservable(() -> twitter.uploadMedia("ho", inputStream))
-                                    .doOnCompleted(() -> {
-                                        try {
-                                            inputStream.close();
-                                            bos.close();
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    })).toBlocking().single();
-                }).toList().toBlocking().single();
-            } else {
-                return new ArrayList<>();
-            }
-        }, new TwitterAction.Callback() {
-            @Override
-            public void result(Status status) {
-                finish();
-            }
+        final Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this, getTweetUserId());
 
-            @Override
-            public void error(Throwable error) {
-                ShowToast.showToast(error.getLocalizedMessage());
+        final List<Bitmap> images = getImages();
+        final long[] mediaIds;
+        if (!images.isEmpty()) {
+            final List<Long> uploadedMediaIds = Observable
+                    .fromIterable(getImages())
+                    .flatMap(new Function<Bitmap, ObservableSource<UploadedMedia>>() {
+                        @Override
+                        public ObservableSource<UploadedMedia> apply(@NonNull Bitmap bitmap) throws Exception {
+                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                            InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
+                            return
+                                    new RxListener<UploadedMedia>() {
+                                        @Override
+                                        public UploadedMedia result() throws Throwable {
+                                            return twitter.uploadMedia("media", inputStream);
+                                        }
+                                    }
+                                            .toObservable()
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeOn(Schedulers.newThread())
+                                            .doOnComplete(new Action() {
+                                                @Override
+                                                public void run() throws Exception {
+                                                    inputStream.close();
+                                                    bos.close();
+                                                }
+                                            });
+                        }
+                    })
+                    .map(new Function<UploadedMedia, Long>() {
+                        @Override
+                        public Long apply(@NonNull UploadedMedia media) throws Exception {
+                            return media.getMediaId();
+                        }
+                    })
+                    .toList().blockingGet();
+            mediaIds = new long[uploadedMediaIds.size()];
+            for (int i = 0; i < uploadedMediaIds.size(); i++) {
+                mediaIds[i] = uploadedMediaIds.get(i);
             }
-        });
+        } else {
+            mediaIds = new long[]{};
+        }
+
+        // tweetText
+        final String tweetText = editText.getText().toString();
+
+        // tweet
+        if (mediaIds.length == 0) {
+            final Status replyStatus = getReplyStatus();
+            if (replyStatus == null) {
+                TwitterAction.tweet(this, tweetText, getTweetUserId());
+            } else {
+                TwitterAction.reply(this, tweetText, getTweetUserId(), replyStatus);
+            }
+        } else {
+            final Status replyStatus = getReplyStatus();
+            if (replyStatus == null) {
+                TwitterAction.tweetWithMedia(this, tweetText, getTweetUserId(), mediaIds);
+            } else {
+                TwitterAction.replyWithMedia(this, tweetText, getTweetUserId(), replyStatus, mediaIds);
+            }
+        }
+    }
+
+    @Override
+    protected boolean shouldUseEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTweetSuccess(TweetSuccessEvent event) {
+        finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTweetFailure(TweetFailureEvent event) {
+        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
     }
 
     /**
@@ -239,8 +294,8 @@ public class TweetActivity extends BaseActivity {
      *
      * @return count == 0 だったら、何もセットされてない
      */
-    private ArrayList<Bitmap> getImages() {
-        ArrayList<Bitmap> res = new ArrayList<>();
+    private List<Bitmap> getImages() {
+        List<Bitmap> res = new ArrayList<>();
         if (this.imageBtnUpload1.getDrawable() != null)
             res.add(((BitmapDrawable) this.imageBtnUpload1.getDrawable()).getBitmap());
         if (this.imageBtnUpload2.getDrawable() != null)
@@ -250,38 +305,5 @@ public class TweetActivity extends BaseActivity {
         if (this.imageBtnUpload4.getDrawable() != null)
             res.add(((BitmapDrawable) this.imageBtnUpload4.getDrawable()).getBitmap());
         return res;
-    }
-
-    public boolean setedImage() {
-        return
-                this.imageBtnUpload1.getDrawable() != null ||
-                        this.imageBtnUpload2.getDrawable() != null ||
-                        this.imageBtnUpload3.getDrawable() != null ||
-                        this.imageBtnUpload4.getDrawable() != null;
-    }
-
-    @Nullable
-    public Uri getPath(Intent data) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            Uri contentUri = FileUtils.getPath(this, data.getData());
-            if (contentUri != null) {
-                return contentUri;
-            } else {
-                Uri uri = data.getData();
-                String id = DocumentsContract.getDocumentId(data.getData());
-                if (uri != null) {
-                    BHLogger.println("知らないソフトウェアからの取得", uri);
-                    BHLogger.println(uri.getAuthority());
-                }
-            }
-        } else {
-            Cursor cursor = this.getContentResolver().query(data.getData(), new String[]{MediaStore.Images.Media.DATA}, null, null, null);
-            if (cursor != null) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                return Uri.parse(cursor.getString(column_index));
-            }
-        }
-        return null;
     }
 }

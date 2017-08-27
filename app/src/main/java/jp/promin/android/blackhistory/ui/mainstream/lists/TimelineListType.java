@@ -2,9 +2,9 @@ package jp.promin.android.blackhistory.ui.mainstream.lists;
 
 import android.support.annotation.Nullable;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import rx.Observable;
+import io.reactivex.Observable;
 
 public enum TimelineListType {
     Home(0),
@@ -17,16 +17,16 @@ public enum TimelineListType {
     Messages(7),
     User(8);
 
-    final public Integer index;
+    private final int mKind;
 
-    TimelineListType(Integer index) {
-        this.index = index;
+    TimelineListType(int kind) {
+        mKind = kind;
     }
 
     @Nullable
     static public TimelineListType getType(int index) {
         for (TimelineListType type : TimelineListType.values()) {
-            if (type.index == index) return type;
+            if (type.mKind == index) return type;
         }
         return null;
     }
@@ -41,10 +41,17 @@ public enum TimelineListType {
 
     @SuppressWarnings("rawtypes")
     static public String[] getValues() {
-        ArrayList<String> _ret = new ArrayList<>();
-        _ret.addAll(Observable.from(TimelineListType.values()).map(Enum::name).toList().toBlocking().single());
-        String[] ret = new String[_ret.size()];
-        ret = _ret.toArray(ret);
+        List<String> list = Observable
+                .fromArray(TimelineListType.values())
+                .map(Enum::name)
+                .toList()
+                .blockingGet();
+        String[] ret = new String[list.size()];
+        ret = list.toArray(ret);
         return ret;
+    }
+
+    public int getKind() {
+        return mKind;
     }
 }

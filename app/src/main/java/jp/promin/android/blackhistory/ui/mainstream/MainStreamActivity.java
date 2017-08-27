@@ -72,7 +72,7 @@ public class MainStreamActivity extends BaseActivity {
     @OnClick(R.id.menu_tweet)
     void OnClickTweet() {
         //アクティビティを開く　ここだとつぶやきに飛ぶ
-        TweetActivity.createIntent(this, getCurrentTabUserId().first);
+        TweetActivity.startActivity(this, getCurrentTabUserId().first);
     }
     //////////////////////////////
 
