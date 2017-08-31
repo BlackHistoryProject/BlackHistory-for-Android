@@ -73,14 +73,5 @@
         android:text="via"
         android:textColor="#D3D3D3"
         android:textSize="11sp"/>
-
-    <ImageView
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/expansion_via"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/attachment_place"/>
 </RelativeLayout>
 

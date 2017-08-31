@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_navigation_bar"
+            android:background="#000">
+
+            <android.support.v4.view.PagerTitleStrip
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:layout_gravity="top"
+                android:background="@drawable/back_actionbar"
+                android:paddingBottom="4dp"
+                android:paddingTop="2dp"
+                android:textColor="#FFFFFF"/>
+        </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:id="@+id/bottom_navigation_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/actions_grad"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="4dp">
+
+            <ImageButton
+                android:id="@+id/menu"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_menu"
+                android:title="@string/menu_tweet"/>
+
+            <!--アカウントの追加-->
+            <ImageButton
+                android:id="@+id/add_account"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_add_user"
+                android:title="アカウントの追加と削除"/>
+
+            <!--リストの追加と削除-->
+            <ImageButton
+                android:id="@+id/setting_tab"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_add_tab"
+                android:title="リストの追加と削除"/>
+
+            <!--つぶやく-->
+            <ImageButton
+                android:id="@+id/tweet"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/press_button"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_menu_tweet"
+                android:title="@string/menu_tweet"/>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

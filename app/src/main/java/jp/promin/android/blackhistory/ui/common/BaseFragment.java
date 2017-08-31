@@ -8,15 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.ButterKnife;
-import jp.promin.android.blackhistory.event.EventBusHolder;
 import jp.promin.android.blackhistory.utils.BHLogger;
 
 abstract public class BaseFragment extends Fragment {
-    private LayoutInflater inflater;
+    protected boolean shouldUseEventBus() {
+        return false;
+    }
 
     @LayoutRes
-    abstract protected int getLayoutID();
+    abstract protected int getLayoutId();
 
     abstract protected void init();
 
@@ -30,8 +33,7 @@ abstract public class BaseFragment extends Fragment {
     @Nullable
     @Override
     final public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(getLayoutID(), container, false);
-        this.inflater = inflater;
+        View rootView = inflater.inflate(getLayoutId(), container, false);
         ButterKnife.bind(this, rootView);
         init();
         BHLogger.printlnDetail();
@@ -46,17 +48,18 @@ abstract public class BaseFragment extends Fragment {
     }
 
     @Override
-    final public void onResume() {
-        super.onResume();
-        EventBusHolder.EVENT_BUS.register(this);
-        BHLogger.printlnDetail();
+    public void onStart() {
+        super.onStart();
+        if (shouldUseEventBus()) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
-    final public void onPause() {
-        EventBusHolder.EVENT_BUS.unregister(this);
-        BHLogger.printlnDetail();
-        super.onPause();
+    public void onStop() {
+        super.onStop();
+        if (shouldUseEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
     }
-
 }

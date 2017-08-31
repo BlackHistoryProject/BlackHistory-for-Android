@@ -1,90 +1,76 @@
 package jp.promin.android.blackhistory.ui.common;
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationManagerCompat;
 import android.widget.ListView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
 import butterknife.Bind;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
-import jp.promin.android.blackhistory.ui.mainstream.MainStreamActivity;
+import jp.promin.android.blackhistory.event.FavoriteFailureEvent;
+import jp.promin.android.blackhistory.event.FavoriteSuccessEvent;
+import jp.promin.android.blackhistory.event.ReTweetFailureEvent;
+import jp.promin.android.blackhistory.event.ReTweetSuccessEvent;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.mainstream.TweetAdapter;
 import jp.promin.android.blackhistory.ui.mainstream.lists.ListStreamListener;
 import jp.promin.android.blackhistory.ui.mainstream.lists.SimpleStreamListener;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 import jp.promin.android.blackhistory.utils.BHLogger;
-import jp.promin.android.blackhistory.utils.RxWrap;
+import jp.promin.android.blackhistory.utils.ShowToast;
+import jp.promin.android.blackhistory.utils.rx.RxListener;
 import jp.promin.android.blackhistory.utils.twitter.BaseStreamListener;
 import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
+@SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
 public abstract class CommonStreamFragment extends BaseFragment implements ListStreamListener {
     final static String ARGS_USER_ID = "args_user_id";
     final static String ARGS_LIST_TYPE = "args_list_type";
     @Bind(android.R.id.list)
     ListView listView;
     //////// getter setter //////////
-    @NonNull
-    private TimelineListType listType;
-    private Long userId;
-    private ModelAccessTokenObject userObject;
+    private UserToken userObject;
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
     private BaseStreamListener listener;
 
-    @NonNull
-    final public Long getUserId() {
-        return userId;
+    public final long getOwnerUserId() {
+        return getArguments().getLong(ARGS_USER_ID);
     }
 
-    @NonNull
-    final public TimelineListType getListType() {
-        return listType;
+    public final TimelineListType getListType() {
+        final int listType = getArguments().getInt(ARGS_LIST_TYPE);
+        return TimelineListType.kindOf(listType);
     }
 
-    @NonNull
-    final public ModelAccessTokenObject getUserObject() {
-        return userObject;
-    }
-
-    final public TweetAdapter getAdapter() {
-        return mAdapter;
-    }
-
-    final public Twitter getTwitter() {
+    protected final Twitter getTwitter() {
         return mTwitter;
-    }
-
-    final public BaseStreamListener getListener() {
-        return listener;
     }
 
     //////////////////////////////////
 
-    final public void setListener(BaseStreamListener listener) {
+    protected final void setListener(BaseStreamListener listener) {
         this.listener = listener;
     }
 
     @Override
-    final protected int getLayoutID() {
+    protected final int getLayoutId() {
         return R.layout.fragment_common_list;
     }
 
     @Override
-    final protected void init() {
-        this.userId = getArguments().getLong(ARGS_USER_ID);
-        this.listType = TimelineListType.getType(getArguments().getInt(ARGS_LIST_TYPE, -1));
-
-        BHLogger.printlnDetail("Loading User Object");
-        this.userObject = TwitterUtils.getAccount(this.userId);
+    protected final void init() {
+        this.userObject = TwitterUtils.getAccount(getContext(), getOwnerUserId());
     }
 
     @Override
@@ -92,11 +78,16 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
         super.onActivityCreated(savedInstanceState);
 
         if (this.mAdapter == null) {
-            this.mAdapter = new TweetAdapter(this);
+            this.mAdapter = new TweetAdapter(getContext(), getOwnerUserId(), new TweetAdapter.Listener() {
+                @Override
+                public void onInvalidateList(int position) {
+                    invalidateListView(position);
+                }
+            });
             this.listView.setAdapter(this.mAdapter);
         }
         if (this.mTwitter == null) {
-            this.mTwitter = TwitterUtils.getTwitterInstance(getActivity(), userId);
+            this.mTwitter = TwitterUtils.getTwitterInstance(getActivity(), getOwnerUserId());
         }
 
         setListener(this);
@@ -107,108 +98,102 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
      * タイムラインの更新
      * 初回呼び出しや、リストをスクロールした時など
      */
-    final protected void reloadTimeLine() {
-        RxWrap.create(RxWrap.createObservable(() -> listener.call(mTwitter)))
-                .subscribe(statuses -> {
-                    if (listener instanceof SimpleStreamListener) {
-                        ((SimpleStreamListener) listener).response(statuses);
-                    } else if (listener instanceof ListStreamListener) {
-                        ((ListStreamListener) listener).response(listView, mAdapter, statuses);
-                    } else {
-                        BHLogger.toast("Unknown Listener");
+    protected final void reloadTimeLine() {
+        new RxListener<List<Status>>() {
+            @Override
+            public List<Status> result() throws Throwable {
+                return listener.call(mTwitter);
+            }
+        }.toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Consumer<List<Status>>() {
+                    @Override
+                    public void accept(List<Status> statuses) throws Exception {
+                        if (listener instanceof SimpleStreamListener) {
+                            ((SimpleStreamListener) listener).response(statuses);
+                        } else if (listener instanceof ListStreamListener) {
+                            ((ListStreamListener) listener).response(listView, mAdapter, statuses);
+                        } else {
+                            BHLogger.toast("Unknown Listener");
+                        }
                     }
-                }, throwable -> {
-                    BHLogger.toast("Response is invalid");
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        BHLogger.toast("Response is invalid");
+                    }
                 });
     }
 
-    /**
-     * 一つのツイートをリストに追加する時につかうよ
-     *
-     * @param status
-     */
-    final protected void insertTweet(final Status status) {
-        getActivity().runOnUiThread(() -> {
-            try {
-                mAdapter.insert(status, 0);
-                mAdapter.notifyDataSetChanged();
-                listView.invalidateViews();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    protected final void insertTweet(final Status status) {
+        try {
+            mAdapter.insert(status, 0);
+            mAdapter.notifyDataSetChanged();
+            listView.invalidateViews();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    final protected void insertAllTweet(@NonNull final List<Status> result) {
+    protected final void insertAllTweet(@NonNull final List<Status> result) {
         insertAllTweet(result, true);
     }
 
-    final protected void insertAllTweet(@NonNull final List<Status> result, final Boolean clear) {
-        getActivity().runOnUiThread(() -> {
-            try {
-                if (clear) mAdapter.clear();
-                mAdapter.addAll(result);
-                if (clear) listView.setSelection(0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    /**
-     * Androidの通知用メソッド
-     */
-    final public void showNotification(int image, String title, String text, int id) {
-        Notification.Builder builder = new Notification.Builder(getContext());
-        builder.setSmallIcon(image);
-
-        Intent intent = new Intent(getContext(), MainStreamActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, intent, 0);
-
-        builder.setContentIntent(pendingIntent);
-        builder.setAutoCancel(true);
-
-        builder.setContentTitle(title);
-        builder.setContentText(text);
-
-        builder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_LIGHTS);
-        builder.setLights(0x7700FF00, 500, 300);
-
-        NotificationManagerCompat manager = NotificationManagerCompat.from(getContext());
-        manager.notify(id, builder.build());
-
-    }
-
-    /**
-     * タブに表示されるカラム名を返すよ
-     *
-     * @return
-     */
-    final public String getTitle() {
+    protected final void insertAllTweet(@NonNull final List<Status> result, final Boolean clear) {
         try {
-            BHLogger.println("getUserId", userId);
-            BHLogger.println("getListType", listType);
-            BHLogger.println("getUserObject", userObject);
+            if (clear) mAdapter.clear();
+            mAdapter.addAll(result);
+            if (clear) listView.setSelection(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-            return this.listType.name() + " - " + this.userObject.getUserScreenName();
+    public final String getTitle() {
+        try {
+            return getListType().name() + " - " + this.userObject.getScreenName();
         } catch (Exception e) {
             e.printStackTrace();
             return "-";
         }
     }
 
-    final protected void setArguments(@NonNull Long userId, @NonNull TimelineListType listType) {
+    protected final void setArguments(@NonNull Long userId, @NonNull TimelineListType listType) {
         Bundle bundle = new Bundle();
         bundle.putLong(ARGS_USER_ID, userId);
-        bundle.putInt(ARGS_LIST_TYPE, listType.index);
-        this.setArguments(bundle);
-
-        // for viewPager
-        this.userId = userId;
-        this.listType = listType;
+        bundle.putInt(ARGS_LIST_TYPE, listType.getKind());
+        setArguments(bundle);
     }
 
-    public void invalidateListView(int targetPosition) {
+    public final void invalidateListView(int targetPosition) {
         this.listView.getAdapter().getView(targetPosition, this.listView.getChildAt(targetPosition), this.listView);
+    }
+
+    @Override
+    protected final boolean shouldUseEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavoriteSuccess(FavoriteSuccessEvent event) {
+        ShowToast.showToast("ふぁぼった");
+        mAdapter.updateStatus(event.getStatus());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavoriteFailure(FavoriteFailureEvent event) {
+        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReTweetSuccess(ReTweetSuccessEvent event) {
+        ShowToast.showToast("RTしました");
+        mAdapter.updateStatus(event.getStatus());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReTweetFailure(ReTweetFailureEvent event) {
+        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
     }
 }

@@ -1,8 +1,9 @@
 package jp.promin.android.blackhistory.utils.twitter;
 
-import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
 
-import jp.promin.android.blackhistory.event.EventBusHolder;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.event.TwitterFavoriteEvent;
 import jp.promin.android.blackhistory.event.TwitterFriendListEvent;
 import jp.promin.android.blackhistory.event.TwitterStreamEvent;
@@ -17,17 +18,16 @@ import twitter4j.UserStreamListener;
 
 final public class ObservableUserStreamListener implements UserStreamListener {
 
-    final Activity context;
-    final long userId;
+    private final BlackHistoryController mApp;
+    private final long mUserId;
 
-    public ObservableUserStreamListener(Activity context, long userId) {
-        this.userId = userId;
-        this.context = context;
-        BHLogger.println("Initialize Listener");
+    public ObservableUserStreamListener(@NonNull Context context, long userId) {
+        mApp = BlackHistoryController.get(context);
+        mUserId = userId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public long getUserId() {
+        return mUserId;
     }
 
     @Override
@@ -37,12 +37,12 @@ final public class ObservableUserStreamListener implements UserStreamListener {
 
     @Override
     public void onFriendList(final long[] friendIds) {
-        context.runOnUiThread(() -> EventBusHolder.EVENT_BUS.post(new TwitterFriendListEvent(userId, friendIds)));
+        mApp.postEvent(new TwitterFriendListEvent(mUserId, friendIds));
     }
 
     @Override
     public void onFavorite(final User source, final User target, final Status favoritedStatus) {
-        context.runOnUiThread(() -> EventBusHolder.EVENT_BUS.post(new TwitterFavoriteEvent(userId, source, target, favoritedStatus)));
+        mApp.postEvent(new TwitterFavoriteEvent(mUserId, source, target, favoritedStatus));
     }
 
     @Override
@@ -142,12 +142,7 @@ final public class ObservableUserStreamListener implements UserStreamListener {
 
     @Override
     public void onStatus(final Status status) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                EventBusHolder.EVENT_BUS.post(new TwitterStreamEvent(userId, status));
-            }
-        });
+        mApp.postEvent(new TwitterStreamEvent(mUserId, status));
     }
 
     @Override
@@ -168,11 +163,10 @@ final public class ObservableUserStreamListener implements UserStreamListener {
     @Override
     public void onStallWarning(StallWarning warning) {
 
-        BHLogger.println("[" + userId + "] " + warning);
     }
 
     @Override
     public void onException(Exception ex) {
-        BHLogger.println("[" + userId + "] " + ex);
+        BHLogger.println("[" + mUserId + "] " + ex);
     }
 }

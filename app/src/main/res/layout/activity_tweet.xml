@@ -126,7 +126,7 @@
                     android:id="@+id/upload_image_1"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
+                    android:layout_marginStart="@dimen/activity_tweet_image_margin"
                     android:background="@drawable/lay_text_blick"
                     android:padding="8dp"/>
 
@@ -134,32 +134,32 @@
                     android:id="@+id/upload_image_2"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:layout_toRightOf="@id/upload_image_1"
+                    android:layout_marginStart="@dimen/activity_tweet_image_margin"
+                    android:layout_toEndOf="@id/upload_image_1"
                     android:background="@drawable/lay_text_blick"/>
 
                 <ImageButton
                     android:id="@+id/upload_image_3"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:layout_toRightOf="@id/upload_image_2"
+                    android:layout_marginStart="@dimen/activity_tweet_image_margin"
+                    android:layout_toEndOf="@id/upload_image_2"
                     android:background="@drawable/lay_text_blick"/>
 
                 <ImageButton
                     android:id="@+id/upload_image_4"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="@dimen/activity_tweet_image_margin"
-                    android:layout_toRightOf="@id/upload_image_3"
+                    android:layout_marginStart="@dimen/activity_tweet_image_margin"
+                    android:layout_toEndOf="@id/upload_image_3"
                     android:background="@drawable/lay_text_blick"/>
 
                 <Button
                     android:id="@+id/tweet_button"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/upload_image_4"
+                    android:layout_marginStart="20dp"
+                    android:layout_toEndOf="@id/upload_image_4"
                     android:text="Send"
                     android:textColor="#FFF"/>
             </RelativeLayout>
@@ -176,17 +176,16 @@
                     android:id="@+id/tweet_camera"
                     android:layout_width="70dp"
                     android:layout_height="fill_parent"
-                    android:layout_alignParentRight="true"
-                    android:contentDescription=""
-                    android:src="@android:drawable/ic_menu_camera"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_camera"
                     android:textColor="#FFF"/>
 
                 <Button
                     android:id="@+id/tweet_picture"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:layout_toLeftOf="@id/tweet_camera"
-                    android:drawableLeft="@drawable/iconcompose_gallery"
+                    android:layout_toStartOf="@id/tweet_camera"
+                    android:drawableStart="@drawable/ic_gallery"
                     android:text="Add Picture"
                     android:textColor="#FFF"/>
             </RelativeLayout>

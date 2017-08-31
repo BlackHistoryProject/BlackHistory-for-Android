@@ -1,160 +1,196 @@
 package jp.promin.android.blackhistory.utils.twitter;
 
 import android.app.NotificationManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.widget.ImageButton;
 
-import java.util.List;
-
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
+import jp.promin.android.blackhistory.event.FavoriteFailureEvent;
+import jp.promin.android.blackhistory.event.FavoriteSuccessEvent;
+import jp.promin.android.blackhistory.event.ReTweetFailureEvent;
+import jp.promin.android.blackhistory.event.ReTweetSuccessEvent;
+import jp.promin.android.blackhistory.event.TweetFailureEvent;
+import jp.promin.android.blackhistory.event.TweetSuccessEvent;
 import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
-import jp.promin.android.blackhistory.utils.RxWrap;
-import rx.Observable;
-import rx.Subscriber;
+import jp.promin.android.blackhistory.utils.rx.RxListener;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.UploadedMedia;
 
+@SuppressWarnings({"Anonymous2MethodRef", "Convert2Lambda"})
 public class TwitterAction {
     public static void favorite(@NonNull final Context context,
                                 @NonNull final ImageButton favButton,
-                                @NonNull final Long myUserId,
-                                @NonNull final Status targetStatus,
-                                final Callback callback) {
-        if (myUserId.equals(targetStatus.getUser().getId())) {
+                                final long myId,
+                                @NonNull final Status targetStatus) {
+        if (targetStatus.getUser().getId() == myId) {
             BHLogger.toast("自分のツイートにはいいねできません");
             return;
         }
         final Boolean favorited = targetStatus.isFavorited();
 
-        RxWrap.create(createObservable(() -> {
-            final Twitter twitter = TwitterUtils.getTwitterInstance(context, myUserId);
-            if (favorited) {
-                return twitter.destroyFavorite(targetStatus.getId());
-            } else {
-                return twitter.createFavorite(targetStatus.getId());
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, myId);
+
+        new RxListener<Status>() {
+            @Override
+            public Status result() throws Throwable {
+                if (favorited) {
+                    return twitter.destroyFavorite(targetStatus.getId());
+                } else {
+                    return twitter.createFavorite(targetStatus.getId());
+                }
             }
-        })).subscribe(status -> {
-            if (favorited) {
-                favButton.setImageResource(android.R.drawable.star_off);
-            } else {
-                favButton.setImageResource(android.R.drawable.star_on);
-            }
-            callback.result(status);
-        }, Throwable::printStackTrace);
+        }.toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Consumer<Status>() {
+                    @Override
+                    public void accept(Status status) throws Exception {
+                        if (favorited) {
+                            favButton.setImageResource(R.drawable.ic_favorite_off);
+                        } else {
+                            favButton.setImageResource(R.drawable.ic_favorite_on);
+                        }
+                        BlackHistoryController.get(context).postEvent(new FavoriteSuccessEvent(status));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        BlackHistoryController.get(context).postEvent(new FavoriteFailureEvent(throwable));
+                    }
+                });
     }
 
-    public static void retweet(@NonNull final Context context,
+    public static void reTweet(@NonNull final Context context,
                                @NonNull final ImageButton rtButton,
                                @NonNull final Long myUserId,
-                               @NonNull final Status targetStatus,
-                               @NonNull final Callback callback) {
+                               @NonNull final Status targetStatus) {
         if (myUserId.equals(targetStatus.getUser().getId())) {
             BHLogger.toast("自分のツイートはリツイートできません");
             return;
         }
 
-        RxWrap.create(createObservable(() -> {
-            final Twitter twitter = TwitterUtils.getTwitterInstance(context, myUserId);
-            return twitter.retweetStatus(targetStatus.getId());
-        })).doOnError(callback::error)
-                .subscribe(status -> {
-                    if (targetStatus.isRetweetedByMe()) {
-                        rtButton.setImageResource(android.R.drawable.checkbox_off_background);
-                    } else {
-                        rtButton.setImageResource(android.R.drawable.checkbox_on_background);
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, myUserId);
+        new RxListener<Status>() {
+            @Override
+            public Status result() throws Throwable {
+                return twitter.retweetStatus(targetStatus.getId());
+            }
+        }.toObservable()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Consumer<Status>() {
+                    @Override
+                    public void accept(Status status) throws Exception {
+                        if (targetStatus.isRetweetedByMe()) {
+                            rtButton.setImageResource(R.drawable.ic_retweet_off);
+                        } else {
+                            rtButton.setImageResource(R.drawable.ic_retweet_on);
+                        }
+                        BlackHistoryController.get(context).postEvent(new ReTweetSuccessEvent(status));
                     }
-                }, Throwable::printStackTrace);
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        BlackHistoryController.get(context).postEvent(new ReTweetFailureEvent(throwable));
+                    }
+                });
     }
 
+    public static void tweet(@NonNull Context context, @NonNull String tweetText, long userId) {
+        tweetImpl(context, tweetText, userId, null, new long[]{});
+    }
 
-    public static void tweet(@NonNull Context context, @NonNull String tweetText, long userId, Callback finishCallback) {
-        tweet(context, tweetText, userId, null, null, finishCallback);
+    public static void tweetWithMedia(@NonNull Context context, @NonNull String tweetText, long userId, long[] mediaIds) {
+        tweetImpl(context, tweetText, userId, null, mediaIds);
+    }
+
+    public static void reply(@NonNull Context context, @NonNull String tweetText, long userId, @NonNull Status replyTarget) {
+        tweetImpl(context, tweetText, userId, replyTarget, new long[]{});
+    }
+
+    public static void replyWithMedia(@NonNull Context context, @NonNull String tweetText, long userId,
+                                      @NonNull Status replyTarget, long[] mediaIds) {
+        tweetImpl(context, tweetText, userId, replyTarget, mediaIds);
     }
 
     /**
-     * ツイートをします
+     * Tweet 処理
+     *
+     * @param context     context
+     * @param tweetText   ツイート内容
+     * @param userId      ツイートをするユーザーのId
+     * @param replyTarget リプライするツイート
+     * @param mediaIds    アップロードする写真
      */
-    public static void tweet(@NonNull Context context,
-                             @NonNull String tweetText,
-                             long userId,
-                             Status replyTarget,
-                             UploadMedia mediaCallback,
-                             @NonNull Callback finishCallback) {
-        /**
-         * ツイートをしている旨を通知
-         */
-        RxWrap.create(createObservable(() -> {
-            Twitter twitter = TwitterUtils.getTwitterInstance(context, userId);
+    private static void tweetImpl(@NonNull final Context context,
+                                  @NonNull String tweetText,
+                                  long userId,
+                                  @Nullable Status replyTarget,
+                                  long[] mediaIds) {
+        final StatusUpdate statusUpdate = new StatusUpdate(tweetText);
 
-            /**
-             * テキストビューの中身をセット (params に入ってる)
-             */
-            final StatusUpdate statusUpdate = new StatusUpdate(tweetText);
+        // reply
+        if (replyTarget != null) {
+            statusUpdate.setInReplyToStatusId(replyTarget.getId());
+        }
 
-            /**
-             * 画像もアップロードするか
-             */
-            if (mediaCallback != null) {
-                List<Long> temp = Observable.from(mediaCallback.medias())
-                        .filter(uploadedMedia -> uploadedMedia != null)
-                        .map(UploadedMedia::getMediaId)
-                        .toList().toBlocking().single();
+        // upload media
+        if (mediaIds.length > 0) {
+            statusUpdate.setMediaIds(mediaIds);
+        }
 
-                long[] mediaIds = new long[temp.size()];
-                for (int i = 0; i < temp.size(); i++) {
-                    mediaIds[i] = temp.get(i);
-                }
-                if (mediaIds.length > 0) {
-                    statusUpdate.setMediaIds(mediaIds);
-                }
-            }
-            if (replyTarget != null) {
-                statusUpdate.setInReplyToStatusId(replyTarget.getId());
-            }
-            return twitter.updateStatus(statusUpdate);
-        }), BlackUtil.createProgressDialog(context, R.string.status_uploading_image, false))
-                .doOnSubscribe(() -> BlackUtil.showNotification(context, R.drawable.ic_notification, "送信中", "送信しています...", 1))
-                .doOnCompleted(() -> {
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(1);
-                })
-                .doOnError(throwable -> {
-                    BlackUtil.showNotification(context, R.drawable.ic_notification_error, "失敗", "ツイートの送信に失敗しました。", 1);
-                    finishCallback.error(throwable);
-                })
-                .subscribe(finishCallback::result, Throwable::printStackTrace);
-    }
+        // dialog
+        final ProgressDialog dialog = new ProgressDialog(context) {{
+            setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            setMessage(context.getString(R.string.status_uploading_image));
+            setCancelable(false);
+        }};
 
-    public static <T> Observable<T> createObservable(Callable<T> observable) {
-        return Observable.create(new Observable.OnSubscribe<T>() {
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, userId);
+
+        new RxListener<Status>() {
             @Override
-            public void call(Subscriber<? super T> subscriber) {
-                try {
-                    subscriber.onNext(observable.call());
-                    subscriber.onCompleted();
-                } catch (TwitterException e) {
-                    subscriber.onError(e);
-                }
+            public Status result() throws Throwable {
+                return twitter.updateStatus(statusUpdate);
             }
-        });
-    }
-
-    public interface UploadMedia {
-        List<UploadedMedia> medias();
-    }
-
-    public interface Callback {
-        void result(Status status);
-
-        void error(Throwable error);
-    }
-
-    public interface Callable<T> {
-        T call() throws TwitterException;
+        }.toObservable(dialog)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        BlackUtil.showNotification(context, R.drawable.ic_notification, "送信中", "送信しています...", 1);
+                    }
+                })
+                .doOnComplete(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                        notificationManager.cancel(1);
+                    }
+                })
+                .subscribe(new Consumer<Status>() {
+                    @Override
+                    public void accept(Status status) throws Exception {
+                        BlackHistoryController.get(context).postEvent(new TweetSuccessEvent(status.getId()));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        BlackUtil.showNotification(context, R.drawable.ic_notification_error, "失敗", "ツイートの送信に失敗しました。", 1);
+                        BlackHistoryController.get(context).postEvent(new TweetFailureEvent(throwable));
+                    }
+                });
     }
 }
