@@ -110,8 +110,8 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         holder.text.setMovementMethod(LinkMovementMethod.getInstance());
 
         holder.time.setText(BlackUtil.getDateFormat(item.getCreatedAt()));
-        holder.favoriteButton.setImageResource(item.isFavorited() ? R.drawable.iconlarge_favourite : android.R.drawable.star_off);
-        holder.retweetButton.setImageResource(item.isRetweetedByMe() ? R.drawable.iconlarge_retweet : R.drawable.iconlarge_retweet);
+        holder.favoriteButton.setImageResource(item.isFavorited() ? R.drawable.ic_favorite_on : R.drawable.ic_favorite_off);
+        holder.retweetButton.setImageResource(item.isRetweetedByMe() ? R.drawable.ic_retweet_on : R.drawable.ic_retweet_off);
 
         return convertView;
     }
@@ -174,6 +174,7 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         ImageButton favoriteButton;
 
         private Status mStatus;
+
         ViewHolder(View view, @NonNull Listener listener) {
             ButterKnife.bind(this, view);
             mListener = listener;

@@ -70,7 +70,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     @Override
     protected final void init() {
-        this.userObject = TwitterUtils.getAccount(getOwnerUserId());
+        this.userObject = TwitterUtils.getAccount(getContext(), getOwnerUserId());
     }
 
     @Override
@@ -152,7 +152,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     public final String getTitle() {
         try {
-            return getListType().name() + " - " + this.userObject.getUserScreenName();
+            return getListType().name() + " - " + this.userObject.getScreenName();
         } catch (Exception e) {
             e.printStackTrace();
             return "-";

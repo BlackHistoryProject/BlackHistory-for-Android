@@ -1,21 +1,19 @@
 package jp.promin.android.blackhistory.model;
 
-import com.github.gfx.android.orma.annotation.Column;
-import com.github.gfx.android.orma.annotation.PrimaryKey;
-import com.github.gfx.android.orma.annotation.Table;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
-@Table
-public class UserToken {
+public class UserToken extends RealmObject {
     @PrimaryKey
-    protected long id;
-    @Column
-    protected String name;
-    @Column
-    protected String screenName;
-    @Column
-    protected String token;
-    @Column
-    protected String tokenSecret;
+    private long id;
+    private String name;
+    private String screenName;
+    private String token;
+    private String tokenSecret;
+
+    public UserToken() {
+
+    }
 
     public long getId() {
         return id;

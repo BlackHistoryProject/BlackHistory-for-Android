@@ -2,31 +2,23 @@ package jp.promin.android.blackhistory.ui.mainstream;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
-import android.support.v4.view.ViewPager;
-import android.widget.ImageButton;
-
-import com.github.gfx.android.orma.Inserter;
+import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
-import jp.promin.android.blackhistory.BlackHistoryController;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import jp.promin.android.blackhistory.R;
+import jp.promin.android.blackhistory.databinding.ActivityMainStreamBinding;
 import jp.promin.android.blackhistory.model.ShowList;
-import jp.promin.android.blackhistory.model.ShowList_Deleter;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
 import jp.promin.android.blackhistory.ui.common.CommonStreamFragment;
 import jp.promin.android.blackhistory.ui.common.CustomDialogFragment;
@@ -38,110 +30,85 @@ import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
 import twitter4j.TwitterStream;
 
 public class MainStreamActivity extends BaseActivity {
-    final static public String EXTRA_USER_ID = "extra_user_id";
-    final static public String EXTRA_FROM_AUTH = "extra_from_auth";
-    public MyFragmentPagerAdapter mAdapter;
-    @Bind(R.id.pager)
-    ViewPager viewPager;
-    @Bind(R.id.menuber_menu)
-    ImageButton menuBar;
+    private static final String EXTRA_USER_ID = "extra_user_id";
+    private static final String EXTRA_FROM_AUTH = "extra_from_auth";
     //////////////////////////////
-    HashMap<Long, ObservableUserStreamListener> streams = new HashMap<>();
+    private final LongSparseArray<ObservableUserStreamListener> mUserStreams = new LongSparseArray<>();
+    public MyFragmentPagerAdapter mAdapter;
+    private ActivityMainStreamBinding mBinding;
 
-    public MainStreamActivity() {
-    }
-
-    public static void startActivity(Context context, Long userId) {
+    public static void startActivity(@NonNull Context context, long userId) {
         Intent intent = new Intent(context, MainStreamActivity.class);
         intent.putExtra(EXTRA_USER_ID, userId);
         intent.putExtra(EXTRA_FROM_AUTH, true);
         context.startActivity(intent);
     }
 
-    @OnClick(R.id.Geolocation)
-    void OnClickGeo() {
-
-    }
-
-    @OnClick(R.id.account)
-    void OnClickAccount() {
-        SelectAccountDialogFragment
-                .newInstance(R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT)
-                .show(getSupportFragmentManager(), "select_account");
-    }
-
-    @OnClick(R.id.addList)
-    void OnClickAddList() {
-        SelectTabKindDialogFragment
-                .newInstance()
-                .show(getSupportFragmentManager(), "a");
-    }
-
-    @OnClick(R.id.menu_tweet)
-    void OnClickTweet() {
-        //アクティビティを開く　ここだとつぶやきに飛ぶ
-        TweetActivity.startActivity(this, getCurrentTabUserId().first);
-    }
-    //////////////////////////////
-
-    @OnClick(R.id.menuber_menu)
-    void OnClickMenu() {
-        CustomDialogFragment.newInstance("", R.array.menu,
-                new CustomDialogFragment.DialogListener() {
-                    @Override
-                    public void onClick(String[] menuRes, int position) {
-                        switch (position) {
-                            case 0: //リスト削除
-                                removeTab();
-                                break;
-                            case 1: //設定
-                                break;
-                        }
-                    }
-                })
-                .show(getSupportFragmentManager(), "menu");
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main_stream);
+        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+        mBinding.pager.setAdapter(mAdapter);
+        mBinding.menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onMenuClick();
+            }
+        });
+        mBinding.addAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddAccountClick();
+            }
+        });
+        mBinding.tweet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onTweetClick();
+            }
+        });
+        mBinding.settingTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onSettingTabClick();
+            }
+        });
 
         if (TwitterUtils.hasAccessToken(this)) {
-            setContentView(R.layout.fragment_main_stream);
-            ButterKnife.bind(this);
-            this.mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-            this.viewPager.setAdapter(this.mAdapter);
-
-            Boolean fromAuth = getIntent().getBooleanExtra(EXTRA_FROM_AUTH, false);
-            Long userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
-            for (Long _userId : TwitterUtils.getAccountIds(this)) {
-                if (this.streams.containsKey(_userId)) continue;
-                TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, _userId);
-                ObservableUserStreamListener listener = new ObservableUserStreamListener(this, _userId);
-                if (twitterStream != null) {
-                    twitterStream.addListener(listener);
-                    twitterStream.user();
-                }
-
-                this.streams.put(_userId, listener);
-                //this.mAdapter.addTab(TimelineListType.Home, _userId);
-            }
-
-            if (this.streams.size() == 0) {
-                //TwitterUtils.deleteAllAccount(this);
-                //createIntent(new Intent(this, TwitterOAuthActivity.class));
-            }
-
-            if (fromAuth && userId > 0) {
-                this.mAdapter.addTab(TimelineListType.Home, userId);
-            }
+            startAllUserStreams();
+            onStartFromAuthorization();
         } else {
             startActivity(new Intent(this, TwitterOAuthActivity.class));
         }
     }
 
     public Pair<Long, CommonStreamFragment> getCurrentTabUserId() {
-        return this.mAdapter.getItemAtIndex(this.viewPager.getCurrentItem());
+        return mAdapter.getItemAtIndex(mBinding.pager.getCurrentItem());
+    }
+
+    private void onStartFromAuthorization() {
+        long userId = getIntent().getLongExtra(EXTRA_USER_ID, -1L);
+        if (userId == -1) {
+            return;
+        }
+        boolean fromAuth = getIntent().getBooleanExtra(EXTRA_FROM_AUTH, false);
+        if (fromAuth && userId > 0) {
+            mAdapter.addTab(TimelineListType.Home, userId);
+        }
+    }
+
+    private void startAllUserStreams() {
+        for (UserToken token : TwitterUtils.getAccounts(this)) {
+            if (mUserStreams.indexOfKey(token.getId()) > 0) return;
+            TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, token.getId());
+            ObservableUserStreamListener listener = new ObservableUserStreamListener(this, token.getId());
+            if (twitterStream != null) {
+                twitterStream.addListener(listener);
+                twitterStream.user();
+            }
+            mUserStreams.append(token.getId(), listener);
+        }
     }
 
     @Override
@@ -157,63 +124,97 @@ public class MainStreamActivity extends BaseActivity {
     }
 
     private void saveTabs() {
-        final BlackHistoryController app = BlackHistoryController.get(this);
-        final Inserter<ShowList> db = app.getDatabase().relationOfShowList().upserter();
+        if (mAdapter == null) {
+            return;
+        }
 
-        Observable.fromIterable(mAdapter.getTab())
-                .map(new Function<Pair<Long, CommonStreamFragment>, ShowList>() {
-                    @Override
-                    public ShowList apply(@NonNull Pair<Long, CommonStreamFragment> item) throws Exception {
-                        return new ShowList(item.second.getListType(), item.first);
-                    }
-                })
-                .toList()
-                .flatMapObservable(new Function<List<ShowList>, ObservableSource<Long>>() {
-                    @Override
-                    public ObservableSource<Long> apply(@NonNull List<ShowList> showLists) throws Exception {
-                        return db.executeAllAsObservable(showLists);
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        final Realm realm = Realm.getInstance(this);
+        realm.beginTransaction();
+        for (int i = 0; i < this.mAdapter.getCount(); i++) {
+            try {
+                Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
+                final ShowList listObject = new ShowList(item.second.getListType(), item.first);
+                realm.copyToRealmOrUpdate(listObject);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        realm.commitTransaction();
+        realm.close();
     }
 
     private void loadTabs() {
-        BlackHistoryController.get(this).getDatabase()
-                .selectFromShowList().executeAsObservable()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<ShowList>() {
-                    @Override
-                    public void accept(ShowList showList) throws Exception {
-                        mAdapter.addTab(showList.getListType(), showList.getUserId());
-                    }
-                });
+        if (mAdapter == null) {
+            return;
+        }
+        final Realm realm = Realm.getInstance(this);
+        final RealmResults<ShowList> showLists = realm.where(ShowList.class).findAll();
+        for (final ShowList listData : showLists) {
+            mAdapter.addTab(TimelineListType.kindOf(listData.getListType()), listData.getUserId());
+        }
+        realm.close();
     }
 
     private void removeTab() {
-        final Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
-        final ShowList targetList = new ShowList(item.second.getListType(), item.first);
-        final BlackHistoryController app = BlackHistoryController.get(this);
-        final ShowList_Deleter deleter = app.getDatabase().relationOfShowList().deleter();
+        try {
+            Realm realm = Realm.getInstance(this);
+            Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
+            RealmResults<ShowList> result =
+                    realm
+                            .where(ShowList.class)
+                            .equalTo("hash", Arrays.hashCode(new Object[]{item.second.getListType(), item.first}))
+                            .findAll();
+            if (result != null) {
+                realm.beginTransaction();
+                for (ShowList listObject : result) {
+                    listObject.removeFromRealm();
+                }
+                realm.commitTransaction();
+                realm.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        deleter
-                .where("hash = ?", targetList.getHash())
-                .executeAsSingle()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer<Integer>() {
+        int current = mBinding.pager.getCurrentItem();
+        mAdapter.remove(current);
+        final List<Pair<Long, CommonStreamFragment>> list = new ArrayList<>(mAdapter.getTab());
+        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
+        mBinding.pager.setAdapter(mAdapter);
+        mBinding.pager.setCurrentItem(current, false);
+    }
+
+    private void onAddAccountClick() {
+        SelectAccountDialogFragment
+                .newInstance(R.string.SELECT_ACCOUNT_TYPE__CHANGE_ACCOUNT)
+                .show(getSupportFragmentManager(), "select_account");
+    }
+
+    private void onSettingTabClick() {
+        SelectTabKindDialogFragment
+                .newInstance()
+                .show(getSupportFragmentManager(), "a");
+    }
+
+    private void onTweetClick() {
+        //アクティビティを開く　ここだとつぶやきに飛ぶ
+        TweetActivity.startActivity(this, getCurrentTabUserId().first);
+    }
+
+    private void onMenuClick() {
+        CustomDialogFragment.newInstance("", R.array.menu,
+                new CustomDialogFragment.DialogListener() {
                     @Override
-                    public void accept(Integer integer) throws Exception {
-                        int current = viewPager.getCurrentItem();
-                        mAdapter.remove(current);
-                        ArrayList<Pair<Long, CommonStreamFragment>> list = new ArrayList<>();
-                        list.addAll(mAdapter.getTab());
-                        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
-                        viewPager.setAdapter(mAdapter);
-                        viewPager.setCurrentItem(current, false);
+                    public void onClick(String[] menuRes, int position) {
+                        switch (position) {
+                            case 0: //リスト削除
+                                removeTab();
+                                break;
+                            case 1: //設定
+                                break;
+                        }
                     }
-                });
+                })
+                .show(getSupportFragmentManager(), "menu");
     }
 }

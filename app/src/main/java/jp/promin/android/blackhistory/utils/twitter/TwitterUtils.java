@@ -5,9 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.model.UserToken;
@@ -36,7 +37,7 @@ final public class TwitterUtils {
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
 
         if (userId != null && hasAccessToken(context)) {
-            twitter.setOAuthAccessToken(loadAccessToken(userId));
+            twitter.setOAuthAccessToken(loadAccessToken(context, userId));
         }
         return twitter;
     }
@@ -48,7 +49,7 @@ final public class TwitterUtils {
         {
             builder.setOAuthConsumerKey(consumerKey);
             builder.setOAuthConsumerSecret(consumerSecret);
-            AccessToken accessToken = loadAccessToken(userId);
+            AccessToken accessToken = loadAccessToken(context, userId);
             if (accessToken != null) {
                 builder.setOAuthAccessToken(accessToken.getToken());
                 builder.setOAuthAccessTokenSecret(accessToken.getTokenSecret());
@@ -64,8 +65,8 @@ final public class TwitterUtils {
     }
 
     @Nullable
-    private static AccessToken loadAccessToken(long userId) {
-        UserToken tokenObject = getAccount(userId);
+    private static AccessToken loadAccessToken(@NonNull Context context, long userId) {
+        UserToken tokenObject = getAccount(context, userId);
         if (tokenObject == null) {
             return null;
         }
@@ -77,11 +78,13 @@ final public class TwitterUtils {
      * @return false or true
      */
     public static boolean hasAccessToken(@NonNull Context context) {
-        return BlackHistoryController.get(context).getDatabase().selectFromUserToken().count() > 0;
+        Realm realm = Realm.getInstance(context);
+        RealmResults<UserToken> s = realm.where(UserToken.class).findAll();
+        return s.size() > 0;
     }
 
     /* ---  database 操作 --- */
-    public static void addAccount(@NonNull Context context, @NonNull AccessToken accessToken) {
+    public static void addAccount(@NonNull Context context, @NonNull final AccessToken accessToken) {
         final UserToken tokenObject = new UserToken();
         tokenObject.setId(accessToken.getUserId());
         tokenObject.setName(accessToken.getScreenName());
@@ -89,49 +92,26 @@ final public class TwitterUtils {
         tokenObject.setToken(accessToken.getToken());
         tokenObject.setTokenSecret(accessToken.getTokenSecret());
 
-        BlackHistoryController.get(context).getDatabase()
-                .relationOfUserToken().upserter()
-                .executeAsSingle(tokenObject)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
+        final Realm realm = Realm.getInstance(context);
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(tokenObject);
+        realm.commitTransaction();
     }
 
-    private static void deleteAccount(@NonNull Context context, Long userId) {
-        BlackHistoryController.get(context).getDatabase()
-                .deleteFromUserToken().idEq(userId)
-                .executeAsSingle()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-    }
-
-    public static void deleteAllAccount(@NonNull Context context) {
-        BlackHistoryController.get(context).getDatabase()
-                .deleteFromUserToken()
-                .executeAsSingle()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe();
-    }
-
-    public static ArrayList<Long> getAccountIds(@NonNull Context context) {
-        Realm realm = Realm.getInstance(context);
-        ArrayList<Long> results = new ArrayList<>();
-        for (UserToken token : realm.where(UserToken.class).findAll()) {
-            try {
-                BHLogger.println("TOKEN-", token);
-                results.add(token.getUserId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private static void deleteAccount(@NonNull Context context, long userId) {
+        final Realm realm = Realm.getInstance(context);
+        final UserToken result = realm.where(UserToken.class).equalTo("id", userId).findFirst();
+        if (result == null) {
+            return;
         }
-        return results;
+        realm.beginTransaction();
+        result.removeFromRealm();
+        realm.commitTransaction();
     }
 
-    public static ArrayList<UserToken> getAccounts(@NonNull Context context) {
-        Realm realm = Realm.getInstance(context);
-        ArrayList<UserToken> results = new ArrayList<>();
+    public static List<UserToken> getAccounts(@NonNull Context context) {
+        final Realm realm = Realm.getInstance(context);
+        final List<UserToken> results = new ArrayList<>();
         for (UserToken token : realm.where(UserToken.class).findAll()) {
             results.add(token);
         }
@@ -139,12 +119,12 @@ final public class TwitterUtils {
     }
 
     @Nullable
-    public static UserToken getAccount(Long userId) {
-
-        Realm realm = Realm.getInstance(BlackHistoryController.get().getApplicationContext());
+    public static UserToken getAccount(@NonNull Context context, long userId) {
+        final Realm realm = Realm.getInstance(BlackHistoryController.get(context));
         return realm
                 .where(UserToken.class)
-                .equalTo("userId", userId)
+                .equalTo("id", userId)
                 .findFirst();
+
     }
 }

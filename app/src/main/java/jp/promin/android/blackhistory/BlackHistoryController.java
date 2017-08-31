@@ -4,9 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.facebook.stetho.Stetho;
+
 import org.greenrobot.eventbus.EventBus;
 
-import jp.promin.android.blackhistory.model.OrmaDatabase;
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
 
 public class BlackHistoryController extends Application {
@@ -26,21 +27,16 @@ public class BlackHistoryController extends Application {
         throw new RuntimeException("Context is not BlackHistoryController");
     }
 
-    private OrmaDatabase mDatabase;
-
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
         ImageManager.Initialize(getApplicationContext());
-        mDatabase = new OrmaDatabase.Builder(this).build();
+
+        Stetho.initializeWithDefaults(this);
     }
 
     public void postEvent(@NonNull Object event) {
         EventBus.getDefault().post(event);
-    }
-
-    public OrmaDatabase getDatabase() {
-        return mDatabase;
     }
 }

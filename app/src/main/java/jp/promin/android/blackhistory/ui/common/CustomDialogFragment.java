@@ -10,8 +10,6 @@ import android.support.v4.app.DialogFragment;
 
 import java.io.Serializable;
 
-import jp.promin.android.blackhistory.R;
-
 public class CustomDialogFragment extends DialogFragment {
     public static final String EXTRA_TITLE = "extra_title";
     public static final String EXTRA_STRING_RES = "extra_string_res";
@@ -39,7 +37,6 @@ public class CustomDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title);
         builder.setCancelable(false);
-        builder.setIcon(R.drawable.ic_action_compose);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

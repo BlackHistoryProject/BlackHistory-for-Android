@@ -2,24 +2,19 @@ package jp.promin.android.blackhistory.model;
 
 import android.support.annotation.NonNull;
 
-import com.github.gfx.android.orma.annotation.Column;
-import com.github.gfx.android.orma.annotation.PrimaryKey;
-import com.github.gfx.android.orma.annotation.Table;
-
 import java.util.Arrays;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 
-@Table
-public class ShowList {
+public class ShowList extends RealmObject {
     @PrimaryKey
-    protected int hash;
-    @Column
-    protected int listType;
-    @Column
-    protected long userId;
+    private int hash;
+    private int listType;
+    private long userId;
 
-    protected ShowList() {
+    public ShowList() {
     }
 
     public ShowList(@NonNull TimelineListType listType, long userId) {
@@ -32,12 +27,23 @@ public class ShowList {
         return hash;
     }
 
-    @NonNull
-    public TimelineListType getListType() {
-        return TimelineListType.kindOf(listType);
+    public void setHash(int hash) {
+        this.hash = hash;
+    }
+
+    public int getListType() {
+        return listType;
+    }
+
+    public void setListType(int listType) {
+        this.listType = listType;
     }
 
     public long getUserId() {
         return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 }
