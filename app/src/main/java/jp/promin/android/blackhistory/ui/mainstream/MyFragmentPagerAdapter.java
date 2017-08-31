@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.util.Pair;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.promin.android.blackhistory.ui.common.CommonStreamFragment;
 import jp.promin.android.blackhistory.ui.mainstream.lists.FavoriteStreamFragment;
@@ -16,18 +17,18 @@ import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 import jp.promin.android.blackhistory.utils.BHLogger;
 
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
-    ArrayList<Pair<Long, CommonStreamFragment>> tab = new ArrayList<>();
+    List<Pair<Long, CommonStreamFragment>> tab = new ArrayList<>();
 
     public MyFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public MyFragmentPagerAdapter(FragmentManager fm, ArrayList<Pair<Long, CommonStreamFragment>> list) {
+    public MyFragmentPagerAdapter(FragmentManager fm, List<Pair<Long, CommonStreamFragment>> list) {
         super(fm);
         this.tab = list;
     }
 
-    public ArrayList<Pair<Long, CommonStreamFragment>> getTab() {
+    public List<Pair<Long, CommonStreamFragment>> getTab() {
         return tab;
     }
 

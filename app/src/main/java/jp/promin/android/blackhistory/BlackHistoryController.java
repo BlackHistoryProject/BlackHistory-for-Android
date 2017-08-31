@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.facebook.stetho.Stetho;
+
 import org.greenrobot.eventbus.EventBus;
 
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
@@ -30,6 +32,8 @@ public class BlackHistoryController extends Application {
         super.onCreate();
         mInstance = this;
         ImageManager.Initialize(getApplicationContext());
+
+        Stetho.initializeWithDefaults(this);
     }
 
     public void postEvent(@NonNull Object event) {

@@ -19,7 +19,7 @@ import jp.promin.android.blackhistory.event.FavoriteFailureEvent;
 import jp.promin.android.blackhistory.event.FavoriteSuccessEvent;
 import jp.promin.android.blackhistory.event.ReTweetFailureEvent;
 import jp.promin.android.blackhistory.event.ReTweetSuccessEvent;
-import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.mainstream.TweetAdapter;
 import jp.promin.android.blackhistory.ui.mainstream.lists.ListStreamListener;
 import jp.promin.android.blackhistory.ui.mainstream.lists.SimpleStreamListener;
@@ -39,7 +39,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
     @Bind(android.R.id.list)
     ListView listView;
     //////// getter setter //////////
-    private ModelAccessTokenObject userObject;
+    private UserToken userObject;
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
     private BaseStreamListener listener;
@@ -50,7 +50,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     public final TimelineListType getListType() {
         final int listType = getArguments().getInt(ARGS_LIST_TYPE);
-        return TimelineListType.getType(listType);
+        return TimelineListType.kindOf(listType);
     }
 
     protected final Twitter getTwitter() {
@@ -70,7 +70,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     @Override
     protected final void init() {
-        this.userObject = TwitterUtils.getAccount(getOwnerUserId());
+        this.userObject = TwitterUtils.getAccount(getContext(), getOwnerUserId());
     }
 
     @Override
@@ -152,7 +152,7 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     public final String getTitle() {
         try {
-            return getListType().name() + " - " + this.userObject.getUserScreenName();
+            return getListType().name() + " - " + this.userObject.getScreenName();
         } catch (Exception e) {
             e.printStackTrace();
             return "-";

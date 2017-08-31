@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/tweet_item_main"
+<RelativeLayout android:id="@+id/tweet_item_main"
+                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="8dp"
@@ -85,7 +85,7 @@
                 android:layout_alignParentEnd="true"
                 android:background="#0000"
                 android:contentDescription="@string/menu_icon"
-                android:src="@drawable/iconlarge_more"/>
+                android:src="@drawable/ic_tweet_menu"/>
 
             <ImageButton
                 android:id="@+id/favorite"
@@ -96,7 +96,7 @@
                 android:layout_toStartOf="@id/menu"
 
                 android:background="#0000"
-                android:src="@drawable/iconlarge_favourite"/>
+                android:src="@drawable/ic_favorite_off"/>
 
             <ImageButton
                 android:id="@+id/retweet"
@@ -106,7 +106,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/favorite"
                 android:background="#0000"
-                android:src="@drawable/iconlarge_retweet"
+                android:src="@drawable/ic_retweet_off"
                 />
 
             <ImageButton
@@ -117,7 +117,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/retweet"
                 android:background="#0000"
-                android:src="@drawable/iconlarge_reply"
+                android:src="@drawable/ic_reply"
                 />
 
         </RelativeLayout>

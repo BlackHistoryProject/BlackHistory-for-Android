@@ -25,12 +25,12 @@ public enum TimelineListType {
         mKind = kind;
     }
 
-    @Nullable
-    static public TimelineListType getType(int index) {
+    @NonNull
+    static public TimelineListType kindOf(int kind) {
         for (TimelineListType type : TimelineListType.values()) {
-            if (type.mKind == index) return type;
+            if (type.mKind == kind) return type;
         }
-        return null;
+        throw new RuntimeException("おかしいリストタイプ");
     }
 
     @Nullable

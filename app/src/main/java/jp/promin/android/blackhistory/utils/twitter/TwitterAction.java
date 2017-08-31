@@ -57,9 +57,9 @@ public class TwitterAction {
                     @Override
                     public void accept(Status status) throws Exception {
                         if (favorited) {
-                            favButton.setImageResource(android.R.drawable.star_off);
+                            favButton.setImageResource(R.drawable.ic_favorite_off);
                         } else {
-                            favButton.setImageResource(android.R.drawable.star_on);
+                            favButton.setImageResource(R.drawable.ic_favorite_on);
                         }
                         BlackHistoryController.get(context).postEvent(new FavoriteSuccessEvent(status));
                     }
@@ -93,9 +93,9 @@ public class TwitterAction {
                     @Override
                     public void accept(Status status) throws Exception {
                         if (targetStatus.isRetweetedByMe()) {
-                            rtButton.setImageResource(android.R.drawable.checkbox_off_background);
+                            rtButton.setImageResource(R.drawable.ic_retweet_off);
                         } else {
-                            rtButton.setImageResource(android.R.drawable.checkbox_on_background);
+                            rtButton.setImageResource(R.drawable.ic_retweet_on);
                         }
                         BlackHistoryController.get(context).postEvent(new ReTweetSuccessEvent(status));
                     }

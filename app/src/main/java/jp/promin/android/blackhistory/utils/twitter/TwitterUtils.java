@@ -5,12 +5,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
-import jp.promin.android.blackhistory.model.ModelAccessTokenObject;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.utils.BHLogger;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -36,7 +37,7 @@ final public class TwitterUtils {
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
 
         if (userId != null && hasAccessToken(context)) {
-            twitter.setOAuthAccessToken(loadAccessToken(userId));
+            twitter.setOAuthAccessToken(loadAccessToken(context, userId));
         }
         return twitter;
     }
@@ -48,7 +49,7 @@ final public class TwitterUtils {
         {
             builder.setOAuthConsumerKey(consumerKey);
             builder.setOAuthConsumerSecret(consumerSecret);
-            AccessToken accessToken = loadAccessToken(userId);
+            AccessToken accessToken = loadAccessToken(context, userId);
             if (accessToken != null) {
                 builder.setOAuthAccessToken(accessToken.getToken());
                 builder.setOAuthAccessTokenSecret(accessToken.getTokenSecret());
@@ -64,12 +65,12 @@ final public class TwitterUtils {
     }
 
     @Nullable
-    public static AccessToken loadAccessToken(long userId) {
-        ModelAccessTokenObject tokenObject = getAccount(userId);
+    private static AccessToken loadAccessToken(@NonNull Context context, long userId) {
+        UserToken tokenObject = getAccount(context, userId);
         if (tokenObject == null) {
             return null;
         }
-        return new AccessToken(tokenObject.getUserToken(), tokenObject.getUserTokenSecret(), tokenObject.getUserId());
+        return new AccessToken(tokenObject.getToken(), tokenObject.getTokenSecret(), userId);
     }
 
     /***
@@ -78,82 +79,52 @@ final public class TwitterUtils {
      */
     public static boolean hasAccessToken(@NonNull Context context) {
         Realm realm = Realm.getInstance(context);
-        RealmResults<ModelAccessTokenObject> s = realm.where(ModelAccessTokenObject.class).findAll();
+        RealmResults<UserToken> s = realm.where(UserToken.class).findAll();
         return s.size() > 0;
     }
 
     /* ---  database 操作 --- */
+    public static void addAccount(@NonNull Context context, @NonNull final AccessToken accessToken) {
+        final UserToken tokenObject = new UserToken();
+        tokenObject.setId(accessToken.getUserId());
+        tokenObject.setName(accessToken.getScreenName());
+        tokenObject.setScreenName(accessToken.getScreenName());
+        tokenObject.setToken(accessToken.getToken());
+        tokenObject.setTokenSecret(accessToken.getTokenSecret());
 
-    public static void addAccount(@NonNull Context context, AccessToken accessToken) {
-        ModelAccessTokenObject tokenObject = new ModelAccessTokenObject();
-        tokenObject.setUserId(accessToken.getUserId());
-        tokenObject.setUserName(accessToken.getScreenName());
-        tokenObject.setUserScreenName(accessToken.getScreenName());
-        tokenObject.setUserToken(accessToken.getToken());
-        tokenObject.setUserTokenSecret(accessToken.getTokenSecret());
-
-        Realm realm = Realm.getInstance(context);
+        final Realm realm = Realm.getInstance(context);
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(tokenObject);
         realm.commitTransaction();
-
-        realm.close();
-
-        BHLogger.println("saved token");
-        BHLogger.println(tokenObject.getUserScreenName());
     }
 
-    public static void deleteAccount(@NonNull Context context, Long userId) {
-//        BHLogger.println("あかうんとけしたぞいｗｗｗ");
-//        Realm realm = Realm.getInstance(context);
-//        ModelAccessTokenObject result = realm.where(ModelAccessTokenObject.class).equalTo("userId", userId).findFirst();
-//        if (result == null){
-//            return;
-//        }
-//        realm.beginTransaction();
-//        result.removeFromRealm();
-//        realm.commitTransaction();
-    }
-
-    public static void deleteAllAccount(@NonNull Context context) {
-//        BHLogger.println("あかうんとぜんぶけすぞいｗｗｗ");
-//        Realm realm = Realm.getInstance(context);
-//        RealmResults<ModelAccessTokenObject> result = realm.where(ModelAccessTokenObject.class).findAll();
-//        realm.beginTransaction();
-//        result.clear();
-//        realm.commitTransaction();
-    }
-
-    public static ArrayList<Long> getAccountIds(@NonNull Context context) {
-        Realm realm = Realm.getInstance(context);
-        ArrayList<Long> results = new ArrayList<>();
-        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()) {
-            try {
-                BHLogger.println("TOKEN-", token);
-                results.add(token.getUserId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+    private static void deleteAccount(@NonNull Context context, long userId) {
+        final Realm realm = Realm.getInstance(context);
+        final UserToken result = realm.where(UserToken.class).equalTo("id", userId).findFirst();
+        if (result == null) {
+            return;
         }
-        return results;
+        realm.beginTransaction();
+        result.removeFromRealm();
+        realm.commitTransaction();
     }
 
-    public static ArrayList<ModelAccessTokenObject> getAccounts(@NonNull Context context) {
-        Realm realm = Realm.getInstance(context);
-        ArrayList<ModelAccessTokenObject> results = new ArrayList<>();
-        for (ModelAccessTokenObject token : realm.where(ModelAccessTokenObject.class).findAll()) {
+    public static List<UserToken> getAccounts(@NonNull Context context) {
+        final Realm realm = Realm.getInstance(context);
+        final List<UserToken> results = new ArrayList<>();
+        for (UserToken token : realm.where(UserToken.class).findAll()) {
             results.add(token);
         }
         return results;
     }
 
     @Nullable
-    public static ModelAccessTokenObject getAccount(Long userId) {
-
-        Realm realm = Realm.getInstance(BlackHistoryController.get().getApplicationContext());
+    public static UserToken getAccount(@NonNull Context context, long userId) {
+        final Realm realm = Realm.getInstance(BlackHistoryController.get(context));
         return realm
-                .where(ModelAccessTokenObject.class)
-                .equalTo("userId", userId)
+                .where(UserToken.class)
+                .equalTo("id", userId)
                 .findFirst();
+
     }
 }
