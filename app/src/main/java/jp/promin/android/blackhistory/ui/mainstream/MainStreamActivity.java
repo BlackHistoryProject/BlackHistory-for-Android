@@ -9,15 +9,11 @@ import android.support.v4.util.LongSparseArray;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.databinding.ActivityMainStreamBinding;
-import jp.promin.android.blackhistory.model.ShowList;
 import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
 import jp.promin.android.blackhistory.ui.common.CommonStreamFragment;
@@ -75,7 +71,10 @@ public class MainStreamActivity extends BaseActivity {
             }
         });
 
-        if (TwitterUtils.hasAccessToken(this)) {
+        BlackHistoryController app = BlackHistoryController.get(this);
+        if (app == null) return;
+
+        if (app.getTokenManager().hasToken()) {
             startAllUserStreams();
             onStartFromAuthorization();
         } else {
@@ -99,89 +98,19 @@ public class MainStreamActivity extends BaseActivity {
     }
 
     private void startAllUserStreams() {
-        for (UserToken token : TwitterUtils.getAccounts(this)) {
+        BlackHistoryController app = BlackHistoryController.get(this);
+        if (app == null) return;
+
+        List<UserToken> userTokens = app.getTokenManager().getAllToken();
+
+        for (UserToken token : userTokens) {
             if (mUserStreams.indexOfKey(token.getId()) > 0) return;
-            TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, token.getId());
+            TwitterStream twitterStream = TwitterUtils.getTwitterStreamInstance(this, token);
             ObservableUserStreamListener listener = new ObservableUserStreamListener(this, token.getId());
-            if (twitterStream != null) {
-                twitterStream.addListener(listener);
-                twitterStream.user();
-            }
+            twitterStream.addListener(listener);
+            twitterStream.user();
             mUserStreams.append(token.getId(), listener);
         }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        loadTabs();
-    }
-
-    @Override
-    protected void onStop() {
-        saveTabs();
-        super.onStop();
-    }
-
-    private void saveTabs() {
-        if (mAdapter == null) {
-            return;
-        }
-
-        final Realm realm = Realm.getInstance(this);
-        realm.beginTransaction();
-        for (int i = 0; i < this.mAdapter.getCount(); i++) {
-            try {
-                Pair<Long, CommonStreamFragment> item = this.mAdapter.getItemAtIndex(i);
-                final ShowList listObject = new ShowList(item.second.getListType(), item.first);
-                realm.copyToRealmOrUpdate(listObject);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        realm.commitTransaction();
-        realm.close();
-    }
-
-    private void loadTabs() {
-        if (mAdapter == null) {
-            return;
-        }
-        final Realm realm = Realm.getInstance(this);
-        final RealmResults<ShowList> showLists = realm.where(ShowList.class).findAll();
-        for (final ShowList listData : showLists) {
-            mAdapter.addTab(TimelineListType.kindOf(listData.getListType()), listData.getUserId());
-        }
-        realm.close();
-    }
-
-    private void removeTab() {
-        try {
-            Realm realm = Realm.getInstance(this);
-            Pair<Long, CommonStreamFragment> item = getCurrentTabUserId();
-            RealmResults<ShowList> result =
-                    realm
-                            .where(ShowList.class)
-                            .equalTo("hash", Arrays.hashCode(new Object[]{item.second.getListType(), item.first}))
-                            .findAll();
-            if (result != null) {
-                realm.beginTransaction();
-                for (ShowList listObject : result) {
-                    listObject.removeFromRealm();
-                }
-                realm.commitTransaction();
-                realm.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        int current = mBinding.pager.getCurrentItem();
-        mAdapter.remove(current);
-        final List<Pair<Long, CommonStreamFragment>> list = new ArrayList<>(mAdapter.getTab());
-        mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), list); //Refresh page caches
-        mBinding.pager.setAdapter(mAdapter);
-        mBinding.pager.setCurrentItem(current, false);
     }
 
     private void onAddAccountClick() {
@@ -208,7 +137,6 @@ public class MainStreamActivity extends BaseActivity {
                     public void onClick(String[] menuRes, int position) {
                         switch (position) {
                             case 0: //リスト削除
-                                removeTab();
                                 break;
                             case 1: //設定
                                 break;

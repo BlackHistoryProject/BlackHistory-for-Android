@@ -10,10 +10,11 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.event.FavoriteFailureEvent;
 import jp.promin.android.blackhistory.event.FavoriteSuccessEvent;
@@ -24,8 +25,6 @@ import jp.promin.android.blackhistory.ui.mainstream.TweetAdapter;
 import jp.promin.android.blackhistory.ui.mainstream.lists.ListStreamListener;
 import jp.promin.android.blackhistory.ui.mainstream.lists.SimpleStreamListener;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
-import jp.promin.android.blackhistory.utils.BHLogger;
-import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.rx.RxListener;
 import jp.promin.android.blackhistory.utils.twitter.BaseStreamListener;
 import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
@@ -36,7 +35,7 @@ import twitter4j.Twitter;
 public abstract class CommonStreamFragment extends BaseFragment implements ListStreamListener {
     final static String ARGS_USER_ID = "args_user_id";
     final static String ARGS_LIST_TYPE = "args_list_type";
-    @Bind(android.R.id.list)
+    @BindView(android.R.id.list)
     ListView listView;
     //////// getter setter //////////
     private UserToken userObject;
@@ -70,7 +69,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     @Override
     protected final void init() {
-        this.userObject = TwitterUtils.getAccount(getContext(), getOwnerUserId());
+        BlackHistoryController app = BlackHistoryController.get(getContext());
+        if (app == null) return;
+
+        UserToken token = app.getTokenManager().getToken(getOwnerUserId());
+        if (token == null) return;
+
+        this.userObject = token;
     }
 
     @Override
@@ -87,7 +92,13 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
             this.listView.setAdapter(this.mAdapter);
         }
         if (this.mTwitter == null) {
-            this.mTwitter = TwitterUtils.getTwitterInstance(getActivity(), getOwnerUserId());
+            BlackHistoryController app = BlackHistoryController.get(getContext());
+            if (app == null) return;
+
+            UserToken token = app.getTokenManager().getToken(getOwnerUserId());
+            if (token == null) return;
+
+            this.mTwitter = TwitterUtils.getTwitterInstance(getContext(), token);
         }
 
         setListener(this);
@@ -114,14 +125,12 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
                             ((SimpleStreamListener) listener).response(statuses);
                         } else if (listener instanceof ListStreamListener) {
                             ((ListStreamListener) listener).response(listView, mAdapter, statuses);
-                        } else {
-                            BHLogger.toast("Unknown Listener");
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        BHLogger.toast("Response is invalid");
+                        throwable.printStackTrace();
                     }
                 });
     }
@@ -177,23 +186,19 @@ public abstract class CommonStreamFragment extends BaseFragment implements ListS
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFavoriteSuccess(FavoriteSuccessEvent event) {
-        ShowToast.showToast("ふぁぼった");
         mAdapter.updateStatus(event.getStatus());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFavoriteFailure(FavoriteFailureEvent event) {
-        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReTweetSuccess(ReTweetSuccessEvent event) {
-        ShowToast.showToast("RTしました");
         mAdapter.updateStatus(event.getStatus());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReTweetFailure(ReTweetFailureEvent event) {
-        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
     }
 }

@@ -1,19 +1,11 @@
 package jp.promin.android.blackhistory.model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class UserToken extends RealmObject {
-    @PrimaryKey
+public class UserToken {
     private long id;
     private String name;
     private String screenName;
     private String token;
     private String tokenSecret;
-
-    public UserToken() {
-
-    }
 
     public long getId() {
         return id;

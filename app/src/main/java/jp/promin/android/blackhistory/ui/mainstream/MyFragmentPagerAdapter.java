@@ -14,7 +14,6 @@ import jp.promin.android.blackhistory.ui.mainstream.lists.FavoriteStreamFragment
 import jp.promin.android.blackhistory.ui.mainstream.lists.HomeStreamFragment;
 import jp.promin.android.blackhistory.ui.mainstream.lists.MentionsStreamFragment;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
-import jp.promin.android.blackhistory.utils.BHLogger;
 
 public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
     List<Pair<Long, CommonStreamFragment>> tab = new ArrayList<>();
@@ -156,7 +155,6 @@ public class MyFragmentPagerAdapter extends FragmentStatePagerAdapter {
             if (_item.equals(item)) {
                 this.tab.remove(item);
                 this.notifyDataSetChanged();
-                BHLogger.toast("削除しました");
                 return;
             }
         }

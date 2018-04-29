@@ -15,16 +15,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.ui.tweet.TweetActivity;
 import jp.promin.android.blackhistory.ui.tweet.TweetExpansionTweetActivity;
-import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.LinkText;
-import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
 import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
 import twitter4j.Status;
@@ -102,8 +100,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
             public void onClick(View widget, boolean isUrl, String clickText) {
                 if (isUrl) {
                     getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(clickText)));
-                } else {
-                    ShowToast.showToast(String.format("タグやで %s", clickText));
                 }
             }
         }));
@@ -128,7 +124,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         /// ツイートが見つからなかった時はとりあえず何もしない
         final int pos = indexOf(status.getId());
         if (pos == -1) {
-            BHLogger.println("Status not found");
             return;
         }
 
@@ -143,7 +138,6 @@ public class TweetAdapter extends ArrayAdapter<Status> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        BHLogger.println("Status updated");
     }
 
     public interface Listener {
@@ -152,25 +146,25 @@ public class TweetAdapter extends ArrayAdapter<Status> {
 
     static class ViewHolder {
         private final Listener mListener;
-        @Bind(R.id.tweet_item_main)
+        @BindView(R.id.tweet_item_main)
         RelativeLayout main;
-        @Bind(R.id.icon)
+        @BindView(R.id.icon)
         ImageView icon;
-        @Bind(R.id.name)
+        @BindView(R.id.name)
         TextView name;
-        @Bind(R.id.screen_name)
+        @BindView(R.id.screen_name)
         TextView screenName;
-        @Bind(R.id.text)
+        @BindView(R.id.text)
         TextView text;
-        @Bind(R.id.time)
+        @BindView(R.id.time)
         TextView time;
-        @Bind(R.id.via)
+        @BindView(R.id.via)
         TextView via;
-        @Bind(R.id.reply)
+        @BindView(R.id.reply)
         ImageButton replyButton;
-        @Bind(R.id.retweet)
+        @BindView(R.id.retweet)
         ImageButton retweetButton;
-        @Bind(R.id.favorite)
+        @BindView(R.id.favorite)
         ImageButton favoriteButton;
 
         private Status mStatus;

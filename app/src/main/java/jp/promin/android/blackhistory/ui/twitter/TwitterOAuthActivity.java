@@ -8,7 +8,9 @@ import android.support.annotation.NonNull;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
 import jp.promin.android.blackhistory.ui.mainstream.MainStreamActivity;
 import jp.promin.android.blackhistory.utils.rx.RxListener;
@@ -17,7 +19,6 @@ import twitter4j.Twitter;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-@SuppressWarnings({"Convert2Lambda", "Anonymous2MethodRef"})
 public final class TwitterOAuthActivity extends BaseActivity {
     private String mCallBackURL;
     private Twitter mTwitter;
@@ -91,8 +92,17 @@ public final class TwitterOAuthActivity extends BaseActivity {
     }
 
     private void successOAuth(@NonNull AccessToken accessToken) {
-        TwitterUtils.addAccount(this, accessToken);
-        MainStreamActivity.startActivity(this, accessToken.getUserId());
+        BlackHistoryController app = BlackHistoryController.get(this);
+        if (app == null) return;
+
+        UserToken token = new UserToken();
+        token.setId(accessToken.getUserId());
+        token.setScreenName(accessToken.getScreenName());
+        token.setToken(accessToken.getToken());
+        token.setTokenSecret(accessToken.getTokenSecret());
+
+        app.getTokenManager().saveToken(token);
+        MainStreamActivity.startActivity(this, token.getId());
         finish();
     }
 }

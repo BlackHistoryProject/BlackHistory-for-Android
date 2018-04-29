@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
-import jp.promin.android.blackhistory.utils.BHLogger;
+import butterknife.Unbinder;
 
 abstract public class BaseFragment extends Fragment {
     protected boolean shouldUseEventBus() {
@@ -23,27 +23,29 @@ abstract public class BaseFragment extends Fragment {
 
     abstract protected void init();
 
+    @Nullable
+    private Unbinder mUnBinder;
+
     @Override
     final public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        BHLogger.printlnDetail();
     }
 
     @Nullable
     @Override
     final public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(getLayoutId(), container, false);
-        ButterKnife.bind(this, rootView);
+        mUnBinder = ButterKnife.bind(this, rootView);
         init();
-        BHLogger.printlnDetail();
         return rootView;
     }
 
     @Override
     final public void onDestroyView() {
-        ButterKnife.unbind(this);
-        BHLogger.printlnDetail();
+        if (mUnBinder != null) {
+            mUnBinder.unbind();
+        }
         super.onDestroyView();
     }
 

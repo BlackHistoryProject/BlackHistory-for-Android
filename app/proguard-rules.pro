@@ -112,9 +112,6 @@
 -assumenosideeffects class android.util.Log {
     <methods>;
 }
--assumenosideeffects class jp.promin.android.blackhistory.utils.BHLogger {
-   <methods>;
-}
 -keepattributes Signature
 
 #------------- RxJava ------------

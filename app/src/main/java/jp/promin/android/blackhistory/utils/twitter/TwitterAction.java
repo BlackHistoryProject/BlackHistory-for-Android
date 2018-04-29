@@ -20,7 +20,7 @@ import jp.promin.android.blackhistory.event.ReTweetFailureEvent;
 import jp.promin.android.blackhistory.event.ReTweetSuccessEvent;
 import jp.promin.android.blackhistory.event.TweetFailureEvent;
 import jp.promin.android.blackhistory.event.TweetSuccessEvent;
-import jp.promin.android.blackhistory.utils.BHLogger;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.rx.RxListener;
 import twitter4j.Status;
@@ -33,13 +33,18 @@ public class TwitterAction {
                                 @NonNull final ImageButton favButton,
                                 final long myId,
                                 @NonNull final Status targetStatus) {
+        BlackHistoryController app = BlackHistoryController.get(context);
+        if (app == null) return;
+
+        UserToken token = app.getTokenManager().getToken(myId);
+        if (token == null) return;
+
         if (targetStatus.getUser().getId() == myId) {
-            BHLogger.toast("自分のツイートにはいいねできません");
             return;
         }
         final Boolean favorited = targetStatus.isFavorited();
 
-        final Twitter twitter = TwitterUtils.getTwitterInstance(context, myId);
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, token);
 
         new RxListener<Status>() {
             @Override
@@ -73,14 +78,19 @@ public class TwitterAction {
 
     public static void reTweet(@NonNull final Context context,
                                @NonNull final ImageButton rtButton,
-                               @NonNull final Long myUserId,
+                               @NonNull final long userId,
                                @NonNull final Status targetStatus) {
-        if (myUserId.equals(targetStatus.getUser().getId())) {
-            BHLogger.toast("自分のツイートはリツイートできません");
+        BlackHistoryController app = BlackHistoryController.get(context);
+        if (app == null) return;
+
+        UserToken token = app.getTokenManager().getToken(userId);
+        if (token == null) return;
+
+        if (userId == targetStatus.getUser().getId()) {
             return;
         }
 
-        final Twitter twitter = TwitterUtils.getTwitterInstance(context, myUserId);
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, token);
         new RxListener<Status>() {
             @Override
             public Status result() throws Throwable {
@@ -138,6 +148,12 @@ public class TwitterAction {
                                   long userId,
                                   @Nullable Status replyTarget,
                                   long[] mediaIds) {
+        BlackHistoryController app = BlackHistoryController.get(context);
+        if (app == null) return;
+
+        UserToken token = app.getTokenManager().getToken(userId);
+        if (token == null) return;
+
         final StatusUpdate statusUpdate = new StatusUpdate(tweetText);
 
         // reply
@@ -157,7 +173,7 @@ public class TwitterAction {
             setCancelable(false);
         }};
 
-        final Twitter twitter = TwitterUtils.getTwitterInstance(context, userId);
+        final Twitter twitter = TwitterUtils.getTwitterInstance(context, token);
 
         new RxListener<Status>() {
             @Override

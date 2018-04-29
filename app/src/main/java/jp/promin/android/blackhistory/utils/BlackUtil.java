@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,14 +15,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.util.Pair;
-import android.view.LayoutInflater;
-import android.view.View;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -35,7 +31,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.ui.mainstream.MainStreamActivity;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 
@@ -102,9 +97,6 @@ public class BlackUtil {
             txt = "";
             e.printStackTrace();
         }
-        if (txt.equals("")) {
-            BHLogger.printlnDetail("Failed generate ListData", txt);
-        }
         return txt;
     }
 
@@ -114,24 +106,12 @@ public class BlackUtil {
         Matcher matcher = ListDataFormat.matcher(txt);
         try {
             if (matcher.find()) {
-                BHLogger.printlnDetail("みつかりはした。");
                 String val = matcher.group(1);
                 String type = matcher.group(2);
                 dat = new Pair<>(Long.parseLong(val), TimelineListType.getType(type));
-            } else {
-                BHLogger.printlnDetail("ぱーすだめです。");
             }
         } catch (Exception e) {
-            BHLogger.printlnDetail(e.toString());
-        }
-        if (dat == null) {
-            BHLogger.printlnDetail("Failed parse ListData", txt);
-        } else {
-            if (dat.first == null || dat.second == null) {
-                BHLogger.printlnDetail("Failed parse ListData Regex", matcher.group());
-            } else {
-                BHLogger.printlnDetail("ぱーすいいです。");
-            }
+            e.printStackTrace();
         }
         return dat;
     }
@@ -170,7 +150,6 @@ public class BlackUtil {
                 if (context.shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) ||
                         context.shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) ||
                         context.shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    ShowToast.showToast("パーミッションが必要です");
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                     Uri uri = Uri.fromParts("package", context.getPackageName(), null);
@@ -213,7 +192,6 @@ public class BlackUtil {
         String folderPath = Environment.getExternalStorageDirectory() + "/BlackHistory/";
         File folder = new File(folderPath);
         if (!folder.exists() && !folder.mkdirs()) {
-            ShowToast.showToast("directory Not found.");
             return null;
         }
         String timeStamp = new SimpleDateFormat("yyyMMddHHmmss", Locale.getDefault()).format(new Date());
@@ -238,25 +216,6 @@ public class BlackUtil {
         }
         intent.setType("image/*");
         activity.startActivityForResult(Intent.createChooser(intent, "Pick"), Const.INTENT_REQUEST.GALLERY);
-    }
-
-    public static View getInflateView(@NonNull Context context, @LayoutRes int resourceID) {
-        try {
-            return LayoutInflater.from(context).inflate(resourceID, null);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    public static View getInflateView(@LayoutRes int resourceID) {
-        Context context = BlackHistoryController.get().getApplicationContext();
-        try {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-            return inflater.inflate(resourceID, null);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public static class Const {
