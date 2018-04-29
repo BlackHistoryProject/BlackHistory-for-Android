@@ -12,11 +12,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 import jp.promin.android.blackhistory.ui.twitter.TwitterOAuthActivity;
-import jp.promin.android.blackhistory.utils.twitter.TwitterUtils;
 
 public class SelectAccountDialogFragment extends DialogFragment {
     public static final String SELECT_TYPE = "selectType";
@@ -56,7 +56,9 @@ public class SelectAccountDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        this.tokens = TwitterUtils.getAccounts(getContext());
+        BlackHistoryController app = BlackHistoryController.get(getContext());
+
+        this.tokens = app.getTokenManager().getAllToken();
 
         final Bundle bundle = getArguments(); //引数の取得
 

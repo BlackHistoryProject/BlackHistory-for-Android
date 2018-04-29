@@ -7,10 +7,9 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
-import jp.promin.android.blackhistory.utils.BHLogger;
 import jp.promin.android.blackhistory.utils.BlackUtil;
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
 import twitter4j.Status;
@@ -18,17 +17,17 @@ import twitter4j.Status;
 public class TweetExpansionTweetActivity extends BaseActivity {
     final private static String EXTRA_STATUS = "extra_status";
 
-    @Bind(R.id.expansion_icon)
+    @BindView(R.id.expansion_icon)
     ImageView imageUserIcon;
-    @Bind(R.id.expansion_name)
+    @BindView(R.id.expansion_name)
     TextView textUserName;
-    @Bind(R.id.expansion_screen_name)
+    @BindView(R.id.expansion_screen_name)
     TextView textUserScreenName;
-    @Bind(R.id.expansion_text)
+    @BindView(R.id.expansion_text)
     TextView textUserTweet;
-    @Bind(R.id.expansion_time)
+    @BindView(R.id.expansion_time)
     TextView textUserTime;
-    @Bind(R.id.expansion_via)
+    @BindView(R.id.expansion_via)
     TextView textUserVia;
 
     public static void createIntent(Context context, Status status) {
@@ -45,7 +44,6 @@ public class TweetExpansionTweetActivity extends BaseActivity {
 
         Status status = (Status) getIntent().getSerializableExtra(EXTRA_STATUS);
         if (status == null) {
-            BHLogger.toast("ツイートの読み込みに失敗しました");
             finish();
             return;
         }

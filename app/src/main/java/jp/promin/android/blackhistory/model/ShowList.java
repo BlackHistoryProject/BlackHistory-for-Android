@@ -4,18 +4,12 @@ import android.support.annotation.NonNull;
 
 import java.util.Arrays;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 import jp.promin.android.blackhistory.ui.mainstream.lists.TimelineListType;
 
-public class ShowList extends RealmObject {
-    @PrimaryKey
+public class ShowList {
     private int hash;
     private int listType;
     private long userId;
-
-    public ShowList() {
-    }
 
     public ShowList(@NonNull TimelineListType listType, long userId) {
         this.hash = Arrays.hashCode(new Object[]{listType, userId});

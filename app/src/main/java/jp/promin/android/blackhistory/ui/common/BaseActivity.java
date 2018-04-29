@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
-import jp.promin.android.blackhistory.utils.BHLogger;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -17,7 +16,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void setContentView(int layoutResId) {
         super.setContentView(layoutResId);
         ButterKnife.bind(this);
-        BHLogger.printlnDetail();
     }
 
     @Override

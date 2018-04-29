@@ -7,7 +7,6 @@ import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.event.TwitterFavoriteEvent;
 import jp.promin.android.blackhistory.event.TwitterFriendListEvent;
 import jp.promin.android.blackhistory.event.TwitterStreamEvent;
-import jp.promin.android.blackhistory.utils.BHLogger;
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -167,6 +166,6 @@ final public class ObservableUserStreamListener implements UserStreamListener {
 
     @Override
     public void onException(Exception ex) {
-        BHLogger.println("[" + mUserId + "] " + ex);
+        ex.printStackTrace();
     }
 }

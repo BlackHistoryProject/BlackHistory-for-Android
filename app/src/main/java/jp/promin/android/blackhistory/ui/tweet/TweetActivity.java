@@ -27,7 +27,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -35,12 +35,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import jp.promin.android.blackhistory.BlackHistoryController;
 import jp.promin.android.blackhistory.R;
 import jp.promin.android.blackhistory.event.TweetFailureEvent;
 import jp.promin.android.blackhistory.event.TweetSuccessEvent;
+import jp.promin.android.blackhistory.model.UserToken;
 import jp.promin.android.blackhistory.ui.common.BaseActivity;
 import jp.promin.android.blackhistory.utils.BlackUtil;
-import jp.promin.android.blackhistory.utils.ShowToast;
 import jp.promin.android.blackhistory.utils.picture.ImageManager;
 import jp.promin.android.blackhistory.utils.rx.RxListener;
 import jp.promin.android.blackhistory.utils.twitter.TwitterAction;
@@ -56,31 +57,31 @@ public final class TweetActivity extends BaseActivity {
 
     private final static int REQUEST_CAPTURE_IMAGE = 100;
     private final static int REQUEST_SELECT_IMAGE = 120;
-    @Bind(R.id.tweet_taskbar)
+    @BindView(R.id.tweet_taskbar)
     TextView textTaskBar;
-    @Bind(R.id.reply_user_info)
+    @BindView(R.id.reply_user_info)
     RelativeLayout layoutReplayInfo;
-    @Bind(R.id.expansion_icon)
+    @BindView(R.id.expansion_icon)
     ImageView imageIconView;
-    @Bind(R.id.expansion_name)
+    @BindView(R.id.expansion_name)
     TextView textName;
-    @Bind(R.id.expansion_screen_name)
+    @BindView(R.id.expansion_screen_name)
     TextView textScreenName;
-    @Bind(R.id.expansion_text)
+    @BindView(R.id.expansion_text)
     TextView textText;
-    @Bind(R.id.expansion_time)
+    @BindView(R.id.expansion_time)
     TextView textTime;
-    @Bind(R.id.expansion_via)
+    @BindView(R.id.expansion_via)
     TextView textVia;
-    @Bind(R.id.input_text)
+    @BindView(R.id.input_text)
     EditText editText;
-    @Bind(R.id.upload_image_1)
+    @BindView(R.id.upload_image_1)
     ImageButton imageBtnUpload1;
-    @Bind(R.id.upload_image_2)
+    @BindView(R.id.upload_image_2)
     ImageButton imageBtnUpload2;
-    @Bind(R.id.upload_image_3)
+    @BindView(R.id.upload_image_3)
     ImageButton imageBtnUpload3;
-    @Bind(R.id.upload_image_4)
+    @BindView(R.id.upload_image_4)
     ImageButton imageBtnUpload4;
 
     public static void startActivity(@NonNull Context context, long tweetUserId) {
@@ -192,7 +193,13 @@ public final class TweetActivity extends BaseActivity {
      * ツイートをします
      */
     private void tweet() {
-        final Twitter twitter = TwitterUtils.getTwitterInstance(TweetActivity.this, getTweetUserId());
+        BlackHistoryController app = BlackHistoryController.get(this);
+        if (app == null) return;
+
+        UserToken token = app.getTokenManager().getToken(getTweetUserId());
+        if (token == null) return;
+
+        final Twitter twitter = TwitterUtils.getTwitterInstance(this, token);
 
         final List<Bitmap> images = getImages();
         final long[] mediaIds;
@@ -272,7 +279,7 @@ public final class TweetActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onTweetFailure(TweetFailureEvent event) {
-        ShowToast.showToast(event.getThrowable().getLocalizedMessage());
+
     }
 
     /**
