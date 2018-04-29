@@ -11,79 +11,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9ca090e0-df48-4342-8bc2-5535b67f029c" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_core_common_1_1_0_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_core_runtime_1_1_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_common_1_1_0_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_livedata_core_1_1_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_runtime_1_1_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__android_arch_lifecycle_viewmodel_1_1_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_adapters_3_1_2.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_baseLibrary_3_1_2_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_databinding_library_3_1_2.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_animated_vector_drawable_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_appcompat_v7_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_design_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_recyclerview_v7_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_annotations_27_1_1_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_compat_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_ui_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_core_utils_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_fragment_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_media_compat_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_v4_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_support_vector_drawable_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_android_support_transition_27_1_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_github_hotchemi_permissionsdispatcher_2_4_0.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_code_gson_gson_2_8_3_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_jakewharton_butterknife_8_8_1.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_jakewharton_butterknife_annotations_8_8_1_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_jakewharton_picasso_picasso2_okhttp3_downloader_1_1_0_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okhttp3_okhttp_3_4_1_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_okio_okio_1_9_0_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_squareup_picasso_picasso_2_5_2_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxandroid_2_0_2.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__io_reactivex_rxjava2_rxjava_2_1_13_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__junit_junit_4_12_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_greenrobot_eventbus_3_1_1_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_hamcrest_hamcrest_core_1_3_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_reactivestreams_reactive_streams_1_0_2_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_twitter4j_twitter4j_core_4_0_6_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_twitter4j_twitter4j_http2_support_4_0_6_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__org_twitter4j_twitter4j_stream_4_0_6_jar.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/manager/TokenManager.java" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/app/proguard-rules.pro" afterPath="$PROJECT_DIR$/app/proguard-rules.pro" />
-      <change beforePath="$PROJECT_DIR$/app/src/androidTest/java/jp/promin/android/blackhistory/ApplicationTest.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/BlackHistoryController.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/BlackHistoryController.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/model/ShowList.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/model/ShowList.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/model/UserToken.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/model/UserToken.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/BaseActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/BaseActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/BaseFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/BaseFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/CommonStreamFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/common/CommonStreamFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/MainStreamActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/MainStreamActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/MyFragmentPagerAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/MyFragmentPagerAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/SelectAccountDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/SelectAccountDialogFragment.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/TweetAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/mainstream/TweetAdapter.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/tweet/TweetActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/tweet/TweetActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/tweet/TweetExpansionTweetActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/tweet/TweetExpansionTweetActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/twitter/TwitterOAuthActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/twitter/TwitterOAuthActivity.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/BHLogger.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/BlackUtil.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/BlackUtil.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/FileUtils.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/ShowToast.java" afterPath="" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/ObservableUserStreamListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/ObservableUserStreamListener.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/TwitterAction.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/TwitterAction.java" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/TwitterUtils.java" afterPath="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/TwitterUtils.java" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/.gitignore" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -138,11 +68,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="230">
               <caret line="35" column="20" lean-forward="true" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="407">
+              <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -2310,6 +2260,8 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/utils/twitter/TwitterUtils.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/jp/promin/android/blackhistory/ui/twitter/TwitterOAuthActivity.java" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/.idea/.gitignore" />
       </list>
     </option>
   </component>
@@ -2322,7 +2274,7 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="AndroidView" proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -2404,20 +2356,7 @@
             <path>
               <item name="BlackHistory-for-Android" type="b2602c69:ProjectViewProjectNode" />
               <item name="BlackHistory-for-Android" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="BlackHistory-for-Android" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BlackHistory-for-Android" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="BlackHistory-for-Android" type="b2602c69:ProjectViewProjectNode" />
-              <item name="BlackHistory-for-Android" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="app" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name=".idea" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="BlackHistory-for-Android" type="b2602c69:ProjectViewProjectNode" />
@@ -2924,6 +2863,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="230">
           <caret line="35" column="20" lean-forward="true" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding />
         </state>
       </provider>
