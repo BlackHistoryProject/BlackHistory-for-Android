@@ -50,8 +50,8 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
 
     // Twitter
-    implementation 'org.twitter4j:twitter4j-http2-support:+'
-    implementation 'org.twitter4j:twitter4j-stream:+'
+    implementation 'org.twitter4j:twitter4j-http2-support:4.0.7'
+    implementation 'org.twitter4j:twitter4j-stream:4.0.7'
 
     // Rx
     implementation 'io.reactivex.rxjava2:rxjava:+'
